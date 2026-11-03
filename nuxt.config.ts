@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     '@vite-pwa/nuxt',
     '@nuxt/icon',
     '@nuxtjs/i18n',
+    '@nuxt/eslint',
   ],
   css: ['~/assets/css/main.css'],
   vite: { plugins: [tailwindcss()] },
