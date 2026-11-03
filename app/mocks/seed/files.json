@@ -1,1 +1,9 @@
-[]
+[
+  { "id": "fl_01", "ownerId": "usr_member", "routineId": "rt_05", "name": "deep-work-checklist.pdf", "mime": "application/pdf", "size": 184320, "createdAt": "2026-10-02T08:00:00.000Z" },
+  { "id": "fl_02", "ownerId": "usr_member", "routineId": "rt_06", "name": "standup-template.docx", "mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "size": 48210, "createdAt": "2026-10-03T08:00:00.000Z" },
+  { "id": "fl_03", "ownerId": "usr_member", "routineId": "rt_01", "name": "run-plan.pdf", "mime": "application/pdf", "size": 96400, "createdAt": "2026-10-05T08:00:00.000Z" },
+  { "id": "fl_04", "ownerId": "usr_member", "routineId": "rt_09", "name": "weekly-review.docx", "mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "size": 52100, "createdAt": "2026-10-08T08:00:00.000Z" },
+  { "id": "fl_05", "ownerId": "usr_member", "routineId": "rt_10", "name": "gym-program.pdf", "mime": "application/pdf", "size": 310200, "createdAt": "2026-10-10T08:00:00.000Z" },
+  { "id": "fl_06", "ownerId": "usr_member", "routineId": "rt_12", "name": "vocab-list.png", "mime": "image/png", "size": 524288, "createdAt": "2026-10-12T08:00:00.000Z" },
+  { "id": "fl_07", "ownerId": "usr_member", "routineId": null, "name": "meal-prep-ideas.jpg", "mime": "image/jpeg", "size": 702000, "createdAt": "2026-10-15T08:00:00.000Z" }
+]
