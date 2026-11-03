@@ -1,7 +1,7 @@
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
-  compatibilityDate: 'KEEP-YOURS',
+  compatibilityDate: '2026-11-03',
   devtools: { enabled: true },
   ssr: false,
   typescript: { strict: true },
