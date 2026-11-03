@@ -1,0 +1,32 @@
+{
+  "name": "RutinApp",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@date-fns/tz": "^1.5.0",
+    "@nuxt/icon": "^2.6.2",
+    "@nuxtjs/i18n": "^10.6.0",
+    "@pinia/nuxt": "^1.0.3",
+    "@vite-pwa/nuxt": "^1.1.1",
+    "date-fns": "^4.4.0",
+    "idb-keyval": "^6.3.0",
+    "mitt": "^3.0.1",
+    "nuxt": "^4.6.3",
+    "pinia": "^4.1.0",
+    "pinia-plugin-persistedstate": "^4.7.1",
+    "vue": "^3.5.44",
+    "vue-router": "^5.4.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.4",
+    "tailwindcss": "^4.3.4"
+  }
+}

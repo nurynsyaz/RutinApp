@@ -1,0 +1,34 @@
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineNuxtConfig({
+  compatibilityDate: 'KEEP-YOURS',
+  devtools: { enabled: true },
+  ssr: false,
+  typescript: { strict: true },
+  modules: [
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
+    '@vite-pwa/nuxt',
+    '@nuxt/icon',
+    '@nuxtjs/i18n',
+  ],
+  css: ['~/assets/css/main.css'],
+  vite: { plugins: [tailwindcss()] },
+  pwa: {
+    registerType: 'prompt',
+    manifest: {
+      name: 'Rutin',
+      short_name: 'Rutin',
+      theme_color: '#0F766E',
+      background_color: '#F6F7F9',
+      display: 'standalone',
+    },
+  },
+  i18n: {
+    defaultLocale: 'en',
+    locales: [
+      { code: 'en', language: 'en', file: 'en.json' },
+      { code: 'ms', language: 'ms', file: 'ms.json' },
+    ],
+  },
+})
