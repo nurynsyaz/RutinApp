@@ -1,0 +1,41 @@
+[
+  {
+    "id": "usr_member",
+    "email": "member@rutin.test",
+    "password": "Rutin#2026",
+    "name": "Aina Member",
+    "role": "member",
+    "sessionTtlSec": null,
+    "memberSince": "2026-01-15",
+    "language": "en",
+    "timezone": "Asia/Kuala_Lumpur",
+    "dayStart": "06:00",
+    "weekStart": "monday"
+  },
+  {
+    "id": "usr_admin",
+    "email": "admin@rutin.test",
+    "password": "Rutin#2026",
+    "name": "Hakim Admin",
+    "role": "admin",
+    "sessionTtlSec": null,
+    "memberSince": "2025-11-01",
+    "language": "en",
+    "timezone": "Asia/Kuala_Lumpur",
+    "dayStart": "06:00",
+    "weekStart": "monday"
+  },
+  {
+    "id": "usr_expired",
+    "email": "expired@rutin.test",
+    "password": "Rutin#2026",
+    "name": "Sara Expired",
+    "role": "member",
+    "sessionTtlSec": 60,
+    "memberSince": "2026-03-10",
+    "language": "ms",
+    "timezone": "Asia/Kuala_Lumpur",
+    "dayStart": "07:00",
+    "weekStart": "monday"
+  }
+]
