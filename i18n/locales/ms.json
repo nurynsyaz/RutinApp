@@ -1,1 +1,40 @@
-{"app":{"name":"Rutin"}}
+{
+  "app": { "name": "Rutin" },
+  "common": {
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Padam",
+    "edit": "Sunting",
+    "retry": "Cuba lagi",
+    "loading": "Memuatkan..."
+  },
+  "identity": {
+    "signIn": {
+      "title": "Selamat kembali",
+      "email": "E-mel",
+      "password": "Kata laluan",
+      "submit": "Log masuk",
+      "forgot": "Lupa kata laluan?",
+      "noAccount": "Belum ada akaun? Daftar"
+    },
+    "signOut": "Log keluar"
+  },
+  "scheduling": {
+    "today": { "title": "Hari ini", "progress": "{done} daripada {total} selesai" },
+    "categories": {
+      "health": "Kesihatan",
+      "work": "Kerja",
+      "personal": "Peribadi",
+      "rest": "Rehat"
+    }
+  },
+  "shell": {
+    "nav": {
+      "today": "Hari ini",
+      "week": "Minggu",
+      "attachments": "Fail",
+      "profile": "Profil",
+      "users": "Pengguna"
+    }
+  }
+}

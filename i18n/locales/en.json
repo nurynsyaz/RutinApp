@@ -1,1 +1,40 @@
-{"app":{"name":"Rutin"}}
+{
+  "app": { "name": "Rutin" },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "retry": "Retry",
+    "loading": "Loading..."
+  },
+  "identity": {
+    "signIn": {
+      "title": "Welcome back",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "forgot": "Forgot password?",
+      "noAccount": "Don't have an account? Sign up"
+    },
+    "signOut": "Sign out"
+  },
+  "scheduling": {
+    "today": { "title": "Today", "progress": "{done} of {total} done" },
+    "categories": {
+      "health": "Health",
+      "work": "Work",
+      "personal": "Personal",
+      "rest": "Rest"
+    }
+  },
+  "shell": {
+    "nav": {
+      "today": "Today",
+      "week": "Week",
+      "attachments": "Files",
+      "profile": "Profile",
+      "users": "Users"
+    }
+  }
+}

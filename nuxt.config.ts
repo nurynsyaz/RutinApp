@@ -24,11 +24,12 @@ export default defineNuxtConfig({
       display: 'standalone',
     },
   },
-  i18n: {
+    i18n: {
+    strategy: 'no_prefix',
     defaultLocale: 'en',
     locales: [
-      { code: 'en', language: 'en', file: 'en.json' },
-      { code: 'ms', language: 'ms', file: 'ms.json' },
+      { code: 'en', language: 'en-MY', name: 'English', file: 'en.json' },
+      { code: 'ms', language: 'ms-MY', name: 'Bahasa Melayu', file: 'ms.json' },
     ],
   },
 })
