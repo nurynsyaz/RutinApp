@@ -2,8 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, staging, uat]
   pull_request:
+    branches: [main, staging, uat]
 
 jobs:
   check:
@@ -16,5 +17,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx nuxt prepare
+      - run: npm run test
       - run: npm run lint
       - run: npm run generate
