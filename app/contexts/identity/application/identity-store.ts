@@ -117,6 +117,17 @@ export const useIdentityStore = defineStore(
       return true
     }
 
+    // Called by the permission guard. The Shell reacts by routing to /403.
+    function denyAccess(path: string, required: Permission | null): void {
+      const { bus, clock } = useIdentityDeps()
+      bus.publish('identity.AccessDenied', {
+        v: 1,
+        occurredAt: clock.nowIso(),
+        path,
+        required,
+      })
+    }
+
     function reset(): void {
       session.value = null
       lockout.value = { ...initialLockout }
@@ -138,6 +149,7 @@ export const useIdentityStore = defineStore(
       requestPasswordReset,
       signOut,
       validateSession,
+      denyAccess,
       reset,
     }
   },
