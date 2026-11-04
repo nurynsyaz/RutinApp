@@ -40,13 +40,12 @@ function makeSession(email: string, account: Account): Session {
   }
 }
 
-// A tiny fake that follows the AuthRepository contract, so this test needs no infrastructure
 const repo: AuthRepository = {
   async signIn({ email, password }) {
-    if (networkDown) return err(domainError('NETWORK', 'shell.errors.network'))
+    if (networkDown) return err(domainError('NETWORK', 'NETWORK'))
     const account = ACCOUNTS[email]
     if (!account || password !== PASSWORD) {
-      return err(domainError('UNAUTHENTICATED', 'identity.errors.invalidCredentials'))
+      return err(domainError('UNAUTHENTICATED', 'INVALID_CREDENTIALS'))
     }
     return ok(makeSession(email, account))
   },
@@ -61,7 +60,6 @@ const repo: AuthRepository = {
   },
 }
 
-// Replace the Nuxt lookup with our own test pieces
 vi.mock('./deps', () => ({ useIdentityDeps: () => ({ repo, bus, clock }) }))
 
 const MEMBER = { email: 'member@rutin.test', password: PASSWORD }
@@ -191,17 +189,6 @@ describe('can', () => {
   })
 })
 
-describe('reset', () => {
-  it('clears session and lockout', async () => {
-    const store = useIdentityStore()
-    await store.signIn(MEMBER.email, 'wrong')
-    await store.signIn(MEMBER.email, MEMBER.password)
-    store.reset()
-    expect(store.isSignedIn).toBe(false)
-    expect(store.attemptsRemaining).toBe(5)
-  })
-})
-
 describe('denyAccess', () => {
   it('publishes identity.AccessDenied', () => {
     const store = useIdentityStore()
@@ -216,5 +203,16 @@ describe('denyAccess', () => {
       required: 'admin:users:read',
     })
     unsubscribe()
+  })
+})
+
+describe('reset', () => {
+  it('clears session and lockout', async () => {
+    const store = useIdentityStore()
+    await store.signIn(MEMBER.email, 'wrong')
+    await store.signIn(MEMBER.email, MEMBER.password)
+    store.reset()
+    expect(store.isSignedIn).toBe(false)
+    expect(store.attemptsRemaining).toBe(5)
   })
 })

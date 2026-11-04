@@ -51,13 +51,12 @@ export const useIdentityStore = defineStore(
     async function signIn(email: string, password: string): Promise<Result<Session, DomainError>> {
       const { repo, clock } = useIdentityDeps()
       if (isLocked(lockout.value, clock.now().getTime())) {
-        return err(domainError('VALIDATION', 'identity.errors.locked'))
+        return err(domainError('VALIDATION', 'LOCKED'))
       }
       busy.value = true
       try {
         const result = await repo.signIn({ email, password })
         if (!result.ok) {
-          // Only wrong credentials count. A network error is not the user's fault.
           if (result.error.code === 'UNAUTHENTICATED') {
             lockout.value = registerFailure(lockout.value, clock.now().getTime())
           }
@@ -106,7 +105,6 @@ export const useIdentityStore = defineStore(
       })
     }
 
-    // Call this after a page reload and before opening guarded routes
     async function validateSession(): Promise<boolean> {
       const { clock } = useIdentityDeps()
       if (!session.value) return false
@@ -117,7 +115,6 @@ export const useIdentityStore = defineStore(
       return true
     }
 
-    // Called by the permission guard. The Shell reacts by routing to /403.
     function denyAccess(path: string, required: Permission | null): void {
       const { bus, clock } = useIdentityDeps()
       bus.publish('identity.AccessDenied', {
@@ -153,6 +150,5 @@ export const useIdentityStore = defineStore(
       reset,
     }
   },
-  // ID-04: the session survives a reload. Only this store persists anything.
-    { persist: { pick: ['session'] } },
+  { persist: { pick: ['session'] } },
 )

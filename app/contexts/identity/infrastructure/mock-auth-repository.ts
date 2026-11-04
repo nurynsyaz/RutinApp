@@ -8,7 +8,7 @@ import { validateEmail, validateName, validatePassword } from '../domain/credent
 import { permissionsFor, type Role } from '../domain/permissions'
 import type { Session } from '../domain/session'
 
-// ID-04: sessions last 60 minutes. A user row can override it (expired@rutin.test uses 60 s).
+// ID-04: 60 min mock expiry. A user row can override it (expired@rutin.test uses 60 s).
 const DEFAULT_SESSION_SECONDS = 60 * 60
 
 interface UserRow {
@@ -39,15 +39,14 @@ export function createMockAuthRepository(clock: Clock = systemClock): AuthReposi
   return {
     async signIn({ email, password }) {
       await latency()
-      if (shouldFail('signin')) return err(domainError('NETWORK', 'shell.errors.network'))
+      if (shouldFail('signin')) return err(domainError('NETWORK', 'NETWORK'))
 
       const checkedEmail = validateEmail(email)
       if (!checkedEmail.ok) return checkedEmail
 
       const users = await readTable<UserRow>('users')
       const user = users.find((u) => u.email === checkedEmail.value && u.password === password)
-      // Same error for unknown email and wrong password, so nobody can probe for accounts
-      if (!user) return err(domainError('UNAUTHENTICATED', 'identity.errors.invalidCredentials'))
+      if (!user) return err(domainError('UNAUTHENTICATED', 'INVALID_CREDENTIALS'))
 
       return ok(toSession(user, clock))
     },
@@ -64,7 +63,7 @@ export function createMockAuthRepository(clock: Clock = systemClock): AuthReposi
 
       const users = await readTable<UserRow>('users')
       if (users.some((u) => u.email === email.value)) {
-        return err(domainError('CONFLICT', 'identity.errors.emailTaken', 'email'))
+        return err(domainError('CONFLICT', 'EMAIL_TAKEN', 'email'))
       }
 
       const user: UserRow = {
@@ -72,7 +71,7 @@ export function createMockAuthRepository(clock: Clock = systemClock): AuthReposi
         email: email.value,
         password: password.value,
         name: name.value,
-        role: 'member', // ID-02: new users are always Members
+        role: 'member',
         sessionTtlSec: null,
         memberSince: clock.now().toISOString().slice(0, 10),
         language: 'en',
@@ -88,7 +87,6 @@ export function createMockAuthRepository(clock: Clock = systemClock): AuthReposi
       await latency()
       const checked = validateEmail(email)
       if (!checked.ok) return checked
-      // ID-03: always the same answer, whether the account exists or not
       return ok(undefined)
     },
 

@@ -31,7 +31,7 @@ afterEach(() => {
 })
 
 describe('signIn', () => {
-    it('signs in a member for 60 minutes', async () => {
+  it('signs in a member for 60 minutes', async () => {
     const session = unwrap(await repo.signIn({ email: 'member@rutin.test', password: 'Rutin#2026' }))
     expect(session.user.role).toBe('member')
     expect(session.permissions).toHaveLength(6)
@@ -61,7 +61,7 @@ describe('signIn', () => {
   it('gives the same error for an unknown email', async () => {
     const error = failure(await repo.signIn({ email: 'nobody@rutin.test', password: 'Rutin#2026' }))
     expect(error.code).toBe('UNAUTHENTICATED')
-    expect(error.message).toBe('identity.errors.invalidCredentials')
+    expect(error.reason).toBe('INVALID_CREDENTIALS')
   })
 
   it('rejects a badly formed email', async () => {
