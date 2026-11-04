@@ -33,4 +33,9 @@ export default defineNuxtConfig({
       { code: 'ms', language: 'ms-MY', name: 'Bahasa Melayu', file: 'ms.json' },
     ],
   },
+
+    runtimeConfig: {
+    public: { dataSource: 'mock' }, // 'mock' now, 'http' when the real API exists
+  },
+  piniaPluginPersistedstate: { storage: 'localStorage' },
 })

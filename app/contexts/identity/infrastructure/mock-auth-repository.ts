@@ -8,8 +8,8 @@ import { validateEmail, validateName, validatePassword } from '../domain/credent
 import { permissionsFor, type Role } from '../domain/permissions'
 import type { Session } from '../domain/session'
 
-// Normal sessions last 8 hours. A user row can override it (expired@rutin.test uses 60 s).
-const DEFAULT_SESSION_SECONDS = 8 * 60 * 60
+// ID-04: sessions last 60 minutes. A user row can override it (expired@rutin.test uses 60 s).
+const DEFAULT_SESSION_SECONDS = 60 * 60
 
 interface UserRow {
   id: string
