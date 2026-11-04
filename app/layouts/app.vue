@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { useIdentityStore } from '~/contexts/identity/application/identity-store'
+import { useCan } from '~/contexts/identity/ui/use-can'
 
 const { t } = useI18n()
-const identity = useIdentityStore()
+const can = useCan()
 
-// The Users item shows for Admin only (BRD section 7)
-// Navigation: bottom bar on mobile, 72 px rail on tablet, 248 px sidebar on desktop (BRD section 10)
 const items = computed(() => {
   const list = [
     { to: '/today', label: t('nav.today'), icon: 'lucide:calendar-check' },
@@ -13,7 +11,7 @@ const items = computed(() => {
     { to: '/files', label: t('nav.files'), icon: 'lucide:paperclip' },
     { to: '/profile', label: t('nav.profile'), icon: 'lucide:user' },
   ]
-  if (identity.can('admin:users:read')) {
+  if (can('admin:users:read')) {
     list.push({ to: '/admin/users', label: t('nav.users'), icon: 'lucide:users' })
   }
   return list
