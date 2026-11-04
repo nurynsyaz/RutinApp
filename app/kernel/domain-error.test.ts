@@ -3,13 +3,13 @@ import { domainError } from './domain-error'
 
 describe('domainError', () => {
   it('builds an error without a field', () => {
-    expect(domainError('NETWORK', 'offline')).toEqual({ code: 'NETWORK', message: 'offline' })
+    expect(domainError('NETWORK', 'NETWORK')).toEqual({ code: 'NETWORK', reason: 'NETWORK' })
   })
 
   it('includes the field when given', () => {
-    expect(domainError('VALIDATION', 'bad', 'email')).toEqual({
+    expect(domainError('VALIDATION', 'EMAIL_INVALID', 'email')).toEqual({
       code: 'VALIDATION',
-      message: 'bad',
+      reason: 'EMAIL_INVALID',
       field: 'email',
     })
   })

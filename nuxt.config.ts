@@ -13,6 +13,10 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@nuxt/eslint',
   ],
+  components: [
+  { path: '~/contexts/identity/ui', pathPrefix: false },
+  '~/components',
+],
   css: ['~/assets/css/main.css'],
   vite: { plugins: [tailwindcss()] },
   pwa: {
