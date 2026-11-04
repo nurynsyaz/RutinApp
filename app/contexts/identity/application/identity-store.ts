@@ -142,5 +142,5 @@ export const useIdentityStore = defineStore(
     }
   },
   // ID-04: the session survives a reload. Only this store persists anything.
-  { persist: { pick: ['session', 'lockout'] } },
+    { persist: { pick: ['session'] } },
 )
