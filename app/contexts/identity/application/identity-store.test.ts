@@ -201,3 +201,20 @@ describe('reset', () => {
     expect(store.attemptsRemaining).toBe(5)
   })
 })
+
+describe('denyAccess', () => {
+  it('publishes identity.AccessDenied', () => {
+    const store = useIdentityStore()
+    const handler = vi.fn()
+    const unsubscribe = bus.subscribe('identity.AccessDenied', handler)
+
+    store.denyAccess('/admin/users', 'admin:users:read')
+
+    expect(handler.mock.calls[0]?.[0]).toMatchObject({
+      v: 1,
+      path: '/admin/users',
+      required: 'admin:users:read',
+    })
+    unsubscribe()
+  })
+})
