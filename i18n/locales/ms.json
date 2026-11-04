@@ -8,19 +8,37 @@
     "retry": "Cuba lagi",
     "loading": "Memuatkan..."
   },
+  "nav": {
+    "today": "Hari ini",
+    "week": "Minggu",
+    "files": "Fail",
+    "profile": "Profil",
+    "users": "Pengguna"
+  },
   "identity": {
     "signIn": {
       "title": "Selamat kembali",
       "email": "E-mel",
       "password": "Kata laluan",
-      "submit": "Log masuk",
+      "cta": "Log masuk",
       "forgot": "Lupa kata laluan?",
       "noAccount": "Belum ada akaun? Daftar"
     },
-    "signOut": "Log keluar"
+    "signOut": { "cta": "Log keluar" },
+    "accessDenied": { "title": "Anda tiada akses kepada halaman ini" },
+    "errors": {
+      "emailInvalid": "Masukkan alamat e-mel yang sah",
+      "passwordWeak": "Gunakan sekurang-kurangnya 8 aksara dengan huruf dan nombor",
+      "nameInvalid": "Masukkan nama antara 1 hingga 60 aksara",
+      "invalidCredentials": "E-mel atau kata laluan salah",
+      "emailTaken": "E-mel ini sudah didaftarkan",
+      "locked": "Terlalu banyak percubaan. Cuba lagi dalam seminit"
+    }
   },
   "scheduling": {
-    "today": { "title": "Hari ini", "progress": "{done} daripada {total} selesai" },
+    "newRoutine": "Rutin baharu",
+    "markDone": "Tandakan selesai",
+    "progress": "{done} daripada {total} selesai",
     "categories": {
       "health": "Kesihatan",
       "work": "Kerja",
@@ -28,13 +46,13 @@
       "rest": "Rehat"
     }
   },
+  "attachments": {
+    "upload": "Muat naik fail",
+    "download": "Muat turun"
+  },
+  "profile": { "save": "Simpan perubahan" },
+  "errors": { "FILE_TOO_LARGE": "Melebihi 10 MB" },
   "shell": {
-    "nav": {
-      "today": "Hari ini",
-      "week": "Minggu",
-      "attachments": "Fail",
-      "profile": "Profil",
-      "users": "Pengguna"
-    }
+    "errors": { "network": "Tidak dapat menghubungi pelayan. Semak sambungan anda dan cuba lagi." }
   }
 }

@@ -8,19 +8,37 @@
     "retry": "Retry",
     "loading": "Loading..."
   },
+  "nav": {
+    "today": "Today",
+    "week": "Week",
+    "files": "Files",
+    "profile": "Profile",
+    "users": "Users"
+  },
   "identity": {
     "signIn": {
       "title": "Welcome back",
       "email": "Email",
       "password": "Password",
-      "submit": "Sign in",
+      "cta": "Sign in",
       "forgot": "Forgot password?",
       "noAccount": "Don't have an account? Sign up"
     },
-    "signOut": "Sign out"
+    "signOut": { "cta": "Sign out" },
+    "accessDenied": { "title": "You don't have access to this page" },
+    "errors": {
+      "emailInvalid": "Enter a valid email address",
+      "passwordWeak": "Use at least 8 characters with a letter and a number",
+      "nameInvalid": "Enter a name between 1 and 60 characters",
+      "invalidCredentials": "Wrong email or password",
+      "emailTaken": "This email is already registered",
+      "locked": "Too many attempts. Try again in a minute"
+    }
   },
   "scheduling": {
-    "today": { "title": "Today", "progress": "{done} of {total} done" },
+    "newRoutine": "New routine",
+    "markDone": "Mark as done",
+    "progress": "{done} of {total} done",
     "categories": {
       "health": "Health",
       "work": "Work",
@@ -28,13 +46,13 @@
       "rest": "Rest"
     }
   },
+  "attachments": {
+    "upload": "Upload files",
+    "download": "Download"
+  },
+  "profile": { "save": "Save changes" },
+  "errors": { "FILE_TOO_LARGE": "Over 10 MB" },
   "shell": {
-    "nav": {
-      "today": "Today",
-      "week": "Week",
-      "attachments": "Files",
-      "profile": "Profile",
-      "users": "Users"
-    }
+    "errors": { "network": "Can't reach the server. Check your connection and try again." }
   }
 }
