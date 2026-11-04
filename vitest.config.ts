@@ -7,6 +7,6 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['app/**/*.test.ts'],
+    include: ['app/**/*.test.ts', 'i18n/**/*.test.ts'],
   },
 })
