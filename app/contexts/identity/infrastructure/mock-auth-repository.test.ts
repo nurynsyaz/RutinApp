@@ -31,11 +31,11 @@ afterEach(() => {
 })
 
 describe('signIn', () => {
-  it('signs in a member for 8 hours', async () => {
+    it('signs in a member for 60 minutes', async () => {
     const session = unwrap(await repo.signIn({ email: 'member@rutin.test', password: 'Rutin#2026' }))
     expect(session.user.role).toBe('member')
     expect(session.permissions).toHaveLength(6)
-    expect(session.expiresAt).toBe('2026-11-04T17:00:00.000Z')
+    expect(session.expiresAt).toBe('2026-11-04T10:00:00.000Z')
   })
 
   it('gives an admin the users permission', async () => {
