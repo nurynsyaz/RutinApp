@@ -113,3 +113,25 @@ describe('signOut', () => {
     expect((await repo.signOut(session)).ok).toBe(true)
   })
 })
+
+describe('refresh', () => {
+  it('gives the session a fresh expiry', async () => {
+    const session = unwrap(await repo.signIn({ email: 'member@rutin.test', password: 'Rutin#2026' }))
+    const older = { ...session, expiresAt: '2026-11-04T09:05:00.000Z' }
+    const next = unwrap(await repo.refresh(older))
+    expect(next.expiresAt).toBe('2026-11-04T10:00:00.000Z')
+    expect(next.accessToken).toBe(session.accessToken)
+  })
+
+  it('keeps the short session of the expiry test account', async () => {
+    const session = unwrap(await repo.signIn({ email: 'expired@rutin.test', password: 'Rutin#2026' }))
+    const next = unwrap(await repo.refresh(session))
+    expect(next.expiresAt).toBe('2026-11-04T09:01:00.000Z')
+  })
+
+  it('refuses a session for a user that no longer exists', async () => {
+    const session = unwrap(await repo.signIn({ email: 'member@rutin.test', password: 'Rutin#2026' }))
+    const error = failure(await repo.refresh({ ...session, user: { ...session.user, id: 'usr_gone' } }))
+    expect(error.code).toBe('UNAUTHENTICATED')
+  })
+})
