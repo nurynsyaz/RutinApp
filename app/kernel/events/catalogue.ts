@@ -15,4 +15,7 @@ export type DomainEvents = {
   'scheduling.RoutineDeleted': EventBase & { routineId: string }
   'scheduling.OccurrenceCompleted': EventBase & { routineId: string; date: string }
   'scheduling.OccurrenceReopened': EventBase & { routineId: string; date: string }
+  'attachments.FileUploaded': EventBase & { fileId: string; routineId: string | null; name: string; size: number; mime: string }
+  'attachments.FileUploadFailed': EventBase & { name: string; reason: string }
+  'attachments.FileDeleted': EventBase & { fileId: string; routineId: string | null }
 }
