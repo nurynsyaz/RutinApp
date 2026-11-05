@@ -54,7 +54,8 @@ test.describe('11. PWA', () => {
     await page.evaluate(() => navigator.serviceWorker.ready)
     const cdp = await context.newCDPSession(page)
     const { installabilityErrors } = await cdp.send('Page.getInstallabilityErrors')
-    expect(installabilityErrors).toEqual([])
+    const real = installabilityErrors.filter((e) => e.errorId !== 'in-incognito')
+    expect(real).toEqual([])
   })
 
   test('TC-1105 offline start still shows the sign in page with fonts', async ({ page, context }) => {
