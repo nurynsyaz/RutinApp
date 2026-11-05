@@ -162,6 +162,12 @@
       "reminder": "Peringatan (minit sebelum)",
       "notes": "Nota"
     },
+    "fields": {
+      "minutes": "{n} min",
+      "reminderNone": "Tiada peringatan",
+      "reminderBefore": "{n} minit sebelum",
+      "reminderDay": "1 hari sebelum"
+    },
     "editor": {
       "newTitle": "Rutin baharu",
       "editTitle": "Sunting rutin",
