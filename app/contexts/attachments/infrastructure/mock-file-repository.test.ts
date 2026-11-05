@@ -66,27 +66,29 @@ describe('upload and download (AT-05)', () => {
     expect(record.routineId).toBeNull()
   })
 
+  // The tests below use few, short steps. Many 1 ms steps are slow on Windows, where timers are coarse.
   it('reports progress up to 1', async () => {
-    mockConfig.uploadBytesPerSecond = 1000
+    // 1 step: 400 bytes at a million bytes a second
+    mockConfig.uploadBytesPerSecond = 1_000_000
     mockConfig.progressIntervalMs = 1
     const seen: number[] = []
-    // 400 bytes at 1000 B/s with 1 ms steps is 0.4 steps, so one step
     unwrap(await repo.upload(MEMBER, upload(new Array(400).fill(1)), { onProgress: (p) => seen.push(p) }))
-    expect(seen.at(-1)).toBe(1)
+    expect(seen).toEqual([1])
   })
 
   it('reports several steps for a bigger file', async () => {
-    mockConfig.uploadBytesPerSecond = 1000
-    mockConfig.progressIntervalMs = 100
+    // 300 bytes at 10000 bytes a second is 0.03 s, so 3 steps of 10 ms
+    mockConfig.uploadBytesPerSecond = 10_000
+    mockConfig.progressIntervalMs = 10
     const seen: number[] = []
-    // 300 bytes at 1000 B/s is 0.3 s, so 3 steps of 100 ms
     await repo.upload(MEMBER, upload(new Array(300).fill(1)), { onProgress: (p) => seen.push(p) })
     expect(seen).toHaveLength(3)
     expect(seen.at(-1)).toBe(1)
-    expect(seen).toEqual([...seen].sort((a, b) => a - b))
+    expect(seen).toEqual([...seen].sort((x, y) => x - y))
   })
 
   it('stops when cancelled and saves nothing', async () => {
+    // 5000 bytes at 1000 bytes a second would take 5 s, so it is still running when it is cancelled
     mockConfig.uploadBytesPerSecond = 1000
     mockConfig.progressIntervalMs = 100
     const controller = new AbortController()
@@ -110,11 +112,13 @@ describe('upload and download (AT-05)', () => {
 
   it('breaks half way through a bigger file so Retry can show', async () => {
     vi.stubGlobal('window', { location: { search: '?mockFail=upload' } })
-    mockConfig.uploadBytesPerSecond = 1000
-    mockConfig.progressIntervalMs = 1
+    // 400 bytes at 4000 bytes a second is 0.1 s, so 10 steps of 10 ms, and it breaks at step 5
+    mockConfig.uploadBytesPerSecond = 4000
+    mockConfig.progressIntervalMs = 10
     const seen: number[] = []
     const result = await repo.upload(MEMBER, upload(new Array(400).fill(1)), { onProgress: (p) => seen.push(p) })
     expect(result.ok).toBe(false)
+    expect(seen).toHaveLength(4)
     expect(seen.every((p) => p < 1)).toBe(true)
   })
 })
