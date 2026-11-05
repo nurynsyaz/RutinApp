@@ -1,6 +1,6 @@
 import type { Result } from '~/kernel/result'
 import type { DomainError } from '~/kernel/domain-error'
-import type { Routine, RoutineInput } from './routine'
+import type { Routine, RoutineInput, RoutineSpan } from './routine'
 
 // One finished occurrence: a routine on a day (BRD events OccurrenceCompleted / OccurrenceReopened)
 export interface Completion {
@@ -12,9 +12,12 @@ export interface Completion {
 export interface RoutineRepository {
   list(ownerId: string): Promise<Result<Routine[], DomainError>>
   get(ownerId: string, id: string): Promise<Result<Routine, DomainError>>
-  create(ownerId: string, input: RoutineInput): Promise<Result<Routine, DomainError>>
+  // `span` is for the routine that takes over from "This and following days" (SC-05)
+  create(ownerId: string, input: RoutineInput, span?: RoutineSpan): Promise<Result<Routine, DomainError>>
   // Replaces the fields from the editor. The attached files stay as they are.
   update(ownerId: string, id: string, input: RoutineInput): Promise<Result<Routine, DomainError>>
+  // SC-05: sets the first day, the last day and the skipped days. Fields left out are cleared.
+  setSpan(ownerId: string, id: string, span: RoutineSpan): Promise<Result<Routine, DomainError>>
   // Also forgets the routine's completed days
   remove(ownerId: string, id: string): Promise<Result<void, DomainError>>
   listCompletions(ownerId: string): Promise<Result<Completion[], DomainError>>

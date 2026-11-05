@@ -167,3 +167,37 @@ describe('listCompletions', () => {
     expect(unwrap(await repo.listCompletions('usr_other'))).toEqual([])
   })
 })
+
+describe('first day, last day and skipped days (SC-05)', () => {
+  it('creates a routine that starts on a day', async () => {
+    const created = unwrap(await repo.create(MEMBER, input, { startsOn: '2026-11-05', endsOn: '2026-12-01' }))
+    expect(created).toMatchObject({ startsOn: '2026-11-05', endsOn: '2026-12-01' })
+    expect(unwrap(await repo.get(MEMBER, created.id)).startsOn).toBe('2026-11-05')
+  })
+
+  it('sets the span of a routine and clears the fields that are left out', async () => {
+    const created = unwrap(await repo.create(MEMBER, input, { startsOn: '2026-11-05' }))
+
+    const ended = unwrap(await repo.setSpan(MEMBER, created.id, { endsOn: '2026-11-20', skipDates: ['2026-11-10', '2026-11-08'] }))
+
+    expect(ended.startsOn).toBeUndefined()
+    expect(ended.endsOn).toBe('2026-11-20')
+    expect(ended.skipDates).toEqual(['2026-11-08', '2026-11-10'])
+  })
+
+  it('keeps the span when the routine itself is edited', async () => {
+    const created = unwrap(await repo.create(MEMBER, input, { endsOn: '2026-11-20' }))
+    const edited = unwrap(await repo.update(MEMBER, created.id, { ...input, title: 'Night walk' }))
+    expect(edited).toMatchObject({ title: 'Night walk', endsOn: '2026-11-20' })
+  })
+
+  it('rejects a date that does not exist', async () => {
+    const created = unwrap(await repo.create(MEMBER, input))
+    expect(failure(await repo.setSpan(MEMBER, created.id, { endsOn: '2026-02-30' })).reason).toBe('DATE_INVALID')
+    expect(failure(await repo.create(MEMBER, input, { skipDates: ['nope'] })).reason).toBe('DATE_INVALID')
+  })
+
+  it('does not change a routine that belongs to someone else', async () => {
+    expect(failure(await repo.setSpan('usr_other', 'rt_01', { endsOn: '2026-11-20' })).reason).toBe('ROUTINE_NOT_FOUND')
+  })
+})

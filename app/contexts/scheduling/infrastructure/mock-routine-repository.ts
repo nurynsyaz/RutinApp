@@ -4,7 +4,7 @@ import { newId } from '~/kernel/ids'
 import { parseWith } from '~/kernel/validation'
 import { latency, readTable, shouldFail, writeTable } from '~/mocks/db'
 import { isValidDate } from '../domain/dates'
-import type { Routine } from '../domain/routine'
+import type { Routine, RoutineSpan } from '../domain/routine'
 import { routineInputSchema } from '../domain/routine-input'
 import type { Completion, RoutineRepository } from '../domain/routine-repository'
 
@@ -17,6 +17,19 @@ function checkInput(input: unknown) {
   if (parsed.ok) return parsed
   const [field, reason] = Object.entries(parsed.error)[0] ?? ['', 'VALIDATION']
   return err(domainError('VALIDATION', String(reason), field || undefined))
+}
+
+// Keeps only valid, non-empty parts of a span. Not in BRD, my choice: a bad date is DATE_INVALID.
+function checkSpan(span: RoutineSpan) {
+  const days = [span.startsOn, span.endsOn, ...(span.skipDates ?? [])]
+  if (days.some((day) => day !== undefined && !isValidDate(day))) {
+    return err(domainError('VALIDATION', 'DATE_INVALID', 'date'))
+  }
+  const clean: RoutineSpan = {}
+  if (span.startsOn) clean.startsOn = span.startsOn
+  if (span.endsOn) clean.endsOn = span.endsOn
+  if (span.skipDates && span.skipDates.length > 0) clean.skipDates = [...new Set(span.skipDates)].sort()
+  return ok(clean)
 }
 
 export function createMockRoutineRepository(): RoutineRepository {
@@ -36,12 +49,14 @@ export function createMockRoutineRepository(): RoutineRepository {
       return routine ? ok(routine) : err(notFound())
     },
 
-    async create(ownerId, input) {
+    async create(ownerId, input, span = {}) {
       await latency()
       const checked = checkInput(input)
       if (!checked.ok) return checked
+      const checkedSpan = checkSpan(span)
+      if (!checkedSpan.ok) return checkedSpan
 
-      const routine: Routine = { ...checked.value, id: `rt_${newId()}`, ownerId, attachmentIds: [] }
+      const routine: Routine = { ...checked.value, ...checkedSpan.value, id: `rt_${newId()}`, ownerId, attachmentIds: [] }
       await writeTable('routines', [...(await readRoutines()), routine])
       return ok(routine)
     },
@@ -55,7 +70,23 @@ export function createMockRoutineRepository(): RoutineRepository {
       const current = routines.find((r) => r.id === id && r.ownerId === ownerId)
       if (!current) return err(notFound())
 
-      const updated: Routine = { ...checked.value, id, ownerId, attachmentIds: current.attachmentIds }
+      // The first, last and skipped days stay as they were
+      const updated: Routine = { ...current, ...checked.value }
+      await writeTable('routines', routines.map((r) => (r.id === id ? updated : r)))
+      return ok(updated)
+    },
+
+    async setSpan(ownerId, id, span) {
+      await latency()
+      const checkedSpan = checkSpan(span)
+      if (!checkedSpan.ok) return checkedSpan
+
+      const routines = await readRoutines()
+      const current = routines.find((r) => r.id === id && r.ownerId === ownerId)
+      if (!current) return err(notFound())
+
+      const { startsOn: _s, endsOn: _e, skipDates: _k, ...rest } = current
+      const updated: Routine = { ...rest, ...checkedSpan.value }
       await writeTable('routines', routines.map((r) => (r.id === id ? updated : r)))
       return ok(updated)
     },
