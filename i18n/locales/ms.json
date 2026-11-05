@@ -1,5 +1,7 @@
 {
-  "app": { "name": "Rutin" },
+  "app": {
+    "name": "Rutin"
+  },
   "common": {
     "save": "Simpan",
     "cancel": "Batal",
@@ -16,7 +18,9 @@
     "profile": "Profil",
     "users": "Pengguna"
   },
-  "language": { "label": "Bahasa" },
+  "language": {
+    "label": "Bahasa"
+  },
   "errors": {
     "FILE_TOO_LARGE": "Melebihi 10 MB",
     "EMAIL_INVALID": "Masukkan alamat e-mel yang sah.",
@@ -101,12 +105,20 @@
     "upload": "Muat naik fail",
     "download": "Muat turun"
   },
-  "profile": { "save": "Simpan perubahan" },
+  "profile": {
+    "save": "Simpan perubahan"
+  },
   "shell": {
     "brand": {
       "tagline": "Rancang hari sekali. Ulang yang berkesan.",
       "subtitle": "Rutin, fail dan kemajuan di satu tempat, pada mana-mana peranti, dalam talian atau luar talian.",
-      "demoNote": "Binaan demo dengan data olok-olok. Tiada apa yang keluar daripada peranti ini."
+      "demoNote": "Binaan demo dengan data olok-olok. Tiada apa yang keluar daripada peranti ini.",
+      "sample": {
+        "morningRun": "Larian pagi",
+        "deepWork": "Kerja fokus",
+        "standup": "Mesyuarat pasukan",
+        "readPages": "Baca 20 muka surat"
+      }
     },
     "toasts": {
       "label": "Pemberitahuan",

@@ -1,5 +1,7 @@
 {
-  "app": { "name": "Rutin" },
+  "app": {
+    "name": "Rutin"
+  },
   "common": {
     "save": "Save",
     "cancel": "Cancel",
@@ -16,7 +18,9 @@
     "profile": "Profile",
     "users": "Users"
   },
-  "language": { "label": "Language" },
+  "language": {
+    "label": "Language"
+  },
   "errors": {
     "FILE_TOO_LARGE": "Over 10 MB",
     "EMAIL_INVALID": "Enter a valid email address.",
@@ -101,12 +105,20 @@
     "upload": "Upload files",
     "download": "Download"
   },
-  "profile": { "save": "Save changes" },
+  "profile": {
+    "save": "Save changes"
+  },
   "shell": {
     "brand": {
       "tagline": "Plan the day once. Repeat what works.",
       "subtitle": "Routines, files and progress in one place, on any device, online or off.",
-      "demoNote": "Demo build with mock data. Nothing leaves this device."
+      "demoNote": "Demo build with mock data. Nothing leaves this device.",
+      "sample": {
+        "morningRun": "Morning run",
+        "deepWork": "Deep work",
+        "standup": "Team stand-up",
+        "readPages": "Read 20 pages"
+      }
     },
     "toasts": {
       "label": "Notifications",
