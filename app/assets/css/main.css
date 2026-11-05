@@ -1,8 +1,28 @@
 @import "tailwindcss";
+@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource-variable/jetbrains-mono";
 
 @theme {
   --color-brand: #0F766E;
+  --color-brand-deep: #134E4A;
   --color-surface: #F6F7F9;
-  --font-sans: "Plus Jakarta Sans", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --color-line: #DADDE2;
+  --color-danger: #B32217;
+  --color-danger-soft: #FEF2F2;
+  --color-danger-line: #F8CFCF;
+  --color-check: #DCFCE7;
+  --font-sans: "Plus Jakarta Sans Variable", sans-serif;
+  --font-mono: "JetBrains Mono Variable", monospace;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

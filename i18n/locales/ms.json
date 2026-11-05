@@ -1,40 +1,141 @@
 {
-  "app": { "name": "Rutin" },
+  "app": {
+    "name": "Rutin"
+  },
   "common": {
     "save": "Simpan",
     "cancel": "Batal",
     "delete": "Padam",
     "edit": "Sunting",
     "retry": "Cuba lagi",
-    "loading": "Memuatkan..."
+    "loading": "Memuatkan...",
+    "back": "Kembali"
+  },
+  "nav": {
+    "today": "Hari ini",
+    "week": "Minggu",
+    "files": "Fail",
+    "profile": "Profil",
+    "users": "Pengguna",
+    "label": "Navigasi utama"
+  },
+  "language": {
+    "label": "Bahasa"
+  },
+  "errors": {
+    "FILE_TOO_LARGE": "Melebihi 10 MB",
+    "EMAIL_INVALID": "Masukkan alamat e-mel yang sah.",
+    "PASSWORD_REQUIRED": "Masukkan kata laluan anda.",
+    "PASSWORD_WEAK": "Gunakan sekurang-kurangnya 8 aksara dengan huruf dan nombor.",
+    "NAME_INVALID": "Masukkan nama antara 1 hingga 60 aksara.",
+    "INVALID_CREDENTIALS": "E-mel atau kata laluan tidak betul.",
+    "EMAIL_TAKEN": "E-mel ini sudah didaftarkan.",
+    "LOCKED": "Log masuk dikunci. Cuba lagi dalam {seconds} saat.",
+    "NETWORK": "Tidak dapat menghubungi pelayan. Semak sambungan anda dan cuba lagi.",
+    "UNKNOWN": "Sesuatu tidak kena. Sila cuba lagi."
   },
   "identity": {
     "signIn": {
-      "title": "Selamat kembali",
+      "title": "Log masuk",
+      "subtitle": "Selamat kembali. Teruskan rutin anda dari tempat anda berhenti.",
       "email": "E-mel",
       "password": "Kata laluan",
-      "submit": "Log masuk",
       "forgot": "Lupa kata laluan?",
-      "noAccount": "Belum ada akaun? Daftar"
+      "showPassword": "Tunjukkan kata laluan",
+      "hidePassword": "Sembunyikan kata laluan",
+      "keepSignedIn": "Kekalkan saya log masuk pada peranti ini",
+      "cta": "Log masuk",
+      "newToRutin": "Baharu dengan Rutin?",
+      "createAccount": "Cipta akaun",
+      "attemptsLeft": "{count} percubaan lagi sebelum log masuk dikunci selama 60 saat."
     },
-    "signOut": "Log keluar"
-  },
-  "scheduling": {
-    "today": { "title": "Hari ini", "progress": "{done} daripada {total} selesai" },
-    "categories": {
-      "health": "Kesihatan",
-      "work": "Kerja",
-      "personal": "Peribadi",
-      "rest": "Rehat"
+    "demoAccounts": {
+      "title": "Akaun demo",
+      "member": "Ahli",
+      "admin": "Admin",
+      "passwordBoth": "Kata laluan untuk kedua-duanya: {password}",
+      "passwordShort": "Kata laluan: {password}"
+    },
+    "signUp": {
+      "title": "Cipta akaun",
+      "subtitle": "Cipta akaun anda untuk mula merancang hari anda.",
+      "name": "Nama penuh",
+      "passwordHint": "Sekurang-kurangnya 8 aksara, dengan huruf dan nombor.",
+      "cta": "Cipta akaun",
+      "haveAccount": "Sudah ada akaun?",
+      "signInLink": "Log masuk"
+    },
+    "forgotPassword": {
+      "title": "Lupa kata laluan",
+      "subtitle": "Masukkan e-mel anda dan kami akan hantar cara untuk menetapkannya semula.",
+      "cta": "Hantar pautan tetapan semula",
+      "confirmation": "Jika akaun wujud untuk e-mel itu, pautan tetapan semula sedang dihantar.",
+      "back": "Kembali ke log masuk"
+    },
+    "signOut": {
+      "cta": "Log keluar",
+      "confirm": {
+        "title": "Log keluar daripada Rutin?",
+        "body": "Rutin dan fail anda akan dipadam daripada peranti ini. Log masuk semula untuk melihatnya.",
+        "unsyncedTitle": "{count} perubahan belum disegerakkan",
+        "unsyncedBody": "kerana anda luar talian. Ia akan hilang jika anda log keluar sekarang.",
+        "bodyPhone": "Rutin dan fail anda akan dipadam daripada telefon ini. Log masuk semula untuk melihatnya."
+      }
+    },
+    "signedOut": {
+      "title": "Anda telah log keluar",
+      "body": "Kami telah memadam rutin dan fail anda daripada peranti ini. Log masuk semula bila-bila masa anda sedia.",
+      "expiredTitle": "Sesi anda telah tamat",
+      "expiredBody": "Anda dilog keluar selepas tempoh tidak aktif. Rutin dan fail anda telah dipadam daripada peranti ini.",
+      "signInAgain": "Log masuk semula",
+      "differentAccount": "Guna akaun lain",
+      "bodyPhone": "Kami telah memadam rutin dan fail anda daripada telefon ini. Log masuk semula bila-bila masa anda sedia.",
+      "expiredBodyPhone": "Anda dilog keluar selepas tempoh tidak aktif. Rutin dan fail anda telah dipadam daripada telefon ini."
+    },
+    "accessDenied": {
+      "heading": "Akses dinafikan",
+      "title": "Anda tiada akses kepada halaman ini",
+      "body": "Pengguna hanya tersedia untuk admin. Jika anda rasa ini satu kesilapan, minta admin menukar peranan anda.",
+      "needs": "403 · memerlukan {permission}",
+      "goToday": "Pergi ke Hari ini"
+    },
+    "session": {
+      "title": "Log masuk pada peranti ini",
+      "endsIn": "Sesi tamat dalam {minutes} min melainkan anda kekal aktif."
     }
   },
+  "scheduling": {
+    "newRoutine": "Rutin baharu",
+    "markDone": "Tandakan selesai",
+    "progress": "{done} daripada {total} selesai"
+  },
+  "attachments": {
+    "upload": "Muat naik fail",
+    "download": "Muat turun"
+  },
+  "profile": {
+    "save": "Simpan perubahan"
+  },
   "shell": {
-    "nav": {
-      "today": "Hari ini",
-      "week": "Minggu",
-      "attachments": "Fail",
-      "profile": "Profil",
-      "users": "Pengguna"
+    "brand": {
+      "tagline": "Rancang hari sekali. Ulang yang berkesan.",
+      "subtitle": "Rutin, fail dan kemajuan di satu tempat, pada mana-mana peranti, dalam talian atau luar talian.",
+      "demoNote": "Binaan demo dengan data olok-olok. Tiada apa yang keluar daripada peranti ini.",
+      "sample": {
+        "morningRun": "Larian pagi",
+        "deepWork": "Kerja fokus",
+        "standup": "Mesyuarat pasukan",
+        "readPages": "Baca 20 muka surat"
+      }
+    },
+    "toasts": {
+      "label": "Pemberitahuan",
+      "dismiss": "Tutup",
+      "sessionExpiring": {
+        "title": "Kekal log masuk?",
+        "body": "Sesi anda hampir tamat.",
+        "action": "Kekal log masuk"
+      }
     }
   }
 }
