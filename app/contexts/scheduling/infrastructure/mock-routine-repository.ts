@@ -80,12 +80,15 @@ export function createMockRoutineRepository(): RoutineRepository {
       await latency()
       if (shouldFail('complete')) return err(domainError('NETWORK', 'NETWORK'))
       if (!isValidDate(date)) return err(domainError('VALIDATION', 'DATE_INVALID', 'date'))
-      if (!mine(await readRoutines(), ownerId).some((r) => r.id === routineId)) return err(notFound())
+      const ownRoutines = mine(await readRoutines(), ownerId)
+      if (!ownRoutines.some((r) => r.id === routineId)) return err(notFound())
 
       const others = (await readCompletions()).filter((c) => !(c.routineId === routineId && c.date === date))
       const next = done ? [...others, { routineId, date }] : others
       await writeTable('completions', next)
-      return ok(next)
+      // Only this owner's days go back to the caller
+      const ids = new Set(ownRoutines.map((r) => r.id))
+      return ok(next.filter((c) => ids.has(c.routineId)))
     },
   }
 }

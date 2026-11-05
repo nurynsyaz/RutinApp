@@ -135,6 +135,14 @@ describe('setDone', () => {
     ])
   })
 
+  it('only gives back the days of the routines the owner has', async () => {
+    const other = unwrap(await repo.create('usr_other', input))
+    unwrap(await repo.setDone('usr_other', other.id, '2026-11-02', true))
+    expect(unwrap(await repo.setDone(MEMBER, 'rt_01', '2026-11-02', true))).toEqual([
+      { routineId: 'rt_01', date: '2026-11-02' },
+    ])
+  })
+
   it('rejects a date that is not real', async () => {
     const error = failure(await repo.setDone(MEMBER, 'rt_01', '2026-02-30', true))
     expect(error.reason).toBe('DATE_INVALID')
