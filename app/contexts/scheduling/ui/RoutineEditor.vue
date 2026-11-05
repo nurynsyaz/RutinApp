@@ -3,7 +3,7 @@ import { useScheduleStore } from '../application/schedule-store'
 import { isValidDate } from '../domain/dates'
 import type { Routine, RoutineInput } from '../domain/routine'
 import { emptyRoutineInput, formErrors, inputOf } from '../domain/routine-form'
-import { trapTab } from './focus-trap'
+import { trapTab } from '~/kernel/focus-trap'
 import { DURATION_OPTIONS, REMINDER_OPTIONS } from './field-options'
 
 // S-06: the routine form. A side drawer from tablet up, a full-screen sheet on mobile.
