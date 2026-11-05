@@ -215,7 +215,13 @@
       "confirm": "Padam rutin"
     },
     "duplicate": "Gandakan",
+    "duplicateDialog": {
+      "title": "Duplikasi ke tarikh lain",
+      "hint": "Satu salinan sekali sahaja ditambah pada tarikh yang anda pilih.",
+      "confirm": "Duplikasi"
+    },
     "toast": {
+      "duplicated": "Rutin diduplikasi",
       "created": "Rutin disimpan",
       "updated": "Rutin dikemas kini",
       "deleted": "Rutin dipadam",
