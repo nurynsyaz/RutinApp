@@ -119,11 +119,33 @@
     "progress": "{done} daripada {total} selesai",
     "markUndone": "Tandakan belum selesai",
     "done": "Selesai",
+    "view": {
+      "label": "Paparan",
+      "day": "Hari",
+      "week": "Minggu"
+    },
     "today": {
+      "summary": "{total} rutin · {done} selesai · {left} lagi",
+      "previousDay": "Hari sebelumnya",
+      "nextDay": "Hari seterusnya",
+      "goToday": "Hari ini",
+      "now": "Kini",
+      "freeFor": "Kosong selama {span}",
+      "spanHours": "{h} j",
+      "spanMinutes": "{m} min",
+      "spanBoth": "{h} j {m} min",
+      "upNext": "Seterusnya",
+      "allDone": "Tiada lagi untuk hari ini.",
+      "loadFailed": "Tidak dapat memuatkan rutin anda.",
+      "timeline": "Garis masa",
       "title": "Hari ini",
       "empty": "Tiada apa dirancang hari ini. Tambah rutin untuk bermula."
     },
     "week": {
+      "loadFailed": "Tidak dapat memuatkan rutin anda.",
+      "grid": "Rutin minggu ini",
+      "dayList": "Rutin untuk {date}",
+      "nothingThisDay": "Tiada apa dirancang.",
       "title": "Minggu",
       "empty": "Tiada rutin minggu ini.",
       "previous": "Minggu lepas",
@@ -169,6 +191,9 @@
       "reminderDay": "1 hari sebelum"
     },
     "editor": {
+      "close": "Tutup",
+      "saving": "Menyimpan...",
+      "notesCount": "{n}/500",
       "newTitle": "Rutin baharu",
       "editTitle": "Sunting rutin",
       "save": "Simpan rutin"
