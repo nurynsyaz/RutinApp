@@ -24,14 +24,34 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
   vite: { plugins: [tailwindcss()] },
-  pwa: {
+    pwa: {
     registerType: 'prompt',
     manifest: {
       name: 'Rutin',
       short_name: 'Rutin',
+      start_url: '/today',
+      display: 'standalone',
       theme_color: '#0F766E',
       background_color: '#F6F7F9',
-      display: 'standalone',
+      icons: [
+        { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+        { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+        { src: '/icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+      ],
+    },
+
+        workbox: {
+      // App shell and fonts are precached. Any other page opens the app, which then routes itself.
+      navigateFallback: '/',
+      globPatterns: ['**/*.{js,css,html,woff2,svg,png,ico,webmanifest}'],
+      runtimeCaching: [
+        {
+          // Images use CacheFirst (BRD s.10)
+          urlPattern: ({ request }) => request.destination === 'image',
+          handler: 'CacheFirst',
+          options: { cacheName: 'images' },
+        },
+      ],
     },
   },
   i18n: {
