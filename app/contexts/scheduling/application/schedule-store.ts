@@ -4,6 +4,7 @@ import { err, ok, type Result } from '~/kernel/result'
 import { domainError, type DomainError } from '~/kernel/domain-error'
 import { buildDay, type DaySchedule } from '../domain/day-schedule'
 import { findOverlaps } from '../domain/overlap'
+import { duplicateInput } from '../domain/duplicate'
 import { planEdit, planRemove, type Scope } from '../domain/occurrence-edit'
 import type { Routine, RoutineInput } from '../domain/routine'
 import type { Completion } from '../domain/routine-repository'
@@ -166,6 +167,13 @@ export const useScheduleStore = defineStore('schedule', () => {
     return created
   }
 
+  // SC-07: copy a routine to another date
+  async function duplicate(id: string, date: string): Promise<Result<Routine, DomainError>> {
+    const current = routineById(id)
+    if (!current) return err(domainError('VALIDATION', 'ROUTINE_NOT_FOUND'))
+    return create(duplicateInput(current, date))
+  }
+
   // SC-05: delete while looking at one day. Only the days asked for go.
   async function removeOccurrence(id: string, date: string, scope: Scope): Promise<Result<void, DomainError>> {
     const { repo, bus, clock } = useSchedulingDeps()
@@ -226,6 +234,7 @@ export const useScheduleStore = defineStore('schedule', () => {
     updateOccurrence,
     remove,
     removeOccurrence,
+    duplicate,
     reset,
   }
 })
