@@ -11,14 +11,18 @@ function setup() {
   const resetShell = vi.fn()
   const clearUserData = vi.fn(async () => {})
   const notifyExpiring = vi.fn()
+  const notifyUploaded = vi.fn()
+  const notifyUploadFailed = vi.fn()
   const stop = registerShellHandlers(bus, {
     navigate,
     signedInTarget: () => '/files',
     resetShell,
     clearUserData,
     notifyExpiring,
+    notifyUploaded,
+    notifyUploadFailed,
   })
-  return { bus, navigate, stop, resetShell, clearUserData, notifyExpiring }
+  return { bus, navigate, stop, resetShell, clearUserData, notifyExpiring, notifyUploaded, notifyUploadFailed }
 }
 
 describe('shell handlers', () => {
@@ -52,6 +56,18 @@ describe('shell handlers', () => {
     const { bus, notifyExpiring } = setup()
     bus.publish('identity.SessionExpiring', { ...base, expiresAt: '2026-11-04T10:00:00.000Z' })
     expect(notifyExpiring).toHaveBeenCalledWith('2026-11-04T10:00:00.000Z')
+  })
+
+  it('shows a toast after attachments.FileUploaded', () => {
+    const { bus, notifyUploaded } = setup()
+    bus.publish('attachments.FileUploaded', { ...base, fileId: 'f1', routineId: null, name: 'plan.pdf', size: 10, mime: 'application/pdf' })
+    expect(notifyUploaded).toHaveBeenCalledWith('plan.pdf')
+  })
+
+  it('shows an error toast with the reason after attachments.FileUploadFailed', () => {
+    const { bus, notifyUploadFailed } = setup()
+    bus.publish('attachments.FileUploadFailed', { ...base, name: 'plan.pdf', reason: 'NETWORK' })
+    expect(notifyUploadFailed).toHaveBeenCalledWith('plan.pdf', 'NETWORK')
   })
 
   it('goes to /403 and says which permission was missing', () => {

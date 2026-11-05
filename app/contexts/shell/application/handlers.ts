@@ -11,6 +11,9 @@ export interface ShellHandlerDeps {
   clearUserData: () => Promise<void>
   // BRD: shows the "Stay signed in?" toast
   notifyExpiring: (expiresAt: string) => void
+  // BRD events table: attachments.FileUploaded and FileUploadFailed show a toast
+  notifyUploaded: (name: string) => void
+  notifyUploadFailed: (name: string, reason: string) => void
 }
 
 export function registerShellHandlers(bus: EventBus<DomainEvents>, deps: ShellHandlerDeps): () => void {
@@ -29,6 +32,12 @@ export function registerShellHandlers(bus: EventBus<DomainEvents>, deps: ShellHa
     }),
     bus.subscribe('identity.SessionExpiring', (event) => {
       deps.notifyExpiring(event.expiresAt)
+    }),
+    bus.subscribe('attachments.FileUploaded', (event) => {
+      deps.notifyUploaded(event.name)
+    }),
+    bus.subscribe('attachments.FileUploadFailed', (event) => {
+      deps.notifyUploadFailed(event.name, event.reason)
     }),
     bus.subscribe('identity.AccessDenied', (event) => {
       deps.navigate(event.required ? { path: '/403', query: { needs: event.required } } : '/403')

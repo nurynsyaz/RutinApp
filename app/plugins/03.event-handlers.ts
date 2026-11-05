@@ -2,6 +2,7 @@ import { safeRedirectTarget } from '~/contexts/identity/domain/access'
 import { useIdentityStore } from '~/contexts/identity/application/identity-store'
 import { registerShellHandlers } from '~/contexts/shell/application/handlers'
 import { useShellStore } from '~/contexts/shell/application/shell-store'
+import { reasonText } from '~/contexts/attachments/ui/file-format'
 import { useAttachmentStore } from '~/contexts/attachments/application/attachment-store'
 import { useScheduleStore } from '~/contexts/scheduling/application/schedule-store'
 import { clearUserData } from '~/mocks/db'
@@ -36,6 +37,19 @@ export default defineNuxtPlugin((nuxtApp) => {
         body: t('shell.toasts.sessionExpiring.body'),
         actionLabel: t('shell.toasts.sessionExpiring.action'),
         onAction: () => void identity.extend(),
+      })
+    },
+    notifyUploaded: (name) => {
+      shell.notify({ kind: 'success', title: t('attachments.toast.uploaded'), body: name })
+    },
+    notifyUploadFailed: (name, reason) => {
+      // A failed upload can be tried again from the toast. A file that was turned away cannot.
+      const failed = attachments.jobs.find((job) => job.status === 'failed' && job.name === name && job.reason === reason)
+      shell.notify({
+        kind: 'error',
+        title: t('attachments.toast.failed'),
+        body: reasonText(t, nuxtApp.$i18n.te, reason, name),
+        ...(failed ? { actionLabel: t('common.retry'), onAction: () => void attachments.retry(failed.id) } : {}),
       })
     },
   })
