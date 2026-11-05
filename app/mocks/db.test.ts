@@ -1,6 +1,6 @@
 import 'fake-indexeddb/auto'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { readTable, writeTable, resetDemoData, shouldFail, latency } from './db'
+import { readTable, writeTable, resetDemoData, clearUserData, shouldFail, latency } from './db'
 
 beforeEach(async () => {
   await resetDemoData()
@@ -21,6 +21,16 @@ describe('mock db', () => {
   it('keeps changes after writing', async () => {
     await writeTable('users', [{ id: 'only' }])
     expect(await readTable('users')).toEqual([{ id: 'only' }])
+  })
+
+  it('clearUserData drops routines and files but keeps users', async () => {
+    await writeTable('routines', [{ id: 'mine' }])
+    await writeTable('files', [{ id: 'mine' }])
+    await writeTable('users', [{ id: 'only' }])
+    await clearUserData()
+    expect(await readTable('users')).toEqual([{ id: 'only' }])
+    expect(await readTable('routines')).toHaveLength(14)
+    expect(await readTable('files')).toHaveLength(7)
   })
 
   it('goes back to the seed after reset', async () => {
