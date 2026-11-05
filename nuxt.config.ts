@@ -39,6 +39,20 @@ export default defineNuxtConfig({
         { src: '/icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
       ],
     },
+
+        workbox: {
+      // App shell and fonts are precached. Any other page opens the app, which then routes itself.
+      navigateFallback: '/',
+      globPatterns: ['**/*.{js,css,html,woff2,svg,png,ico,webmanifest}'],
+      runtimeCaching: [
+        {
+          // Images use CacheFirst (BRD s.10)
+          urlPattern: ({ request }) => request.destination === 'image',
+          handler: 'CacheFirst',
+          options: { cacheName: 'images' },
+        },
+      ],
+    },
   },
   i18n: {
     strategy: 'no_prefix',
