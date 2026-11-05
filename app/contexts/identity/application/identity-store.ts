@@ -90,6 +90,8 @@ export const useIdentityStore = defineStore(
           if (result.error.code === 'UNAUTHENTICATED') await signOut('expired')
           return result
         }
+        // Signed out while the refresh was in flight: do not bring the session back
+        if (!session.value) return err(domainError('UNAUTHENTICATED', 'UNAUTHENTICATED'))
         session.value = result.value
         lastExtendedAt = clock.now().getTime()
         scheduleTimers()
