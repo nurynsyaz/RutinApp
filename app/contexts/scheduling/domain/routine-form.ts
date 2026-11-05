@@ -19,7 +19,9 @@ export function emptyRoutineInput(date: string): RoutineInput {
 // Fills the form when a routine is opened for editing
 export function inputOf(routine: Routine): RoutineInput {
   const { title, category, start, durationMin, repeat, reminderMin, notes } = routine
-  return { title, category, start, durationMin, repeat: structuredClone(repeat), reminderMin, notes }
+  // Copied by hand: structuredClone cannot copy the reactive objects the store hands out
+  const copy: RoutineInput['repeat'] = repeat.kind === 'custom' ? { kind: 'custom', days: [...repeat.days] } : { ...repeat }
+  return { title, category, start, durationMin, repeat: copy, reminderMin, notes }
 }
 
 // Switching the repeat option keeps the form usable: a one-time routine gets the day being

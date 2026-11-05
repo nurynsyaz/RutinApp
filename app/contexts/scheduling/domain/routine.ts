@@ -24,7 +24,19 @@ export interface RoutineInput {
   notes: string
 }
 
-export interface Routine extends RoutineInput {
+// SC-05: "This day only" and "This and following days" need a routine to stop on a day, start on a
+// day, or skip single days. Nothing here is typed in the editor, so it is not part of RoutineInput.
+// Not in BRD, my choice: how the two choices are stored.
+export interface RoutineSpan {
+  // First day the routine applies (inclusive). Missing means it has always applied.
+  startsOn?: string
+  // Last day the routine applies (inclusive). Missing means it never ends.
+  endsOn?: string
+  // Single days that were removed or changed with "This day only"
+  skipDates?: string[]
+}
+
+export interface Routine extends RoutineInput, RoutineSpan {
   id: string
   ownerId: string
   attachmentIds: string[]
