@@ -170,6 +170,10 @@
     "overlap": {
       "warning": "This overlaps with {titles}."
     },
+    "card": {
+      "startsIn": "Starts in {minutes} min",
+      "overlaps": "Overlaps with {titles}"
+    },
     "scope": {
       "title": "Apply this change to",
       "one": "This day only",
