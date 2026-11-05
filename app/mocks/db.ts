@@ -3,14 +3,15 @@ import users from './seed/users.json'
 import routines from './seed/routines.json'
 import files from './seed/files.json'
 
-export type Table = 'users' | 'routines' | 'files'
+export type Table = 'users' | 'routines' | 'files' | 'completions'
 export type FailKey = 'signin' | 'upload' | 'complete'
 
 // Change these to speed up or slow down the fake server
 export const mockConfig = { minLatencyMs: 150, maxLatencyMs: 600 }
 
 const store = createStore('rutin-db', 'tables')
-const seeds: Record<Table, unknown[]> = { users, routines, files }
+// Nobody has finished anything on a fresh install, so completions start empty
+const seeds: Record<Table, unknown[]> = { users, routines, files, completions: [] }
 
 export function latency(): Promise<void> {
   const { minLatencyMs, maxLatencyMs } = mockConfig
@@ -42,6 +43,7 @@ export async function writeTable<T>(table: Table, rows: T[]): Promise<void> {
 export async function clearUserData(): Promise<void> {
   await del('routines', store)
   await del('files', store)
+  await del('completions', store)
 }
 
 export async function resetDemoData(): Promise<void> {

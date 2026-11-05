@@ -32,7 +32,16 @@
     "EMAIL_TAKEN": "This email is already registered.",
     "LOCKED": "Sign in is locked. Try again in {seconds} seconds.",
     "NETWORK": "Can't reach the server. Check your connection and try again.",
-    "UNKNOWN": "Something went wrong. Please try again."
+    "UNKNOWN": "Something went wrong. Please try again.",
+    "TITLE_INVALID": "Enter a title between 1 and 60 characters.",
+    "CATEGORY_INVALID": "Choose a category.",
+    "START_INVALID": "Enter a valid start time.",
+    "DURATION_INVALID": "Choose 5 to 480 minutes, in steps of 5.",
+    "REPEAT_INVALID": "Check the repeat options.",
+    "REMINDER_INVALID": "Enter a reminder from 0 to 1440 minutes.",
+    "NOTES_TOO_LONG": "Notes can be up to 500 characters.",
+    "ROUTINE_NOT_FOUND": "This routine could not be found.",
+    "DATE_INVALID": "This date is not valid."
   },
   "identity": {
     "signIn": {
@@ -107,7 +116,117 @@
   "scheduling": {
     "newRoutine": "New routine",
     "markDone": "Mark as done",
-    "progress": "{done} of {total} done"
+    "progress": "{done} of {total} done",
+    "markUndone": "Mark as not done",
+    "done": "Done",
+    "view": {
+      "label": "View",
+      "day": "Day",
+      "week": "Week"
+    },
+    "today": {
+      "summary": "{total} routine · {done} done · {left} to go | {total} routines · {done} done · {left} to go",
+      "previousDay": "Previous day",
+      "nextDay": "Next day",
+      "goToday": "Today",
+      "now": "Now",
+      "freeFor": "Free for {span}",
+      "spanHours": "{h} h",
+      "spanMinutes": "{m} min",
+      "spanBoth": "{h} h {m} min",
+      "upNext": "Up next",
+      "allDone": "Nothing left for today.",
+      "loadFailed": "Could not load your routines.",
+      "timeline": "Timeline",
+      "title": "Today",
+      "empty": "Nothing planned for today. Add a routine to get started."
+    },
+    "week": {
+      "loadFailed": "Could not load your routines.",
+      "grid": "Routines this week",
+      "dayList": "Routines for {date}",
+      "nothingThisDay": "Nothing planned.",
+      "title": "Week",
+      "empty": "No routines this week.",
+      "previous": "Previous week",
+      "next": "Next week",
+      "thisWeek": "This week"
+    },
+    "category": {
+      "label": "Category",
+      "health": "Health",
+      "work": "Work",
+      "personal": "Personal",
+      "rest": "Rest"
+    },
+    "repeat": {
+      "label": "Repeat",
+      "once": "Once",
+      "daily": "Every day",
+      "weekdays": "Weekdays",
+      "custom": "Custom days",
+      "date": "Date",
+      "days": "Days"
+    },
+    "weekday": {
+      "1": "Mon",
+      "2": "Tue",
+      "3": "Wed",
+      "4": "Thu",
+      "5": "Fri",
+      "6": "Sat",
+      "7": "Sun"
+    },
+    "field": {
+      "title": "Title",
+      "start": "Start time",
+      "duration": "Duration (minutes)",
+      "reminder": "Reminder (minutes before)",
+      "notes": "Notes"
+    },
+    "fields": {
+      "minutes": "{n} min",
+      "reminderNone": "No reminder",
+      "reminderBefore": "{n} minutes before",
+      "reminderDay": "1 day before"
+    },
+    "editor": {
+      "close": "Close",
+      "saving": "Saving...",
+      "notesCount": "{n}/500",
+      "newTitle": "New routine",
+      "editTitle": "Edit routine",
+      "save": "Save routine"
+    },
+    "overlap": {
+      "warning": "This overlaps with {titles}."
+    },
+    "card": {
+      "startsIn": "Starts in {minutes} min",
+      "overlaps": "Overlaps with {titles}"
+    },
+    "scope": {
+      "title": "Apply this change to",
+      "one": "This day only",
+      "future": "This and following days"
+    },
+    "delete": {
+      "title": "Delete this routine?",
+      "confirm": "Delete routine"
+    },
+    "duplicate": "Duplicate",
+    "duplicateDialog": {
+      "title": "Duplicate to another date",
+      "hint": "A one-time copy is added on the date you choose.",
+      "confirm": "Duplicate"
+    },
+    "toast": {
+      "duplicated": "Routine duplicated",
+      "created": "Routine saved",
+      "updated": "Routine updated",
+      "deleted": "Routine deleted",
+      "completeFailed": "Couldn't save. Your change was undone."
+    }
   },
   "attachments": {
     "upload": "Upload files",
