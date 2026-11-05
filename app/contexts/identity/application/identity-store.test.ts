@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import type { Clock } from '~/kernel/clock'
 import { domainError } from '~/kernel/domain-error'
@@ -30,6 +30,7 @@ const ACCOUNTS: Record<string, Account | undefined> = {
 }
 
 let networkDown = false
+let revoked = false
 
 function makeSession(email: string, account: Account): Session {
   return {
@@ -58,15 +59,26 @@ const repo: AuthRepository = {
   async signOut() {
     return ok(undefined)
   },
+  async refresh(session) {
+    if (revoked) return err(domainError('UNAUTHENTICATED', 'UNAUTHENTICATED'))
+    const account = Object.values(ACCOUNTS).find((a) => a?.id === session.user.id)
+    const ttlSec = account?.ttlSec ?? 3600
+    return ok({ ...session, expiresAt: new Date(now.getTime() + ttlSec * 1000).toISOString() })
+  },
 }
 
 vi.mock('./deps', () => ({ useIdentityDeps: () => ({ repo, bus, clock }) }))
 
 const MEMBER = { email: 'member@rutin.test', password: PASSWORD }
 
+afterEach(() => {
+  vi.useRealTimers()
+})
+
 beforeEach(() => {
   now = new Date(START)
   networkDown = false
+  revoked = false
   setActivePinia(createPinia())
 })
 
@@ -214,5 +226,108 @@ describe('reset', () => {
     store.reset()
     expect(store.isSignedIn).toBe(false)
     expect(store.attemptsRemaining).toBe(5)
+  })
+})
+
+describe('session expiry (ID-04)', () => {
+  const MINUTE = 60_000
+
+  // Moves both the fake timers and the fake clock forward together
+  async function pass(ms: number) {
+    now = new Date(now.getTime() + ms)
+    await vi.advanceTimersByTimeAsync(ms)
+  }
+
+  it('warns 2 minutes before expiry, then signs out as expired', async () => {
+    vi.useFakeTimers()
+    const store = useIdentityStore()
+    const expiring = vi.fn()
+    const signedOut = vi.fn()
+    const offExpiring = bus.subscribe('identity.SessionExpiring', expiring)
+    const offSignedOut = bus.subscribe('identity.SignedOut', signedOut)
+
+    await store.signIn(MEMBER.email, MEMBER.password)
+    await pass(57 * MINUTE)
+    expect(expiring).not.toHaveBeenCalled()
+
+    await pass(1 * MINUTE)
+    expect(expiring).toHaveBeenCalledTimes(1)
+    expect(expiring.mock.calls[0]?.[0]).toMatchObject({ expiresAt: store.session?.expiresAt })
+    expect(store.isSignedIn).toBe(true)
+
+    await pass(2 * MINUTE)
+    expect(store.isSignedIn).toBe(false)
+    expect(signedOut.mock.calls[0]?.[0]).toMatchObject({ reason: 'expired' })
+    offExpiring()
+    offSignedOut()
+  })
+
+  it('warns straight away when the session is shorter than 2 minutes', async () => {
+    vi.useFakeTimers()
+    const store = useIdentityStore()
+    const expiring = vi.fn()
+    const off = bus.subscribe('identity.SessionExpiring', expiring)
+
+    await store.signIn('expired@rutin.test', PASSWORD)
+    expect(expiring).toHaveBeenCalledTimes(1)
+    off()
+  })
+
+  it('extend gives a fresh expiry and moves the timers', async () => {
+    vi.useFakeTimers()
+    const store = useIdentityStore()
+    await store.signIn(MEMBER.email, MEMBER.password)
+    await pass(40 * MINUTE)
+    const before = store.session?.expiresAt
+
+    const result = await store.extend()
+    expect(result.ok).toBe(true)
+    expect(store.session?.expiresAt).not.toBe(before)
+
+    await pass(30 * MINUTE) // 70 min after sign in, past the original expiry
+    expect(store.isSignedIn).toBe(true)
+  })
+
+  it('signs out as expired when the server no longer knows the session', async () => {
+    const store = useIdentityStore()
+    await store.signIn(MEMBER.email, MEMBER.password)
+    const signedOut = vi.fn()
+    const off = bus.subscribe('identity.SignedOut', signedOut)
+
+    revoked = true
+    await store.extend()
+
+    expect(store.isSignedIn).toBe(false)
+    expect(signedOut.mock.calls[0]?.[0]).toMatchObject({ reason: 'expired' })
+    off()
+  })
+
+  it('activity extends the session, but only once every 30 seconds', async () => {
+    vi.useFakeTimers()
+    const refresh = vi.spyOn(repo, 'refresh')
+    const store = useIdentityStore()
+    await store.signIn(MEMBER.email, MEMBER.password)
+
+    await store.touch()
+    expect(refresh).not.toHaveBeenCalled()
+
+    await pass(31_000)
+    await store.touch()
+    await store.touch()
+    expect(refresh).toHaveBeenCalledTimes(1)
+    refresh.mockRestore()
+  })
+
+  it('stops the timers after sign out', async () => {
+    vi.useFakeTimers()
+    const store = useIdentityStore()
+    await store.signIn(MEMBER.email, MEMBER.password)
+    await store.signOut()
+
+    const signedOut = vi.fn()
+    const off = bus.subscribe('identity.SignedOut', signedOut)
+    await pass(61 * MINUTE)
+    expect(signedOut).not.toHaveBeenCalled()
+    off()
   })
 })
