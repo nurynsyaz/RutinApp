@@ -4,6 +4,7 @@ import { err, ok, type Result } from '~/kernel/result'
 import { domainError, type DomainError } from '~/kernel/domain-error'
 import { buildDay, type DaySchedule } from '../domain/day-schedule'
 import { findOverlaps } from '../domain/overlap'
+import { planEdit, planRemove, type Scope } from '../domain/occurrence-edit'
 import type { Routine, RoutineInput } from '../domain/routine'
 import type { Completion } from '../domain/routine-repository'
 import { datesOfWeek, type WeekStart } from '../domain/week'
@@ -120,7 +121,7 @@ export const useScheduleStore = defineStore('schedule', () => {
     return result
   }
 
-  async function update(id: string, input: RoutineInput): Promise<Result<Routine, DomainError>> {
+  async function update(id: string, input: RoutineInput, scope: Scope = 'future'): Promise<Result<Routine, DomainError>> {
     const { repo, bus, clock } = useSchedulingDeps()
     const owner = ownerId.value
     if (!owner) return noOwner()
@@ -128,14 +129,60 @@ export const useScheduleStore = defineStore('schedule', () => {
     const result = await repo.update(owner, id, input)
     if (!result.ok) return result
     if (ownerId.value === owner) routines.value = routines.value.map((r) => (r.id === id ? result.value : r))
-    // The "This day only" choice (SC-05) comes with the edit task. Until then every save changes the routine.
-    bus.publish('scheduling.RoutineUpdated', {
-      v: 1,
-      occurredAt: clock.nowIso(),
-      routineId: id,
-      scope: 'future',
-    })
+    bus.publish('scheduling.RoutineUpdated', { v: 1, occurredAt: clock.nowIso(), routineId: id, scope })
     return result
+  }
+
+  // SC-05: save a change made while looking at one day. "This day only" and "This and following
+  // days" split the routine, so the days before (or after) keep what they had.
+  async function updateOccurrence(
+    id: string,
+    date: string,
+    input: RoutineInput,
+    scope: Scope,
+  ): Promise<Result<Routine, DomainError>> {
+    const { repo, bus, clock } = useSchedulingDeps()
+    const owner = ownerId.value
+    if (!owner) return noOwner()
+    const current = routineById(id)
+    if (!current) return err(domainError('VALIDATION', 'ROUTINE_NOT_FOUND'))
+
+    const plan = planEdit(current, date, input, scope)
+    if (plan.kind === 'update') return update(id, input, scope)
+
+    // The new routine is made first, so a failure leaves the original untouched
+    const created = await repo.create(owner, plan.created.input, plan.created.span)
+    if (!created.ok) return created
+    const original = await repo.setSpan(owner, id, plan.originalSpan)
+    if (!original.ok) {
+      await repo.remove(owner, created.value.id)
+      return original
+    }
+
+    if (ownerId.value === owner) {
+      routines.value = [...routines.value.map((r) => (r.id === id ? original.value : r)), created.value]
+    }
+    bus.publish('scheduling.RoutineUpdated', { v: 1, occurredAt: clock.nowIso(), routineId: id, scope })
+    return created
+  }
+
+  // SC-05: delete while looking at one day. Only the days asked for go.
+  async function removeOccurrence(id: string, date: string, scope: Scope): Promise<Result<void, DomainError>> {
+    const { repo, bus, clock } = useSchedulingDeps()
+    const owner = ownerId.value
+    if (!owner) return noOwner()
+    const current = routineById(id)
+    if (!current) return err(domainError('VALIDATION', 'ROUTINE_NOT_FOUND'))
+
+    const plan = planRemove(current, date, scope)
+    if (plan.kind === 'remove') return remove(id)
+
+    const result = await repo.setSpan(owner, id, plan.span)
+    if (!result.ok) return result
+    if (ownerId.value === owner) routines.value = routines.value.map((r) => (r.id === id ? result.value : r))
+    // The routine is still there for other days, so this is an update and its files stay
+    bus.publish('scheduling.RoutineUpdated', { v: 1, occurredAt: clock.nowIso(), routineId: id, scope })
+    return ok(undefined)
   }
 
   async function remove(id: string): Promise<Result<void, DomainError>> {
@@ -176,7 +223,9 @@ export const useScheduleStore = defineStore('schedule', () => {
     setDone,
     create,
     update,
+    updateOccurrence,
     remove,
+    removeOccurrence,
     reset,
   }
 })

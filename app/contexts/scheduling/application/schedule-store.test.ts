@@ -48,6 +48,7 @@ let storedDone: Completion[]
 let failSetDone: Set<string>
 let gate: Promise<void> | null
 let listFails: boolean
+let failSetSpan: boolean
 const calls = { setDone: 0 }
 
 const repo: RoutineRepository = {
@@ -59,14 +60,23 @@ const repo: RoutineRepository = {
     const found = stored.find((r) => r.id === id)
     return found ? ok(found) : err(domainError('VALIDATION', 'ROUTINE_NOT_FOUND'))
   },
-  async create(owner, value) {
+  async create(owner, value, span) {
     if (value.title === 'bad') return err(domainError('VALIDATION', 'TITLE_INVALID', 'title'))
-    const created: Routine = { ...value, id: `rt_new_${stored.length}`, ownerId: owner, attachmentIds: [] }
+    const created: Routine = { ...value, ...span, id: `rt_new_${stored.length}`, ownerId: owner, attachmentIds: [] }
     stored.push(created)
     return ok(created)
   },
   async update(owner, id, value) {
     const updated: Routine = { ...value, id, ownerId: owner, attachmentIds: [] }
+    stored = stored.map((r) => (r.id === id ? updated : r))
+    return ok(updated)
+  },
+  async setSpan(_owner, id, span) {
+    if (failSetSpan) return err(domainError('NETWORK', 'NETWORK'))
+    const found = stored.find((r) => r.id === id)
+    if (!found) return err(domainError('VALIDATION', 'ROUTINE_NOT_FOUND'))
+    const { startsOn: _a, endsOn: _b, skipDates: _c, ...rest } = found
+    const updated: Routine = { ...rest, ...span }
     stored = stored.map((r) => (r.id === id ? updated : r))
     return ok(updated)
   },
@@ -119,6 +129,7 @@ beforeEach(() => {
   failSetDone = new Set()
   gate = null
   listFails = false
+  failSetSpan = false
   calls.setDone = 0
 })
 
@@ -317,6 +328,125 @@ describe('create, update and remove', () => {
     expect(store.completions).toEqual([{ routineId: 'b', date: TUESDAY }])
     expect(handler.mock.calls[0]?.[0]).toMatchObject({ routineId: 'a' })
     stop()
+  })
+})
+
+describe('changing one day of a repeating routine (SC-05)', () => {
+  const changed: RoutineInput = { ...input, title: 'Changed', repeat: { kind: 'daily' } }
+
+  beforeEach(() => {
+    stored = [routine('a')]
+  })
+
+  it('this day only: skips the day and adds a one-time routine for it', async () => {
+    const store = await loaded()
+    const handler = vi.fn()
+    const stop = bus.subscribe('scheduling.RoutineUpdated', handler)
+
+    const result = await store.updateOccurrence('a', '2026-11-05', changed, 'one')
+
+    expect(result.ok).toBe(true)
+    expect(store.dayOf('2026-11-05').items.map((i) => i.routine.title)).toEqual(['Changed'])
+    expect(store.dayOf('2026-11-04').items.map((i) => i.routine.title)).toEqual(['a'])
+    expect(store.dayOf('2026-11-06').items.map((i) => i.routine.title)).toEqual(['a'])
+    expect(handler.mock.calls[0]?.[0]).toMatchObject({ routineId: 'a', scope: 'one' })
+    stop()
+  })
+
+  it('this and following days: the old days keep the old routine', async () => {
+    const store = await loaded()
+
+    await store.updateOccurrence('a', '2026-11-05', changed, 'future')
+
+    expect(store.dayOf('2026-11-04').items.map((i) => i.routine.title)).toEqual(['a'])
+    expect(store.dayOf('2026-11-05').items.map((i) => i.routine.title)).toEqual(['Changed'])
+    expect(store.dayOf('2026-11-20').items.map((i) => i.routine.title)).toEqual(['Changed'])
+  })
+
+  it('changes the routine itself when it is a one-time routine', async () => {
+    stored = [routine('a', { repeat: { kind: 'once', date: '2026-11-05' } })]
+    const store = await loaded()
+
+    await store.updateOccurrence('a', '2026-11-05', { ...changed, repeat: { kind: 'once', date: '2026-11-05' } }, 'one')
+
+    expect(store.routines).toHaveLength(1)
+    expect(store.routines[0]?.title).toBe('Changed')
+  })
+
+  it('leaves the original alone and returns the error when the new routine is invalid', async () => {
+    const store = await loaded()
+
+    const result = await store.updateOccurrence('a', '2026-11-05', { ...changed, title: 'bad' }, 'one')
+
+    expect(failureOf(result).reason).toBe('TITLE_INVALID')
+    expect(store.routines).toHaveLength(1)
+    expect(store.dayOf('2026-11-05').items.map((i) => i.routine.title)).toEqual(['a'])
+  })
+
+  it('takes the new routine back when the original cannot be changed', async () => {
+    const store = await loaded()
+    failSetSpan = true
+
+    const result = await store.updateOccurrence('a', '2026-11-05', changed, 'one')
+
+    expect(failureOf(result).code).toBe('NETWORK')
+    expect(stored).toHaveLength(1)
+    expect(store.routines).toHaveLength(1)
+  })
+
+  it('reports a routine that is not in the list', async () => {
+    const store = await loaded()
+    expect(failureOf(await store.updateOccurrence('nope', '2026-11-05', changed, 'one')).reason).toBe('ROUTINE_NOT_FOUND')
+  })
+})
+
+describe('deleting one day of a repeating routine (SC-05)', () => {
+  beforeEach(() => {
+    stored = [routine('a')]
+  })
+
+  it('this day only: the routine stays for the other days and RoutineDeleted is not published', async () => {
+    const store = await loaded()
+    const deleted = vi.fn()
+    const stop = bus.subscribe('scheduling.RoutineDeleted', deleted)
+
+    await store.removeOccurrence('a', '2026-11-05', 'one')
+
+    expect(store.dayOf('2026-11-05').items).toEqual([])
+    expect(store.dayOf('2026-11-06').items).toHaveLength(1)
+    expect(deleted).not.toHaveBeenCalled()
+    stop()
+  })
+
+  it('this and following days: the routine ends the day before', async () => {
+    const store = await loaded()
+
+    await store.removeOccurrence('a', '2026-11-05', 'future')
+
+    expect(store.dayOf('2026-11-04').items).toHaveLength(1)
+    expect(store.dayOf('2026-11-05').items).toEqual([])
+    expect(store.dayOf('2026-12-01').items).toEqual([])
+  })
+
+  it('removes a one-time routine and publishes RoutineDeleted', async () => {
+    stored = [routine('a', { repeat: { kind: 'once', date: '2026-11-05' } })]
+    const store = await loaded()
+    const deleted = vi.fn()
+    const stop = bus.subscribe('scheduling.RoutineDeleted', deleted)
+
+    await store.removeOccurrence('a', '2026-11-05', 'one')
+
+    expect(store.routines).toEqual([])
+    expect(deleted).toHaveBeenCalledOnce()
+    stop()
+  })
+
+  it('returns the error and keeps the routine when the save fails', async () => {
+    const store = await loaded()
+    failSetSpan = true
+
+    expect(failureOf(await store.removeOccurrence('a', '2026-11-05', 'one')).code).toBe('NETWORK')
+    expect(store.dayOf('2026-11-05').items).toHaveLength(1)
   })
 })
 
