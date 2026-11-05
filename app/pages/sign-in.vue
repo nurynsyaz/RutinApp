@@ -38,6 +38,8 @@ function startLockCountdown() {
   }, 1000)
 }
 
+// A lock saved before a reload picks up again here
+onMounted(startLockCountdown)
 onBeforeUnmount(stopTimer)
 
 async function submit() {
