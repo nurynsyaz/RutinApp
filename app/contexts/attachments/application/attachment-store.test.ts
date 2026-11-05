@@ -275,6 +275,15 @@ describe('attachment store', () => {
     expect(store.files.map((f) => [f.id, f.routineId])).toEqual([['fl_a', null], ['fl_b', 'rt_2']])
   })
 
+  it('closes the list of turned away files', async () => {
+    const store = useAttachmentStore()
+    await store.load('usr_member')
+    await store.upload([new File(['x'], 'run.exe')], null)
+    expect(store.rejected).toHaveLength(1)
+    store.dismissRejected()
+    expect(store.rejected).toEqual([])
+  })
+
   it('resets everything on sign out', async () => {
     stored = [record('fl_a', null)]
     const store = useAttachmentStore()
