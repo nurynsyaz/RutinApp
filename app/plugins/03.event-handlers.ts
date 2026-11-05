@@ -2,12 +2,14 @@ import { safeRedirectTarget } from '~/contexts/identity/domain/access'
 import { useIdentityStore } from '~/contexts/identity/application/identity-store'
 import { registerShellHandlers } from '~/contexts/shell/application/handlers'
 import { useShellStore } from '~/contexts/shell/application/shell-store'
+import { useScheduleStore } from '~/contexts/scheduling/application/schedule-store'
 import { clearUserData } from '~/mocks/db'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const router = useRouter()
   const shell = useShellStore()
   const identity = useIdentityStore()
+  const schedule = useScheduleStore()
   const t = nuxtApp.$i18n.t
 
   let expiringToast: number | null = null
@@ -35,6 +37,9 @@ export default defineNuxtPlugin((nuxtApp) => {
       })
     },
   })
+
+  // BRD s.4: on sign out every store resets
+  nuxtApp.$bus.subscribe('identity.SignedOut', () => schedule.reset())
 
   // The warning no longer applies once an existing session gets a new expiry (activity or "Stay signed in")
   watch(
