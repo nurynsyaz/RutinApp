@@ -42,5 +42,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     (_next, previous) => {
       if (previous) dismissExpiringToast()
     },
+    // sync: dismiss the old warning before the new expiry can raise a fresh one
+    { flush: 'sync' },
   )
 })

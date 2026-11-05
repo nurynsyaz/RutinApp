@@ -302,6 +302,22 @@ describe('session expiry (ID-04)', () => {
     off()
   })
 
+  it('a refresh that finishes after sign out does not bring the session back', async () => {
+    const store = useIdentityStore()
+    await store.signIn(MEMBER.email, MEMBER.password)
+    const refresh = vi.spyOn(repo, 'refresh')
+    refresh.mockImplementationOnce(async (current) => {
+      await store.signOut()
+      return { ok: true, value: { ...current, expiresAt: new Date(Date.now() + 60 * MINUTE).toISOString() } }
+    })
+
+    const result = await store.extend()
+
+    expect(result.ok).toBe(false)
+    expect(store.isSignedIn).toBe(false)
+    refresh.mockRestore()
+  })
+
   it('activity extends the session, but only once every 30 seconds', async () => {
     vi.useFakeTimers()
     const refresh = vi.spyOn(repo, 'refresh')
