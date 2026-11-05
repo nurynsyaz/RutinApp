@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { isValidDate } from './dates'
-import { CATEGORIES, WEEKDAYS } from './routine'
+import { CATEGORIES, WEEKDAYS, type Weekday } from './routine'
 
 // SC-03. The messages are reason codes, the UI shows errors.<reason> in the active language.
 const titleSchema = z.string().trim().min(1, 'TITLE_INVALID').max(60, 'TITLE_INVALID')
@@ -17,7 +17,10 @@ const durationSchema = z
   .max(480, 'DURATION_INVALID')
   .refine((value) => value % 5 === 0, 'DURATION_INVALID')
 
-const weekdaySchema = z.number().refine((value) => (WEEKDAYS as readonly number[]).includes(value), 'REPEAT_INVALID')
+// The type guard makes the parsed days a Weekday[] instead of a number[]
+const weekdaySchema = z
+  .number()
+  .refine((value): value is Weekday => (WEEKDAYS as readonly number[]).includes(value), 'REPEAT_INVALID')
 
 const repeatSchema = z.discriminatedUnion(
   'kind',
