@@ -50,6 +50,14 @@ describe('routine form', () => {
     expect(original.repeat).toEqual({ kind: 'custom', days: [2, 4] })
   })
 
+  // The store hands out reactive proxies, and structuredClone throws on a proxy
+  it('copies a routine that comes out of the store as a proxy', () => {
+    const proxied = (value: Routine): Routine => ({ ...value, repeat: new Proxy(value.repeat, {}) })
+    const custom = proxied(routine('a', { repeat: { kind: 'custom', days: [2, 4] } }))
+    expect(inputOf(custom).repeat).toEqual({ kind: 'custom', days: [2, 4] })
+    expect(inputOf(proxied(routine('b', { repeat: { kind: 'once', date: TUESDAY } }))).repeat).toEqual({ kind: 'once', date: TUESDAY })
+  })
+
   it('gives each repeat option a usable starting value', () => {
     expect(repeatFor('once', TUESDAY)).toEqual({ kind: 'once', date: TUESDAY })
     expect(repeatFor('daily', TUESDAY)).toEqual({ kind: 'daily' })
