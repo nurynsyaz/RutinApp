@@ -17,6 +17,10 @@ export default defineNuxtConfig({
   { path: '~/contexts/identity/ui', pathPrefix: false },
   '~/components',
 ],
+
+  // Icons are bundled into the app, so a static build shows them offline
+  icon: { clientBundle: { scan: true }, serverBundle: false },
+
   css: ['~/assets/css/main.css'],
   vite: { plugins: [tailwindcss()] },
   pwa: {
