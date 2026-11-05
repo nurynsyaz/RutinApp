@@ -170,6 +170,10 @@
     "overlap": {
       "warning": "Ini bertindih dengan {titles}."
     },
+    "card": {
+      "startsIn": "Bermula dalam {minutes} minit",
+      "overlaps": "Bertindih dengan {titles}"
+    },
     "scope": {
       "title": "Gunakan perubahan ini pada",
       "one": "Hari ini sahaja",
