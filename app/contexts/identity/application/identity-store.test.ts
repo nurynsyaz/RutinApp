@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
+import { nextTick } from 'vue'
 import type { Clock } from '~/kernel/clock'
 import { domainError } from '~/kernel/domain-error'
 import { err, ok } from '~/kernel/result'
@@ -117,6 +118,53 @@ describe('signIn', () => {
     now = new Date(now.getTime() + 61_000)
     const allowed = await store.signIn(MEMBER.email, MEMBER.password)
     expect(allowed.ok).toBe(true)
+  })
+
+  it('keeps the lock after a reload', async () => {
+    const data = new Map<string, string>()
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string) => data.get(key) ?? null,
+      setItem: (key: string, value: string) => void data.set(key, value),
+    })
+    try {
+      const first = useIdentityStore()
+      for (let i = 0; i < 5; i++) await first.signIn(MEMBER.email, 'wrong')
+      await nextTick()
+
+      setActivePinia(createPinia()) // a reload starts a fresh store
+      const reloaded = useIdentityStore()
+      expect(reloaded.lockSecondsLeft()).toBe(60)
+      const blocked = await reloaded.signIn(MEMBER.email, MEMBER.password)
+      expect(blocked.ok).toBe(false)
+
+      now = new Date(now.getTime() + 61_000)
+      setActivePinia(createPinia())
+      const later = useIdentityStore()
+      expect(later.lockSecondsLeft()).toBe(0)
+    }
+    finally {
+      vi.unstubAllGlobals()
+    }
+  })
+
+  it('keeps the failed attempts after a reload', async () => {
+    const data = new Map<string, string>()
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string) => data.get(key) ?? null,
+      setItem: (key: string, value: string) => void data.set(key, value),
+    })
+    try {
+      const first = useIdentityStore()
+      await first.signIn(MEMBER.email, 'wrong')
+      await first.signIn(MEMBER.email, 'wrong')
+      await nextTick()
+
+      setActivePinia(createPinia())
+      expect(useIdentityStore().attemptsRemaining).toBe(3)
+    }
+    finally {
+      vi.unstubAllGlobals()
+    }
   })
 
   it('does not count a network error as a failed attempt', async () => {

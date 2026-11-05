@@ -72,6 +72,33 @@ test.describe('1. Sign in', () => {
     await expect(signInButton(page)).toBeDisabled()
   })
 
+  test('TC-106 the lock survives a reload', async ({ page }) => {
+    await page.goto('/sign-in')
+    for (let i = 0; i < 5; i++) {
+      await fillSignIn(page, MEMBER, 'wrongpass1')
+      await signInButton(page).click()
+      if (i < 4) await expect(page.getByText('Email or password is incorrect.')).toBeVisible()
+    }
+    await expect(page.getByText(/Sign in is locked/)).toBeVisible()
+    await page.reload()
+    await expect(page.getByText(/Sign in is locked\. Try again in \d+ seconds\./)).toBeVisible()
+    await expect(page.locator('#email')).toBeDisabled()
+    await expect(signInButton(page)).toBeDisabled()
+  })
+
+  test('TC-105 failed attempts survive a reload', async ({ page }) => {
+    await page.goto('/sign-in')
+    for (let i = 0; i < 2; i++) {
+      await fillSignIn(page, MEMBER, 'wrongpass1')
+      await signInButton(page).click()
+      await expect(page.getByText('Email or password is incorrect.')).toBeVisible()
+    }
+    await page.reload()
+    await fillSignIn(page, MEMBER, 'wrongpass1')
+    await signInButton(page).click()
+    await expect(page.getByText('2 attempts left before sign in locks for 60 seconds.')).toBeVisible()
+  })
+
   test('TC-107 lock ends and correct sign in works', async ({ page }) => {
     await page.goto('/sign-in')
     for (let i = 0; i < 5; i++) {

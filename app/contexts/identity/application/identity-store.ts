@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { err, type Result } from '~/kernel/result'
 import { domainError, type DomainError } from '~/kernel/domain-error'
 import type { Permission } from '../domain/permissions'
@@ -12,6 +12,7 @@ import {
   type LockoutState,
 } from '../domain/lockout'
 import { useIdentityDeps } from './deps'
+import { readLockout, writeLockout } from './lockout-storage'
 
 // Not in the BRD: activity extends the session at most once every 30 seconds
 export const ACTIVITY_THROTTLE_MS = 30_000
@@ -20,7 +21,9 @@ export const useIdentityStore = defineStore(
   'identity',
   () => {
     const session = ref<Session | null>(null)
-    const lockout = ref<LockoutState>({ ...initialLockout })
+    // The lock is read back after a reload, so refreshing the page does not skip it
+    const lockout = ref<LockoutState>(readLockout(useIdentityDeps().clock.now().getTime()))
+    watch(lockout, (next) => writeLockout(next))
     const busy = ref(false)
 
     let warnTimer: ReturnType<typeof setTimeout> | undefined
