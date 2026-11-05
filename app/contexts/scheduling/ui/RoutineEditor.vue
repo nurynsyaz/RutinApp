@@ -10,7 +10,7 @@ import { DURATION_OPTIONS, REMINDER_OPTIONS } from './field-options'
 // It checks the form and shows the overlap warning (SC-04). The page saves it.
 // Give it a `routine` to edit one (SC-05), leave it out to make a new one (SC-03).
 const props = defineProps<{ date: string; routine?: Routine; saving?: boolean }>()
-const emit = defineEmits<{ submit: [input: RoutineInput]; delete: []; close: [] }>()
+const emit = defineEmits<{ submit: [input: RoutineInput]; delete: []; duplicate: []; close: [] }>()
 
 const { t, te } = useI18n()
 const schedule = useScheduleStore()
@@ -69,15 +69,27 @@ onMounted(() => titleField.value?.focus())
     >
       <header class="flex items-center justify-between border-b border-line px-4 py-3">
         <h1 id="editor-title" class="text-lg font-bold text-slate-900">{{ routine ? t('scheduling.editor.editTitle') : t('scheduling.editor.newTitle') }}</h1>
-        <button
-          type="button"
-          class="flex size-11 items-center justify-center rounded-lg text-slate-600"
-          :aria-label="t('scheduling.editor.close')"
-          :title="t('scheduling.editor.close')"
-          @click="emit('close')"
-        >
-          <Icon name="lucide:x" class="size-5" />
-        </button>
+        <div class="flex items-center">
+          <button
+            v-if="routine"
+            type="button"
+            class="flex size-11 items-center justify-center rounded-lg text-slate-600"
+            :aria-label="t('scheduling.duplicate')"
+            :title="t('scheduling.duplicate')"
+            @click="emit('duplicate')"
+          >
+            <Icon name="lucide:copy" class="size-5" />
+          </button>
+          <button
+            type="button"
+            class="flex size-11 items-center justify-center rounded-lg text-slate-600"
+            :aria-label="t('scheduling.editor.close')"
+            :title="t('scheduling.editor.close')"
+            @click="emit('close')"
+          >
+            <Icon name="lucide:x" class="size-5" />
+          </button>
+        </div>
       </header>
 
       <form id="routine-form" class="flex-1 space-y-5 overflow-y-auto px-4 py-5" novalidate @submit.prevent="save">
