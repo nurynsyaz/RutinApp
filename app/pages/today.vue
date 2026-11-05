@@ -82,7 +82,7 @@ function open(item: DayItem): void {
         />
       </section>
 
-      <aside class="order-1 flex flex-col gap-4 lg:order-2">
+      <div class="order-1 flex flex-col gap-4 lg:order-2">
         <div class="rounded-lg border border-line bg-white p-4">
           <ProgressRing
             :done="day.progress.done"
@@ -102,7 +102,7 @@ function open(item: DayItem): void {
           />
           <p v-else class="text-sm text-slate-600">{{ t('scheduling.today.allDone') }}</p>
         </div>
-      </aside>
+      </div>
     </div>
   </div>
 </template>
