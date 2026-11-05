@@ -32,7 +32,16 @@
     "EMAIL_TAKEN": "E-mel ini sudah didaftarkan.",
     "LOCKED": "Log masuk dikunci. Cuba lagi dalam {seconds} saat.",
     "NETWORK": "Tidak dapat menghubungi pelayan. Semak sambungan anda dan cuba lagi.",
-    "UNKNOWN": "Sesuatu tidak kena. Sila cuba lagi."
+    "UNKNOWN": "Sesuatu tidak kena. Sila cuba lagi.",
+    "TITLE_INVALID": "Masukkan tajuk antara 1 hingga 60 aksara.",
+    "CATEGORY_INVALID": "Pilih satu kategori.",
+    "START_INVALID": "Masukkan masa mula yang sah.",
+    "DURATION_INVALID": "Pilih 5 hingga 480 minit, dalam langkah 5.",
+    "REPEAT_INVALID": "Semak pilihan ulang.",
+    "REMINDER_INVALID": "Masukkan peringatan dari 0 hingga 1440 minit.",
+    "NOTES_TOO_LONG": "Nota boleh sehingga 500 aksara.",
+    "ROUTINE_NOT_FOUND": "Rutin ini tidak dijumpai.",
+    "DATE_INVALID": "Tarikh ini tidak sah."
   },
   "identity": {
     "signIn": {
@@ -107,7 +116,76 @@
   "scheduling": {
     "newRoutine": "Rutin baharu",
     "markDone": "Tandakan selesai",
-    "progress": "{done} daripada {total} selesai"
+    "progress": "{done} daripada {total} selesai",
+    "markUndone": "Tandakan belum selesai",
+    "done": "Selesai",
+    "today": {
+      "title": "Hari ini",
+      "empty": "Tiada apa dirancang hari ini. Tambah rutin untuk bermula."
+    },
+    "week": {
+      "title": "Minggu",
+      "empty": "Tiada rutin minggu ini.",
+      "previous": "Minggu lepas",
+      "next": "Minggu depan",
+      "thisWeek": "Minggu ini"
+    },
+    "category": {
+      "label": "Kategori",
+      "health": "Kesihatan",
+      "work": "Kerja",
+      "personal": "Peribadi",
+      "rest": "Rehat"
+    },
+    "repeat": {
+      "label": "Ulang",
+      "once": "Sekali",
+      "daily": "Setiap hari",
+      "weekdays": "Hari bekerja",
+      "custom": "Hari pilihan",
+      "date": "Tarikh",
+      "days": "Hari"
+    },
+    "weekday": {
+      "1": "Isn",
+      "2": "Sel",
+      "3": "Rab",
+      "4": "Kha",
+      "5": "Jum",
+      "6": "Sab",
+      "7": "Ahd"
+    },
+    "field": {
+      "title": "Tajuk",
+      "start": "Masa mula",
+      "duration": "Tempoh (minit)",
+      "reminder": "Peringatan (minit sebelum)",
+      "notes": "Nota"
+    },
+    "editor": {
+      "newTitle": "Rutin baharu",
+      "editTitle": "Sunting rutin",
+      "save": "Simpan rutin"
+    },
+    "overlap": {
+      "warning": "Ini bertindih dengan {titles}."
+    },
+    "scope": {
+      "title": "Gunakan perubahan ini pada",
+      "one": "Hari ini sahaja",
+      "future": "Hari ini dan hari-hari seterusnya"
+    },
+    "delete": {
+      "title": "Padam rutin ini?",
+      "confirm": "Padam rutin"
+    },
+    "duplicate": "Gandakan",
+    "toast": {
+      "created": "Rutin disimpan",
+      "updated": "Rutin dikemas kini",
+      "deleted": "Rutin dipadam",
+      "completeFailed": "Tidak dapat disimpan. Perubahan anda dibatalkan."
+    }
   },
   "attachments": {
     "upload": "Muat naik fail",
