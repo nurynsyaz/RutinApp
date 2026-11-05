@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useScheduleStore } from '~/contexts/scheduling/application/schedule-store'
+import { addDays } from '~/contexts/scheduling/domain/dates'
 import { needsScope, type Scope } from '~/contexts/scheduling/domain/occurrence-edit'
 import type { Routine, RoutineInput } from '~/contexts/scheduling/domain/routine'
 import { useViewedDate } from '~/contexts/scheduling/ui/use-today'
@@ -32,6 +33,7 @@ watch(
 
 const pending = ref<Pending | null>(null)
 const saving = ref(false)
+const duplicating = ref(false)
 
 useHead({ title: computed(() => t('scheduling.editor.editTitle')) })
 
@@ -63,6 +65,18 @@ async function applySave(input: RoutineInput, scope: Scope): Promise<void> {
   await navigateTo({ path: '/today', query: { date } })
 }
 
+// SC-07: a one-time copy on the chosen date
+async function applyDuplicate(date: string): Promise<void> {
+  saving.value = true
+  const result = await schedule.duplicate(id.value, date)
+  saving.value = false
+
+  if (!result.ok) return fail(result.error.reason)
+  duplicating.value = false
+  shell.notify({ kind: 'success', title: t('scheduling.toast.duplicated') })
+  await navigateTo({ path: '/today', query: { date } })
+}
+
 async function applyDelete(scope: Scope): Promise<void> {
   saving.value = true
   const result = await schedule.removeOccurrence(id.value, viewed.value, scope)
@@ -91,6 +105,7 @@ function onChoose(scope: Scope): void {
       :saving="saving"
       @submit="requestSave"
       @delete="pending = { kind: 'delete' }"
+      @duplicate="duplicating = true"
       @close="close"
     />
 
@@ -115,5 +130,7 @@ function onChoose(scope: Scope): void {
       @confirm="applyDelete('one')"
       @cancel="pending = null"
     />
+  
+    <DuplicateDialog v-if="duplicating" :date="addDays(viewed, 1)" :busy="saving" @confirm="applyDuplicate" @cancel="duplicating = false" />
   </div>
 </template>

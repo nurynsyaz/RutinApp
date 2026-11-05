@@ -450,6 +450,28 @@ describe('deleting one day of a repeating routine (SC-05)', () => {
   })
 })
 
+describe('duplicate (SC-07)', () => {
+  it('adds a one-time copy on the chosen date and publishes RoutineCreated', async () => {
+    stored = [routine('a', { title: 'Stretching', repeat: { kind: 'daily' } })]
+    const store = await loaded()
+    const handler = vi.fn()
+    const stop = bus.subscribe('scheduling.RoutineCreated', handler)
+
+    const result = await store.duplicate('a', '2026-11-12')
+
+    expect(result.ok).toBe(true)
+    expect(store.routines).toHaveLength(2)
+    expect(store.routines[1]).toMatchObject({ title: 'Stretching', repeat: { kind: 'once', date: '2026-11-12' } })
+    expect(handler.mock.calls[0]?.[0]).toMatchObject({ scope: 'one' })
+    stop()
+  })
+
+  it('reports a routine that is not in the list', async () => {
+    const store = await loaded()
+    expect(failureOf(await store.duplicate('nope', '2026-11-12')).reason).toBe('ROUTINE_NOT_FOUND')
+  })
+})
+
 describe('reset', () => {
   it('clears everything on sign out', async () => {
     const store = await loaded()

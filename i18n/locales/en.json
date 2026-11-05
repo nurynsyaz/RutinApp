@@ -215,7 +215,13 @@
       "confirm": "Delete routine"
     },
     "duplicate": "Duplicate",
+    "duplicateDialog": {
+      "title": "Duplicate to another date",
+      "hint": "A one-time copy is added on the date you choose.",
+      "confirm": "Duplicate"
+    },
     "toast": {
+      "duplicated": "Routine duplicated",
       "created": "Routine saved",
       "updated": "Routine updated",
       "deleted": "Routine deleted",
