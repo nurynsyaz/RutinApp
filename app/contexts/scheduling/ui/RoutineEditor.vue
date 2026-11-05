@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import { useScheduleStore } from '../application/schedule-store'
 import { isValidDate } from '../domain/dates'
-import type { RoutineInput } from '../domain/routine'
-import { emptyRoutineInput, formErrors } from '../domain/routine-form'
+import type { Routine, RoutineInput } from '../domain/routine'
+import { emptyRoutineInput, formErrors, inputOf } from '../domain/routine-form'
+import { trapTab } from './focus-trap'
 import { DURATION_OPTIONS, REMINDER_OPTIONS } from './field-options'
 
 // S-06: the routine form. A side drawer from tablet up, a full-screen sheet on mobile.
 // It checks the form and shows the overlap warning (SC-04). The page saves it.
-const props = defineProps<{ date: string; saving?: boolean }>()
-const emit = defineEmits<{ submit: [input: RoutineInput]; close: [] }>()
+// Give it a `routine` to edit one (SC-05), leave it out to make a new one (SC-03).
+const props = defineProps<{ date: string; routine?: Routine; saving?: boolean }>()
+const emit = defineEmits<{ submit: [input: RoutineInput]; delete: []; close: [] }>()
 
 const { t, te } = useI18n()
 const schedule = useScheduleStore()
 
-const form = ref<RoutineInput>(emptyRoutineInput(props.date))
+const form = ref<RoutineInput>(props.routine ? inputOf(props.routine) : emptyRoutineInput(props.date))
 const submitted = ref(false)
 const panel = ref<HTMLElement | null>(null)
 const titleField = ref<HTMLInputElement | null>(null)
@@ -24,7 +26,7 @@ const errorText = (reason?: string) => (reason ? (te(`errors.${reason}`) ? t(`er
 
 // SC-04: the day the warning is checked on. A one-time routine uses its own date, the others the day being viewed.
 const checkDate = computed(() => (form.value.repeat.kind === 'once' && isValidDate(form.value.repeat.date) ? form.value.repeat.date : props.date))
-const clashes = computed(() => schedule.clashesWith(form.value, checkDate.value))
+const clashes = computed(() => schedule.clashesWith(form.value, checkDate.value, props.routine?.id))
 const clashTitles = computed(() => clashes.value.map((routine) => routine.title).join(', '))
 
 const reminderLabel = (minutes: number) =>
@@ -48,20 +50,7 @@ function onKeydown(event: KeyboardEvent): void {
     emit('close')
     return
   }
-  if (event.key !== 'Tab' || !panel.value) return
-  const focusable = [...panel.value.querySelectorAll<HTMLElement>('button, input, select, textarea, a[href]')].filter(
-    (element) => !element.hasAttribute('disabled'),
-  )
-  const first = focusable[0]
-  const last = focusable[focusable.length - 1]
-  if (!first || !last) return
-  if (event.shiftKey && document.activeElement === first) {
-    event.preventDefault()
-    last.focus()
-  } else if (!event.shiftKey && document.activeElement === last) {
-    event.preventDefault()
-    first.focus()
-  }
+  trapTab(event, panel.value)
 }
 
 onMounted(() => titleField.value?.focus())
@@ -79,7 +68,7 @@ onMounted(() => titleField.value?.focus())
       class="relative flex h-full w-full flex-col bg-white shadow-xl sm:w-md"
     >
       <header class="flex items-center justify-between border-b border-line px-4 py-3">
-        <h1 id="editor-title" class="text-lg font-bold text-slate-900">{{ t('scheduling.editor.newTitle') }}</h1>
+        <h1 id="editor-title" class="text-lg font-bold text-slate-900">{{ routine ? t('scheduling.editor.editTitle') : t('scheduling.editor.newTitle') }}</h1>
         <button
           type="button"
           class="flex size-11 items-center justify-center rounded-lg text-slate-600"
@@ -176,6 +165,15 @@ onMounted(() => titleField.value?.focus())
       </form>
 
       <footer class="flex gap-3 border-t border-line px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        <button
+          v-if="routine"
+          type="button"
+          :disabled="saving"
+          class="min-h-11 rounded-lg border border-danger px-3 text-sm font-medium text-danger disabled:opacity-60"
+          @click="emit('delete')"
+        >
+          {{ t('common.delete') }}
+        </button>
         <button type="button" class="min-h-11 flex-1 rounded-lg border border-line px-4 text-sm font-medium text-slate-800" @click="emit('close')">
           {{ t('common.cancel') }}
         </button>
