@@ -17,8 +17,14 @@ logs
 .DS_Store
 .fleet
 .idea
+.vscode/settings.json
 
 # Local env files
 .env
 .env.*
 !.env.example
+
+# Playwright test output
+test-results
+playwright-report
+blob-report

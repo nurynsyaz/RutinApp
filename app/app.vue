@@ -1,5 +1,14 @@
+<script setup lang="ts">
+import { useShellLocale } from '~/contexts/shell/ui/use-shell-locale'
+
+await useShellLocale().init()
+</script>
+
 <template>
-  <div class="min-h-screen bg-surface p-6">
-    <h1 class="text-2xl font-bold text-brand">Rutin</h1>
-  </div>
+  <!-- Adds the <link rel="manifest"> tag, without it Chrome finds no manifest and offers no install -->
+  <VitePwaManifest />
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
+  <ToastHost />
 </template>

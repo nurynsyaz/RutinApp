@@ -1,40 +1,141 @@
 {
-  "app": { "name": "Rutin" },
+  "app": {
+    "name": "Rutin"
+  },
   "common": {
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
     "retry": "Retry",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "back": "Go back"
+  },
+  "nav": {
+    "today": "Today",
+    "week": "Week",
+    "files": "Files",
+    "profile": "Profile",
+    "users": "Users",
+    "label": "Main navigation"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "errors": {
+    "FILE_TOO_LARGE": "Over 10 MB",
+    "EMAIL_INVALID": "Enter a valid email address.",
+    "PASSWORD_REQUIRED": "Enter your password.",
+    "PASSWORD_WEAK": "Use at least 8 characters with a letter and a number.",
+    "NAME_INVALID": "Enter a name between 1 and 60 characters.",
+    "INVALID_CREDENTIALS": "Email or password is incorrect.",
+    "EMAIL_TAKEN": "This email is already registered.",
+    "LOCKED": "Sign in is locked. Try again in {seconds} seconds.",
+    "NETWORK": "Can't reach the server. Check your connection and try again.",
+    "UNKNOWN": "Something went wrong. Please try again."
   },
   "identity": {
     "signIn": {
-      "title": "Welcome back",
+      "title": "Sign in",
+      "subtitle": "Welcome back. Pick up your routine where you left off.",
       "email": "Email",
       "password": "Password",
-      "submit": "Sign in",
       "forgot": "Forgot password?",
-      "noAccount": "Don't have an account? Sign up"
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "keepSignedIn": "Keep me signed in on this device",
+      "cta": "Sign in",
+      "newToRutin": "New to Rutin?",
+      "createAccount": "Create account",
+      "attemptsLeft": "{count} attempt left before sign in locks for 60 seconds. | {count} attempts left before sign in locks for 60 seconds."
     },
-    "signOut": "Sign out"
-  },
-  "scheduling": {
-    "today": { "title": "Today", "progress": "{done} of {total} done" },
-    "categories": {
-      "health": "Health",
-      "work": "Work",
-      "personal": "Personal",
-      "rest": "Rest"
+    "demoAccounts": {
+      "title": "Demo accounts",
+      "member": "Member",
+      "admin": "Admin",
+      "passwordBoth": "Password for both: {password}",
+      "passwordShort": "Password: {password}"
+    },
+    "signUp": {
+      "title": "Create account",
+      "subtitle": "Create your account to start planning your day.",
+      "name": "Full name",
+      "passwordHint": "At least 8 characters, with a letter and a number.",
+      "cta": "Create account",
+      "haveAccount": "Already have an account?",
+      "signInLink": "Sign in"
+    },
+    "forgotPassword": {
+      "title": "Forgot password",
+      "subtitle": "Enter your email and we'll send you a way to reset it.",
+      "cta": "Send reset link",
+      "confirmation": "If an account exists for that email, a reset link is on its way.",
+      "back": "Back to sign in"
+    },
+    "signOut": {
+      "cta": "Sign out",
+      "confirm": {
+        "title": "Sign out of Rutin?",
+        "body": "Your routines and files will be cleared from this device. Sign in again to see them.",
+        "unsyncedTitle": "{count} change hasn't synced | {count} changes haven't synced",
+        "unsyncedBody": "because you're offline. It'll be lost if you sign out now. | because you're offline. They'll be lost if you sign out now.",
+        "bodyPhone": "Your routines and files will be cleared from this phone. Sign in again to see them."
+      }
+    },
+    "signedOut": {
+      "title": "You're signed out",
+      "body": "We cleared your routines and files from this device. Sign in again whenever you're ready.",
+      "expiredTitle": "Your session expired",
+      "expiredBody": "You were signed out after a period of inactivity. Your routines and files were cleared from this device.",
+      "signInAgain": "Sign in again",
+      "differentAccount": "Use a different account",
+      "bodyPhone": "We cleared your routines and files from this phone. Sign in again whenever you're ready.",
+      "expiredBodyPhone": "You were signed out after a period of inactivity. Your routines and files were cleared from this phone."
+    },
+    "accessDenied": {
+      "heading": "Access denied",
+      "title": "You don't have access to this page",
+      "body": "Users is only available to admins. If you think this is a mistake, ask an admin to change your role.",
+      "needs": "403 · needs {permission}",
+      "goToday": "Go to Today"
+    },
+    "session": {
+      "title": "Signed in on this device",
+      "endsIn": "Session ends in {minutes} min unless you stay active."
     }
   },
+  "scheduling": {
+    "newRoutine": "New routine",
+    "markDone": "Mark as done",
+    "progress": "{done} of {total} done"
+  },
+  "attachments": {
+    "upload": "Upload files",
+    "download": "Download"
+  },
+  "profile": {
+    "save": "Save changes"
+  },
   "shell": {
-    "nav": {
-      "today": "Today",
-      "week": "Week",
-      "attachments": "Files",
-      "profile": "Profile",
-      "users": "Users"
+    "brand": {
+      "tagline": "Plan the day once. Repeat what works.",
+      "subtitle": "Routines, files and progress in one place, on any device, online or off.",
+      "demoNote": "Demo build with mock data. Nothing leaves this device.",
+      "sample": {
+        "morningRun": "Morning run",
+        "deepWork": "Deep work",
+        "standup": "Team stand-up",
+        "readPages": "Read 20 pages"
+      }
+    },
+    "toasts": {
+      "label": "Notifications",
+      "dismiss": "Dismiss",
+      "sessionExpiring": {
+        "title": "Stay signed in?",
+        "body": "Your session is about to end.",
+        "action": "Stay signed in"
+      }
     }
   }
 }
