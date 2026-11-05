@@ -62,7 +62,7 @@ const timeRange = computed(
       <Icon v-if="item.done" name="lucide:check" class="size-4" />
     </button>
 
-    <button type="button" class="min-w-0 flex-1 rounded text-left" @click="emit('open')">
+    <button type="button" data-routine-open class="min-w-0 flex-1 rounded text-left" @click="emit('open')">
       <span class="block truncate text-sm font-semibold text-slate-900" :class="compact ? '' : 'sm:text-base'">
         {{ item.routine.title }}
       </span>
