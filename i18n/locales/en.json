@@ -119,11 +119,33 @@
     "progress": "{done} of {total} done",
     "markUndone": "Mark as not done",
     "done": "Done",
+    "view": {
+      "label": "View",
+      "day": "Day",
+      "week": "Week"
+    },
     "today": {
+      "summary": "{total} routine · {done} done · {left} to go | {total} routines · {done} done · {left} to go",
+      "previousDay": "Previous day",
+      "nextDay": "Next day",
+      "goToday": "Today",
+      "now": "Now",
+      "freeFor": "Free for {span}",
+      "spanHours": "{h} h",
+      "spanMinutes": "{m} min",
+      "spanBoth": "{h} h {m} min",
+      "upNext": "Up next",
+      "allDone": "Nothing left for today.",
+      "loadFailed": "Could not load your routines.",
+      "timeline": "Timeline",
       "title": "Today",
       "empty": "Nothing planned for today. Add a routine to get started."
     },
     "week": {
+      "loadFailed": "Could not load your routines.",
+      "grid": "Routines this week",
+      "dayList": "Routines for {date}",
+      "nothingThisDay": "Nothing planned.",
       "title": "Week",
       "empty": "No routines this week.",
       "previous": "Previous week",
@@ -169,6 +191,9 @@
       "reminderDay": "1 day before"
     },
     "editor": {
+      "close": "Close",
+      "saving": "Saving...",
+      "notesCount": "{n}/500",
       "newTitle": "New routine",
       "editTitle": "Edit routine",
       "save": "Save routine"
