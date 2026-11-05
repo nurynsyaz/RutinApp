@@ -11,6 +11,12 @@
   --color-danger-soft: #FEF2F2;
   --color-danger-line: #F8CFCF;
   --color-check: #DCFCE7;
+  /* Category colours from the UI/UX blueprint (S-04) */
+  --color-health-soft: #DCF3EA;
+  --color-work-soft: #DFE7FB;
+  --color-personal-soft: #FCEFC6;
+  --color-rest-soft: #EBE4F8;
+  --color-now: #B8431A;
   --font-sans: "Plus Jakarta Sans Variable", sans-serif;
   --font-mono: "JetBrains Mono Variable", monospace;
 }

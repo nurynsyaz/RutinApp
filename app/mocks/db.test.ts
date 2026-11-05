@@ -33,6 +33,13 @@ describe('mock db', () => {
     expect(await readTable('files')).toHaveLength(7)
   })
 
+  it('starts with no completed occurrences and clears them on sign out', async () => {
+    expect(await readTable('completions')).toEqual([])
+    await writeTable('completions', [{ routineId: 'rt_01', date: '2026-11-02' }])
+    await clearUserData()
+    expect(await readTable('completions')).toEqual([])
+  })
+
   it('goes back to the seed after reset', async () => {
     await writeTable('users', [])
     await resetDemoData()
