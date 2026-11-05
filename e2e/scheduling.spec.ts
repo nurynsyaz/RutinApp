@@ -69,11 +69,33 @@ test.describe('Today (SC-01)', () => {
   })
 })
 
+// Reads the saved ticks straight from the fake database in IndexedDB
+function savedTicks(page: Page): Promise<number> {
+  return page.evaluate(
+    () =>
+      new Promise<number>((resolve) => {
+        const open = indexedDB.open('rutin-db')
+        open.onerror = () => resolve(0)
+        open.onsuccess = () => {
+          const db = open.result
+          const get = db.transaction('tables').objectStore('tables').get('completions')
+          get.onerror = () => resolve(0)
+          get.onsuccess = () => {
+            db.close()
+            resolve(Array.isArray(get.result) ? get.result.length : 0)
+          }
+        }
+      }),
+  )
+}
+
 test.describe('Mark done (SC-06)', () => {
   test('SC-06 a tick shows at once and is still there after a reload', async ({ page }) => {
     await page.goto(`/today?date=${TUESDAY}`)
     await page.getByRole('checkbox', { name: 'Mark as done' }).first().click()
     await expect(page.getByText('10 routines · 1 done · 9 to go')).toBeVisible()
+    // The tick shows before the fake server finishes, so wait until it is saved
+    await expect.poll(() => savedTicks(page)).toBe(1)
     await page.reload()
     await expect(page.getByText('10 routines · 1 done · 9 to go')).toBeVisible()
     await page.getByRole('checkbox', { name: 'Mark as not done' }).first().click()
