@@ -1,4 +1,4 @@
-import { createStore, get, set, clear } from 'idb-keyval'
+import { createStore, get, set, clear, del } from 'idb-keyval'
 import users from './seed/users.json'
 import routines from './seed/routines.json'
 import files from './seed/files.json'
@@ -35,6 +35,13 @@ export async function readTable<T>(table: Table): Promise<T[]> {
 
 export async function writeTable<T>(table: Table, rows: T[]): Promise<void> {
   await set(table, rows, store)
+}
+
+// Sign out (BRD s.7 step 4): drops the signed-in user's routines and files.
+// The users table stays because accounts are not cached user data, and the PWA shell cache is not touched.
+export async function clearUserData(): Promise<void> {
+  await del('routines', store)
+  await del('files', store)
 }
 
 export async function resetDemoData(): Promise<void> {

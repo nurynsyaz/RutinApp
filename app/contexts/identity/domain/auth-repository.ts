@@ -18,4 +18,6 @@ export interface AuthRepository {
   signUp(input: SignUpInput): Promise<Result<Session, DomainError>>
   requestPasswordReset(email: string): Promise<Result<void, DomainError>>
   signOut(session: Session): Promise<Result<void, DomainError>>
+  // Gives the session a fresh expiry. UNAUTHENTICATED means the session is no longer valid.
+  refresh(session: Session): Promise<Result<Session, DomainError>>
 }

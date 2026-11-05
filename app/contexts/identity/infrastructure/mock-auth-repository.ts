@@ -94,5 +94,17 @@ export function createMockAuthRepository(clock: Clock = systemClock): AuthReposi
       await latency()
       return ok(undefined)
     },
+
+    async refresh(session) {
+      await latency()
+      const users = await readTable<UserRow>('users')
+      const user = users.find((u) => u.id === session.user.id)
+      if (!user) return err(domainError('UNAUTHENTICATED', 'UNAUTHENTICATED'))
+      const seconds = user.sessionTtlSec ?? DEFAULT_SESSION_SECONDS
+      return ok({
+        ...session,
+        expiresAt: new Date(clock.now().getTime() + seconds * 1000).toISOString(),
+      })
+    },
   }
 }

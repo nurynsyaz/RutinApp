@@ -16,7 +16,8 @@
     "week": "Week",
     "files": "Files",
     "profile": "Profile",
-    "users": "Users"
+    "users": "Users",
+    "label": "Main navigation"
   },
   "language": {
     "label": "Language"
@@ -77,7 +78,8 @@
         "title": "Sign out of Rutin?",
         "body": "Your routines and files will be cleared from this device. Sign in again to see them.",
         "unsyncedTitle": "{count} change hasn't synced | {count} changes haven't synced",
-        "unsyncedBody": "because you're offline. It'll be lost if you sign out now. | because you're offline. They'll be lost if you sign out now."
+        "unsyncedBody": "because you're offline. It'll be lost if you sign out now. | because you're offline. They'll be lost if you sign out now.",
+        "bodyPhone": "Your routines and files will be cleared from this phone. Sign in again to see them."
       }
     },
     "signedOut": {
@@ -86,7 +88,9 @@
       "expiredTitle": "Your session expired",
       "expiredBody": "You were signed out after a period of inactivity. Your routines and files were cleared from this device.",
       "signInAgain": "Sign in again",
-      "differentAccount": "Use a different account"
+      "differentAccount": "Use a different account",
+      "bodyPhone": "We cleared your routines and files from this phone. Sign in again whenever you're ready.",
+      "expiredBodyPhone": "You were signed out after a period of inactivity. Your routines and files were cleared from this phone."
     },
     "accessDenied": {
       "heading": "Access denied",
@@ -94,6 +98,10 @@
       "body": "Users is only available to admins. If you think this is a mistake, ask an admin to change your role.",
       "needs": "403 · needs {permission}",
       "goToday": "Go to Today"
+    },
+    "session": {
+      "title": "Signed in on this device",
+      "endsIn": "Session ends in {minutes} min unless you stay active."
     }
   },
   "scheduling": {
@@ -125,7 +133,7 @@
       "dismiss": "Dismiss",
       "sessionExpiring": {
         "title": "Stay signed in?",
-        "body": "You'll be signed out in about 2 minutes.",
+        "body": "Your session is about to end.",
         "action": "Stay signed in"
       }
     }

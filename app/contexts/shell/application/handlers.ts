@@ -5,24 +5,33 @@ export type NavigateTarget = string | { path: string; query?: Record<string, str
 
 export interface ShellHandlerDeps {
   navigate: (to: NavigateTarget) => unknown
-  signedInTarget: () => string // where to go after signing in
+  signedInTarget: () => string
+  // BRD s.4: on sign out every store resets and cached user data is cleared
+  resetShell: () => void
+  clearUserData: () => Promise<void>
+  // BRD: shows the "Stay signed in?" toast
+  notifyExpiring: (expiresAt: string) => void
 }
 
-// BRD 5.3: the Shell routes the user when identity events happen
 export function registerShellHandlers(bus: EventBus<DomainEvents>, deps: ShellHandlerDeps): () => void {
   const unsubscribers = [
     bus.subscribe('identity.SignedIn', () => {
       deps.navigate(deps.signedInTarget())
     }),
     bus.subscribe('identity.SignedOut', (event) => {
+      deps.resetShell()
+      void deps.clearUserData()
       deps.navigate(
         event.reason === 'expired'
           ? { path: '/signed-out', query: { reason: 'expired' } }
           : '/signed-out',
       )
     }),
-    bus.subscribe('identity.AccessDenied', () => {
-      deps.navigate('/403')
+    bus.subscribe('identity.SessionExpiring', (event) => {
+      deps.notifyExpiring(event.expiresAt)
+    }),
+    bus.subscribe('identity.AccessDenied', (event) => {
+      deps.navigate(event.required ? { path: '/403', query: { needs: event.required } } : '/403')
     }),
   ]
   return () => unsubscribers.forEach((unsubscribe) => unsubscribe())

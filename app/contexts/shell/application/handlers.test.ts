@@ -8,8 +8,17 @@ const base = { v: 1 as const, occurredAt: '2026-11-04T09:00:00.000Z' }
 function setup() {
   const bus = createMittEventBus<DomainEvents>()
   const navigate = vi.fn()
-  const stop = registerShellHandlers(bus, { navigate, signedInTarget: () => '/files' })
-  return { bus, navigate, stop }
+  const resetShell = vi.fn()
+  const clearUserData = vi.fn(async () => {})
+  const notifyExpiring = vi.fn()
+  const stop = registerShellHandlers(bus, {
+    navigate,
+    signedInTarget: () => '/files',
+    resetShell,
+    clearUserData,
+    notifyExpiring,
+  })
+  return { bus, navigate, stop, resetShell, clearUserData, notifyExpiring }
 }
 
 describe('shell handlers', () => {
@@ -31,9 +40,29 @@ describe('shell handlers', () => {
     expect(navigate).toHaveBeenCalledWith({ path: '/signed-out', query: { reason: 'expired' } })
   })
 
-  it('goes to /403 after identity.AccessDenied', () => {
+  it('resets the shell and clears user data on every sign out', () => {
+    const { bus, resetShell, clearUserData } = setup()
+    bus.publish('identity.SignedOut', { ...base, userId: 'u1', reason: 'user' })
+    bus.publish('identity.SignedOut', { ...base, userId: 'u1', reason: 'expired' })
+    expect(resetShell).toHaveBeenCalledTimes(2)
+    expect(clearUserData).toHaveBeenCalledTimes(2)
+  })
+
+  it('shows the stay signed in toast after identity.SessionExpiring', () => {
+    const { bus, notifyExpiring } = setup()
+    bus.publish('identity.SessionExpiring', { ...base, expiresAt: '2026-11-04T10:00:00.000Z' })
+    expect(notifyExpiring).toHaveBeenCalledWith('2026-11-04T10:00:00.000Z')
+  })
+
+  it('goes to /403 and says which permission was missing', () => {
     const { bus, navigate } = setup()
     bus.publish('identity.AccessDenied', { ...base, path: '/admin/users', required: 'admin:users:read' })
+    expect(navigate).toHaveBeenCalledWith({ path: '/403', query: { needs: 'admin:users:read' } })
+  })
+
+  it('goes to plain /403 when no permission is named', () => {
+    const { bus, navigate } = setup()
+    bus.publish('identity.AccessDenied', { ...base, path: '/x', required: null })
     expect(navigate).toHaveBeenCalledWith('/403')
   })
 

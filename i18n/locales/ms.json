@@ -16,7 +16,8 @@
     "week": "Minggu",
     "files": "Fail",
     "profile": "Profil",
-    "users": "Pengguna"
+    "users": "Pengguna",
+    "label": "Navigasi utama"
   },
   "language": {
     "label": "Bahasa"
@@ -77,7 +78,8 @@
         "title": "Log keluar daripada Rutin?",
         "body": "Rutin dan fail anda akan dipadam daripada peranti ini. Log masuk semula untuk melihatnya.",
         "unsyncedTitle": "{count} perubahan belum disegerakkan",
-        "unsyncedBody": "kerana anda luar talian. Ia akan hilang jika anda log keluar sekarang."
+        "unsyncedBody": "kerana anda luar talian. Ia akan hilang jika anda log keluar sekarang.",
+        "bodyPhone": "Rutin dan fail anda akan dipadam daripada telefon ini. Log masuk semula untuk melihatnya."
       }
     },
     "signedOut": {
@@ -86,7 +88,9 @@
       "expiredTitle": "Sesi anda telah tamat",
       "expiredBody": "Anda dilog keluar selepas tempoh tidak aktif. Rutin dan fail anda telah dipadam daripada peranti ini.",
       "signInAgain": "Log masuk semula",
-      "differentAccount": "Guna akaun lain"
+      "differentAccount": "Guna akaun lain",
+      "bodyPhone": "Kami telah memadam rutin dan fail anda daripada telefon ini. Log masuk semula bila-bila masa anda sedia.",
+      "expiredBodyPhone": "Anda dilog keluar selepas tempoh tidak aktif. Rutin dan fail anda telah dipadam daripada telefon ini."
     },
     "accessDenied": {
       "heading": "Akses dinafikan",
@@ -94,6 +98,10 @@
       "body": "Pengguna hanya tersedia untuk admin. Jika anda rasa ini satu kesilapan, minta admin menukar peranan anda.",
       "needs": "403 · memerlukan {permission}",
       "goToday": "Pergi ke Hari ini"
+    },
+    "session": {
+      "title": "Log masuk pada peranti ini",
+      "endsIn": "Sesi tamat dalam {minutes} min melainkan anda kekal aktif."
     }
   },
   "scheduling": {
@@ -125,7 +133,7 @@
       "dismiss": "Tutup",
       "sessionExpiring": {
         "title": "Kekal log masuk?",
-        "body": "Anda akan dilog keluar dalam kira-kira 2 minit.",
+        "body": "Sesi anda hampir tamat.",
         "action": "Kekal log masuk"
       }
     }
