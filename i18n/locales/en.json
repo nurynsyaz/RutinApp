@@ -162,6 +162,12 @@
       "reminder": "Reminder (minutes before)",
       "notes": "Notes"
     },
+    "fields": {
+      "minutes": "{n} min",
+      "reminderNone": "No reminder",
+      "reminderBefore": "{n} minutes before",
+      "reminderDay": "1 day before"
+    },
     "editor": {
       "newTitle": "New routine",
       "editTitle": "Edit routine",
