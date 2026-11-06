@@ -66,6 +66,39 @@ test.describe('Download (AT-05)', () => {
     await page.getByRole('button', { name: 'Download: run-plan.pdf' }).click()
     expect((await download).suggestedFilename()).toBe('run-plan.pdf')
   })
+
+  // The browser does not report the type of a download, so the page's blob is read as it is handed over
+  async function watchBlobTypes(page: Page): Promise<void> {
+    await page.evaluate(() => {
+      const w = window as unknown as { __types: string[] }
+      w.__types = []
+      const make = URL.createObjectURL.bind(URL)
+      URL.createObjectURL = (blob: Blob | MediaSource) => {
+        if (blob instanceof Blob) w.__types.push(blob.type)
+        return make(blob)
+      }
+    })
+  }
+  const typesSeen = (page: Page) => page.evaluate(() => (window as unknown as { __types: string[] }).__types)
+
+  test('AT-05 downloads a seed file with its original type', async ({ page }) => {
+    await watchBlobTypes(page)
+    const download = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'Download: run-plan.pdf' }).click()
+    await download
+    expect(await typesSeen(page)).toEqual(['application/pdf'])
+  })
+
+  test('AT-05 downloads an uploaded file with the name and type it had', async ({ page }) => {
+    const png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+    await upload(page, { name: 'Pic One.png', mimeType: 'image/png', buffer: Buffer.from(png, 'base64') })
+    await expect(row(page, 'Pic One.png')).toBeVisible()
+    await watchBlobTypes(page)
+    const download = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'Download: Pic One.png' }).click()
+    expect((await download).suggestedFilename()).toBe('Pic One.png')
+    expect(await typesSeen(page)).toEqual(['image/png'])
+  })
 })
 
 test.describe('Upload (AT-01, AT-02, AT-03)', () => {
