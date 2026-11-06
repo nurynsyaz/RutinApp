@@ -135,3 +135,50 @@ describe('refresh', () => {
     expect(error.code).toBe('UNAUTHENTICATED')
   })
 })
+
+describe('listUsers', () => {
+  const admin = { id: 'usr_admin', email: 'admin@rutin.test', name: 'Hakim Admin', role: 'admin' as const }
+  const member = { id: 'usr_member', email: 'member@rutin.test', name: 'Aina Member', role: 'member' as const }
+
+  it('gives an admin every user, sorted by name', async () => {
+    const users = unwrap(await repo.listUsers(admin))
+    expect(users.map((u) => u.name)).toEqual(['Aina Member', 'Hakim Admin', 'Sara Expired'])
+    expect(users.map((u) => u.role)).toEqual(['member', 'admin', 'member'])
+  })
+
+  it('never includes passwords', async () => {
+    const users = unwrap(await repo.listUsers(admin))
+    expect(JSON.stringify(users)).not.toContain('Rutin#2026')
+    expect(users[0]).not.toHaveProperty('password')
+  })
+
+  it('shows the status and the last time each person was active', async () => {
+    const users = unwrap(await repo.listUsers(admin))
+    const sara = users.find((u) => u.id === 'usr_expired')
+    expect(sara).toMatchObject({ status: 'inactive', lastActiveAt: '2026-09-20T08:00:00.000Z' })
+  })
+
+  it('refuses a member', async () => {
+    expect(failure(await repo.listUsers(member)).code).toBe('FORBIDDEN')
+  })
+
+  it('records the time of a sign in as last active', async () => {
+    unwrap(await repo.signIn({ email: 'expired@rutin.test', password: 'Rutin#2026' }))
+    const users = unwrap(await repo.listUsers(admin))
+    expect(users.find((u) => u.id === 'usr_expired')?.lastActiveAt).toBe(NOW)
+  })
+
+  it('lists a new account as active, just now', async () => {
+    unwrap(await repo.signUp({ name: 'Zed New', email: 'zed@rutin.test', password: 'Rutin#2026' }))
+    const users = unwrap(await repo.listUsers(admin))
+    expect(users.at(-1)).toMatchObject({ name: 'Zed New', status: 'active', lastActiveAt: NOW })
+  })
+
+  it('treats an account saved before AD-01 as active and never seen', async () => {
+    const { readTable, writeTable } = await import('~/mocks/db')
+    const rows = await readTable<Record<string, unknown>>('users')
+    await writeTable('users', rows.map(({ status: _s, lastActiveAt: _l, ...rest }) => rest))
+    const users = unwrap(await repo.listUsers(admin))
+    expect(users.every((u) => u.status === 'active' && u.lastActiveAt === null)).toBe(true)
+  })
+})
