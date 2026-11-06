@@ -1,3 +1,5 @@
+import { formatWhen } from '~/kernel/when'
+import { ALLOWED_EXTENSIONS } from '../domain/file-rules'
 import type { FileKind } from '../domain/file-record'
 
 const INTL_LOCALE: Record<string, string> = { en: 'en-MY', ms: 'ms-MY' }
@@ -5,24 +7,17 @@ const intl = (locale: string): string => INTL_LOCALE[locale] ?? locale
 
 // "240 KB", "1.2 MB". Files here are 10 MB at most, so GB is never needed.
 export function formatSize(bytes: number, locale = 'en'): string {
-  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024) return `${Math.round(bytes)} B`
   if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`
   const mb = new Intl.NumberFormat(intl(locale), { maximumFractionDigits: 1 }).format(bytes / (1024 * 1024))
   return `${mb} MB`
 }
 
-const dayIn = (date: Date, zone: string): string =>
-  new Intl.DateTimeFormat('en-CA', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(date)
-
 // "Today, 09:12" for today, "2 Nov" for any other day, in the user's time zone
-export function formatAdded(iso: string, now: Date, locale: string, zone: string, todayLabel: string): string {
-  const added = new Date(iso)
-  if (dayIn(added, zone) === dayIn(now, zone)) {
-    const time = new Intl.DateTimeFormat(intl(locale), { timeZone: zone, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(added)
-    return `${todayLabel}, ${time}`
-  }
-  return new Intl.DateTimeFormat(intl(locale), { timeZone: zone, day: 'numeric', month: 'short' }).format(added)
-}
+export const formatAdded = formatWhen
+
+// The file picker's accept list: ".pdf,.png,..."
+export const ACCEPT = ALLOWED_EXTENSIONS.map((extension) => `.${extension}`).join(',')
 
 // The small badge in front of a file name
 export const KIND_BADGE: Record<FileKind, { label: string; classes: string }> = {
