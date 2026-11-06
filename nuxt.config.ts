@@ -31,6 +31,8 @@ export default defineNuxtConfig({
   piniaPluginPersistedstate: { storage: 'localStorage' },
   pwa: {
     registerType: 'prompt',
+    // SH-02: the install card shows until the person says "Not now"; the choice is kept under this key
+    client: { installPrompt: 'rutin.install.hidden' },
     manifest: {
       name: 'Rutin',
       short_name: 'Rutin',

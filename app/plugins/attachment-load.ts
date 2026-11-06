@@ -2,8 +2,11 @@ import { useAttachmentStore } from '~/contexts/attachments/application/attachmen
 import { useIdentityStore } from '~/contexts/identity/application/identity-store'
 
 // The file list loads for whoever is signed in, including a session restored after a reload.
-// On sign out the store is reset by 03.event-handlers.
-export default defineNuxtPlugin(() => {
+// On sign out the store is reset by the event-handlers plugin.
+export default defineNuxtPlugin({
+  name: 'attachment-load',
+  dependsOn: ['event-handlers', 'session-watch'],
+  setup() {
   const identity = useIdentityStore()
   const attachments = useAttachmentStore()
 
@@ -14,4 +17,5 @@ export default defineNuxtPlugin(() => {
     },
     { immediate: true },
   )
+  },
 })

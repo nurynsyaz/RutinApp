@@ -36,6 +36,8 @@ async function submit() {
   if (field) fieldErrors.value = { [field]: reason }
   else failureReason.value = reason
 }
+
+useHead({ title: () => t('identity.signUp.title') })
 </script>
 
 <template>
