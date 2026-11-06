@@ -76,6 +76,17 @@ export function createMockRoutineRepository(): RoutineRepository {
       return ok(updated)
     },
 
+    async setAttachmentIds(ownerId, id, fileIds) {
+      await latency()
+      const routines = await readRoutines()
+      const current = routines.find((r) => r.id === id && r.ownerId === ownerId)
+      if (!current) return err(notFound())
+
+      const updated: Routine = { ...current, attachmentIds: [...new Set(fileIds)] }
+      await writeTable('routines', routines.map((r) => (r.id === id ? updated : r)))
+      return ok(updated)
+    },
+
     async setSpan(ownerId, id, span) {
       await latency()
       const checkedSpan = checkSpan(span)
