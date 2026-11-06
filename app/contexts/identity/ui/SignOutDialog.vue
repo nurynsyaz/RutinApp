@@ -3,8 +3,7 @@ import { useIdentityStore } from '../application/identity-store'
 import { useSignOutDialog } from './use-sign-out-dialog'
 
 // BRD ID-06 and S-11: dialog on desktop, bottom sheet on mobile, with a confirm step.
-// `unsynced` is the number of queued offline completions that would be lost. The offline queue
-// arrives in a later milestone, so it is 0 for now.
+// `unsynced` is the number of queued offline completions that would be lost (SH-01).
 const props = withDefaults(defineProps<{ unsynced?: number }>(), { unsynced: 0 })
 
 const { t } = useI18n()

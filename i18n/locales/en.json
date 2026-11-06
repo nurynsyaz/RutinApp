@@ -170,7 +170,8 @@
       "done": "Uploaded",
       "failed": "Failed",
       "cancelled": "Cancelled"
-    }
+    },
+    "offline": "You're offline. Uploads and downloads are paused until you reconnect."
   },
   "scheduling": {
     "newRoutine": "New routine",
@@ -359,6 +360,10 @@
       "failed": "Upload failed",
       "downloadFailed": "Could not download the file",
       "deleteFailed": "Could not delete the file"
+    },
+    "offline": {
+      "note": "You're offline. Uploads and downloads are paused until you reconnect.",
+      "download": "You're offline. Downloads are paused until you reconnect."
     }
   },
   "profile": {
@@ -413,6 +418,13 @@
     }
   },
   "shell": {
+    "inspector": {
+      "label": "Event inspector",
+      "title": "Events",
+      "clear": "Clear",
+      "empty": "No events yet. Use the app and they will show here.",
+      "button": "Events ({count})"
+    },
     "brand": {
       "tagline": "Plan the day once. Repeat what works.",
       "subtitle": "Routines, files and progress in one place, on any device, online or off.",
@@ -431,7 +443,16 @@
         "title": "Stay signed in?",
         "body": "Your session is about to end.",
         "action": "Stay signed in"
-      }
+      },
+      "backOnline": "You're back online.",
+      "synced": "{count} change synced. | {count} changes synced.",
+      "syncFailed": "{count} change could not be synced. | {count} changes could not be synced.",
+      "syncFailedBody": "They stay in the queue and we will try again."
+    },
+    "offline": {
+      "title": "You're offline.",
+      "body": "Your schedule is still here. Uploads and downloads are paused.",
+      "pending": "{count} change will be sent when you're back online. | {count} changes will be sent when you're back online."
     },
     "install": {
       "title": "Install Rutin on this computer",
