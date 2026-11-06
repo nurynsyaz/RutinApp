@@ -8,6 +8,7 @@ import { saveBlob } from '~/contexts/attachments/ui/download'
 import { formatAdded, formatSize, reasonText } from '~/contexts/attachments/ui/file-format'
 import { useCan } from '~/contexts/identity/ui/use-can'
 import { useScheduleStore } from '~/contexts/scheduling/application/schedule-store'
+import { useOnline } from '~/kernel/connectivity'
 import { useShellStore } from '~/contexts/shell/application/shell-store'
 
 definePageMeta({ layout: 'app', permission: 'attachment:download' })
@@ -49,10 +50,11 @@ function retryLoad(): void {
 
 // Upload: the button, or dropping files anywhere on the page (AT-01)
 const picker = ref<HTMLInputElement | null>(null)
+const online = useOnline()
 
 async function addFiles(list: FileList | File[] | null): Promise<void> {
   const picked = list ? [...list] : []
-  if (picked.length === 0 || !can('attachment:upload')) return
+  if (picked.length === 0 || !can('attachment:upload') || !online.value) return
   await store.upload(picked, null)
 }
 
@@ -69,7 +71,7 @@ const hasFiles = (event: DragEvent): boolean => event.dataTransfer?.types.includ
 function onDragEnter(event: DragEvent): void {
   if (!hasFiles(event)) return
   dragDepth += 1
-  dragging.value = can('attachment:upload')
+  dragging.value = can('attachment:upload') && online.value
 }
 function onDragOver(event: DragEvent): void {
   // Without this the browser would open the dropped file instead
@@ -120,6 +122,7 @@ onBeforeUnmount(() => timers.forEach((timer) => clearTimeout(timer)))
 // Download (AT-05) and delete (AT-04)
 const downloading = ref<string | null>(null)
 async function download(id: string): Promise<void> {
+  if (!online.value) return
   downloading.value = id
   const result = await store.blobOf(id)
   downloading.value = null
@@ -154,7 +157,9 @@ const uploading = computed(() => store.jobs.some(isActive))
       <div v-if="can('attachment:upload')" class="flex flex-col items-start gap-1 sm:items-end">
         <button
           type="button"
-          class="flex min-h-11 items-center gap-2 rounded-lg bg-brand px-4 text-sm font-semibold text-white"
+          class="flex min-h-11 items-center gap-2 rounded-lg bg-brand px-4 text-sm font-semibold text-white disabled:opacity-60"
+          :disabled="!online"
+          :aria-describedby="online ? undefined : 'files-offline-note'"
           @click="picker?.click()"
         >
           <Icon name="lucide:upload" class="size-4" />
@@ -164,6 +169,11 @@ const uploading = computed(() => store.jobs.some(isActive))
         <input ref="picker" type="file" multiple :accept="accept" class="sr-only" tabindex="-1" aria-hidden="true" data-testid="file-input" @change="onPick">
       </div>
     </header>
+
+    <p v-if="!online" id="files-offline-note" role="status" class="mt-3 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+      <Icon name="lucide:wifi-off" class="mt-0.5 size-4 shrink-0" />
+      {{ t('attachments.offline.note') }}
+    </p>
 
     <div class="mt-4">
       <UploadPanel
@@ -249,6 +259,7 @@ const uploading = computed(() => store.jobs.some(isActive))
             :can-download="can('attachment:download')"
             :can-delete="can('attachment:delete')"
             :busy="downloading === file.id"
+            :offline="!online"
             @download="download"
             @delete="(id: string) => (toDelete = id)"
           />

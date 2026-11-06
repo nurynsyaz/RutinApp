@@ -35,6 +35,8 @@ async function submit() {
     sending.value = false
   }
 }
+
+useHead({ title: () => t('identity.forgotPassword.title') })
 </script>
 
 <template>
