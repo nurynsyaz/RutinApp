@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useOnline } from '~/kernel/connectivity'
 import { useAttachmentStore } from '../application/attachment-store'
 import { checkFiles, MAX_FILES_PER_BATCH, MAX_FILES_PER_ROUTINE, type Rejection } from '../domain/file-rules'
 import { isActive } from '../domain/upload-job'
@@ -13,6 +14,7 @@ const staged = defineModel<File[]>('staged', { default: () => [] })
 
 const { t, te, locale } = useI18n()
 const store = useAttachmentStore()
+const online = useOnline()
 
 const picker = ref<HTMLInputElement | null>(null)
 const over = ref(false)
@@ -24,6 +26,8 @@ const used = computed(() => (props.routineId ? store.countFor(props.routineId) :
 // A job that finished is already in the list of stored files, so only the others show here
 const jobs = computed(() => (props.routineId ? store.jobs.filter((job) => job.status !== 'done') : []))
 const full = computed(() => used.value >= MAX_FILES_PER_ROUTINE)
+// SH-01: no adding or downloading files while the browser is offline
+const locked = computed(() => full.value || !online.value)
 
 // Finished jobs leave the queue list on their own
 watch(
@@ -32,7 +36,7 @@ watch(
 )
 
 async function add(list: File[]): Promise<void> {
-  if (list.length === 0) return
+  if (list.length === 0 || !online.value) return
   downloadFailed.value = null
   if (props.routineId) {
     if (!store.ownerId) return
@@ -67,6 +71,7 @@ function unstage(file: File): void {
 }
 
 async function download(id: string, name: string): Promise<void> {
+  if (!online.value) return
   downloadFailed.value = null
   const result = await store.blobOf(id)
   if (!result.ok) {
@@ -113,7 +118,7 @@ const percent = (progress: number): number => Math.round(progress * 100)
         <button
           type="button"
           class="min-h-11 rounded px-1 font-medium text-brand underline disabled:opacity-60"
-          :disabled="full"
+          :disabled="locked"
           @click="picker?.click()"
         >
           {{ t('routineFiles.browse') }}
@@ -122,12 +127,13 @@ const percent = (progress: number): number => Math.round(progress * 100)
       <button
         type="button"
         class="min-h-11 rounded-lg border border-line px-4 text-sm font-medium text-slate-800 disabled:opacity-60 sm:hidden"
-        :disabled="full"
+        :disabled="locked"
         @click="picker?.click()"
       >
         {{ t('routineFiles.add') }}
       </button>
-      <p class="mt-1 text-xs text-slate-600">{{ t('routineFiles.limits', { batch: MAX_FILES_PER_BATCH }) }}</p>
+      <p v-if="!online" id="routine-files-offline" class="mt-1 text-xs text-amber-800">{{ t('routineFiles.offline') }}</p>
+      <p v-else class="mt-1 text-xs text-slate-600">{{ t('routineFiles.limits', { batch: MAX_FILES_PER_BATCH }) }}</p>
     </div>
 
     <section v-if="rejected.length > 0" role="status" class="mt-3 rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-900">
@@ -214,7 +220,9 @@ const percent = (progress: number): number => Math.round(progress * 100)
         </div>
         <button
           type="button"
-          class="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-slate-600"
+          class="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-slate-600 disabled:opacity-60"
+          :disabled="!online"
+          :aria-describedby="online ? undefined : 'routine-files-offline'"
           :aria-label="t('routineFiles.download', { name: file.name })"
           :title="t('routineFiles.download', { name: file.name })"
           @click="download(file.id, file.name)"
