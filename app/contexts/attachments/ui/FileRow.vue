@@ -12,6 +12,8 @@ const props = defineProps<{
   canDownload: boolean
   canDelete: boolean
   busy?: boolean
+  // SH-01: no downloads while the browser is offline
+  offline?: boolean
 }>()
 const emit = defineEmits<{ download: [id: string]; delete: [id: string] }>()
 
@@ -40,10 +42,11 @@ const badge = computed(() => KIND_BADGE[fileKindOf(props.file.mime)])
       <button
         v-if="canDownload"
         type="button"
-        :disabled="busy"
+        :disabled="busy || offline"
+        :aria-describedby="offline ? 'files-offline-note' : undefined"
         class="flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-lg px-2 text-sm font-medium text-brand disabled:opacity-60"
         :aria-label="`${t('attachments.download')}: ${file.name}`"
-        :title="t('attachments.download')"
+        :title="offline ? t('attachments.offline.download') : t('attachments.download')"
         @click="emit('download', file.id)"
       >
         <Icon name="lucide:download" class="size-4" />
