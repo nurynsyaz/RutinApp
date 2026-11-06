@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     { path: '~/contexts/identity/ui', pathPrefix: false },
     { path: '~/contexts/shell/ui', pathPrefix: false },
     { path: '~/contexts/scheduling/ui', pathPrefix: false },
+    { path: '~/contexts/attachments/ui', pathPrefix: false },
     '~/components',
   ],
 

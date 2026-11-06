@@ -113,6 +113,36 @@
       "endsIn": "Session ends in {minutes} min unless you stay active."
     }
   },
+  "routineFiles": {
+    "title": "Attachments",
+    "count": "{n} of {max}",
+    "dropHere": "Drop files here or",
+    "dropOver": "Drop to add",
+    "browse": "browse",
+    "add": "Add files",
+    "limits": "PDF, PNG, JPG, WEBP, DOCX, XLSX, TXT · up to 10 MB each · {batch} per batch",
+    "empty": "No files attached yet.",
+    "stagedHint": "These files are added when you save the routine.",
+    "removeStaged": "Remove {name}",
+    "download": "Download {name}",
+    "downloadFailed": "Could not download {name}.",
+    "rejectedTitle": "Not added",
+    "dismiss": "Dismiss",
+    "progress": "{loaded} of {size} · {percent}%",
+    "status": {
+      "queued": "Waiting",
+      "uploading": "Uploading",
+      "done": "Uploaded",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    },
+    "reject": {
+      "FILE_TYPE_NOT_ALLOWED": "{name} was not added: file type not allowed. Use PDF, PNG, JPG, WEBP, DOCX, XLSX or TXT.",
+      "FILE_TOO_LARGE": "{name} was not added: it is over the 10 MB limit.",
+      "BATCH_LIMIT": "{name} was not added: you can add up to 5 files at once.",
+      "ROUTINE_LIMIT": "{name} was not added: a routine can hold up to 20 files."
+    }
+  },
   "scheduling": {
     "newRoutine": "New routine",
     "markDone": "Mark as done",
@@ -203,6 +233,7 @@
     },
     "card": {
       "startsIn": "Starts in {minutes} min",
+      "files": "{n} file | {n} files",
       "overlaps": "Overlaps with {titles}"
     },
     "scope": {
