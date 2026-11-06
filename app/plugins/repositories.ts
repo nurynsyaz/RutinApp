@@ -8,7 +8,7 @@ import { createMockFileRepository } from '~/contexts/attachments/infrastructure/
 import type { FileRepository } from '~/contexts/attachments/domain/file-repository'
 
 // The return type is written out so TypeScript does not have to guess it from
-// nuxtApp.$clock, which comes from the plugin before this one.
+// nuxtApp.$clock, which comes from the event-bus plugin.
 export interface Repositories {
   auth: AuthRepository
   routines: RoutineRepository
@@ -16,7 +16,10 @@ export interface Repositories {
   profile: ProfileRepository
 }
 
-export default defineNuxtPlugin((nuxtApp): { provide: { repositories: Repositories } } => {
+export default defineNuxtPlugin({
+  name: 'repositories',
+  dependsOn: ['event-bus'],
+  setup(nuxtApp): { provide: { repositories: Repositories } } {
   const source = useRuntimeConfig().public.dataSource
   if (source !== 'mock') {
     throw new Error(`Data source "${source}" is not built yet. Use "mock".`)
@@ -31,4 +34,5 @@ export default defineNuxtPlugin((nuxtApp): { provide: { repositories: Repositori
       },
     },
   }
+  },
 })
