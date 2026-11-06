@@ -16,7 +16,7 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('Files library (AT-04)', () => {
   test('AT-04 lists the files with the total size and the routine each one belongs to', async ({ page }) => {
-    await expect(page.getByText('7 files · 1 MB on this device')).toBeVisible()
+    await expect(page.getByText('7 files · 1 MB stored on this device')).toBeVisible()
     await expect(row(page, 'run-plan.pdf')).toContainText('Morning run')
     await expect(row(page, 'notes.pdf')).toContainText('Not linked')
   })
