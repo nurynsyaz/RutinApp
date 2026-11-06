@@ -8,5 +8,13 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['app/**/*.test.ts', 'i18n/**/*.test.ts'],
+        // BRD section 14: unit coverage of at least 70% on domain/ and application/ (npm run test:coverage)
+    coverage: {
+      provider: 'v8',
+      include: ['app/contexts/*/domain/**/*.ts', 'app/contexts/*/application/**/*.ts'],
+      exclude: ['**/*.test.ts'],
+      reporter: ['text-summary', 'text'],
+      thresholds: { statements: 70, branches: 70, functions: 70, lines: 70 },
+    },
   },
 })

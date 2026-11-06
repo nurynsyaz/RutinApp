@@ -32,7 +32,7 @@ function setMinute(event: Event): void {
       >
         <option v-for="hour in HOUR_OPTIONS" :key="hour" :value="hour">{{ pad(hour) }}</option>
       </select>
-      <span aria-hidden="true" class="font-mono text-slate-500">:</span>
+      <span aria-hidden="true" class="font-mono text-slate-600">:</span>
       <select
         :id="`${id}-minute`"
         :value="parts.minute"
