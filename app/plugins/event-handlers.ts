@@ -8,7 +8,10 @@ import { useProfileStore } from '~/contexts/profile/application/profile-store'
 import { useScheduleStore } from '~/contexts/scheduling/application/schedule-store'
 import { clearUserData } from '~/mocks/db'
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin({
+  name: 'event-handlers',
+  dependsOn: ['event-bus', 'repositories'],
+  setup(nuxtApp) {
   const router = useRouter()
   const shell = useShellStore()
   const identity = useIdentityStore()
@@ -82,4 +85,5 @@ export default defineNuxtPlugin((nuxtApp) => {
     // sync: dismiss the old warning before the new expiry can raise a fresh one
     { flush: 'sync' },
   )
+  },
 })

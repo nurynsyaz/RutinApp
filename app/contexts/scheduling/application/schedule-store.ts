@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { err, ok, type Result } from '~/kernel/result'
 import { domainError, type DomainError } from '~/kernel/domain-error'
+import { applyQueue, enqueue, type QueuedChange } from '../domain/completion-queue'
 import { buildDay, type DaySchedule } from '../domain/day-schedule'
 import { findOverlaps } from '../domain/overlap'
 import { duplicateInput } from '../domain/duplicate'
@@ -10,6 +11,7 @@ import type { Routine, RoutineInput } from '../domain/routine'
 import type { Completion } from '../domain/routine-repository'
 import { datesOfWeek, type WeekStart } from '../domain/week'
 import { useSchedulingDeps } from './deps'
+import { readQueue, writeQueue } from './queue-storage'
 
 export type LoadStatus = 'idle' | 'loading' | 'ready' | 'error'
 
@@ -24,6 +26,11 @@ export const useScheduleStore = defineStore('schedule', () => {
   const status = ref<LoadStatus>('idle')
   // Occurrences that are being saved right now, so a double click does not send two calls
   const saving = ref<string[]>([])
+  // SH-01: while offline, done changes wait here and are sent when the browser is back online
+  const online = ref(true)
+  const queue = ref<QueuedChange[]>([])
+  const pending = computed(() => queue.value.length)
+  let flushing = false
 
   const noOwner = () => err(domainError('UNAUTHENTICATED', 'UNAUTHENTICATED'))
 
@@ -71,22 +78,36 @@ export const useScheduleStore = defineStore('schedule', () => {
       return done
     }
     routines.value = list.value
-    completions.value = done.value
+    queue.value = readQueue(forOwner)
+    completions.value = applyQueue(done.value, queue.value)
     status.value = 'ready'
     return ok(undefined)
   }
 
   // SC-06: the day changes on screen straight away. If the save fails, only that day goes back.
   async function setDone(routineId: string, date: string, done: boolean): Promise<Result<void, DomainError>> {
-    const { repo, bus, clock } = useSchedulingDeps()
+    const { repo } = useSchedulingDeps()
     const owner = ownerId.value
     if (!owner) return noOwner()
 
     const key = keyOf(routineId, date)
     if (saving.value.includes(key) || isDone(routineId, date) === done) return ok(undefined)
 
-    saving.value = [...saving.value, key]
     applyDone(routineId, date, done)
+    if (!online.value) {
+      // SH-01: offline, the day changes on screen and the change waits in the queue
+      queue.value = enqueue(queue.value, { routineId, date, done })
+      writeQueue(owner, queue.value)
+      publishDone(routineId, date, done)
+      return ok(undefined)
+    }
+
+    // A change sent now replaces an older one still waiting in the queue for the same day
+    if (queue.value.some((c) => c.routineId === routineId && c.date === date)) {
+      queue.value = queue.value.filter((c) => !(c.routineId === routineId && c.date === date))
+      writeQueue(owner, queue.value)
+    }
+    saving.value = [...saving.value, key]
     const result = await repo.setDone(owner, routineId, date, done)
     if (ownerId.value !== owner) return ok(undefined)
     saving.value = saving.value.filter((k) => k !== key)
@@ -95,13 +116,51 @@ export const useScheduleStore = defineStore('schedule', () => {
       applyDone(routineId, date, !done)
       return result
     }
+    publishDone(routineId, date, done)
+    return ok(undefined)
+  }
+
+  function publishDone(routineId: string, date: string, done: boolean): void {
+    const { bus, clock } = useSchedulingDeps()
     bus.publish(done ? 'scheduling.OccurrenceCompleted' : 'scheduling.OccurrenceReopened', {
       v: 1,
       occurredAt: clock.nowIso(),
       routineId,
       date,
     })
-    return ok(undefined)
+  }
+
+  function setOnline(value: boolean): void {
+    online.value = value
+  }
+
+  // SH-01: sends the queued changes one by one. A change that cannot be sent stays in the queue.
+  async function flush(): Promise<{ synced: number; failed: number }> {
+    const owner = ownerId.value
+    if (!owner || flushing || queue.value.length === 0) return { synced: 0, failed: 0 }
+    const { repo } = useSchedulingDeps()
+    flushing = true
+    let synced = 0
+    let failed = 0
+    try {
+      for (const change of [...queue.value]) {
+        if (!online.value || ownerId.value !== owner) break
+        const result = await repo.setDone(owner, change.routineId, change.date, change.done)
+        if (ownerId.value !== owner) break
+        if (!result.ok) {
+          failed++
+          continue
+        }
+        synced++
+        // A newer change for the same day (made while this one was sending) stays queued
+        queue.value = queue.value.filter((c) => !(c.routineId === change.routineId && c.date === change.date && c.done === change.done))
+        writeQueue(owner, queue.value)
+      }
+    }
+    finally {
+      flushing = false
+    }
+    return { synced, failed }
   }
 
   async function create(input: RoutineInput): Promise<Result<Routine, DomainError>> {
@@ -241,6 +300,9 @@ export const useScheduleStore = defineStore('schedule', () => {
 
   // BRD s.4: on sign out every store resets
   function reset(): void {
+    // BRD s.4: queued changes that were not synced are lost when the person signs out
+    if (ownerId.value) writeQueue(ownerId.value, [])
+    queue.value = []
     ownerId.value = null
     routines.value = []
     completions.value = []
@@ -253,6 +315,8 @@ export const useScheduleStore = defineStore('schedule', () => {
     routines,
     completions,
     status,
+    online,
+    pending,
     isDone,
     routineById,
     dayOf,
@@ -260,6 +324,8 @@ export const useScheduleStore = defineStore('schedule', () => {
     clashesWith,
     load,
     setDone,
+    setOnline,
+    flush,
     create,
     update,
     updateOccurrence,

@@ -52,7 +52,7 @@ function onKeydown(event: KeyboardEvent): void {
   <ol :aria-label="t('scheduling.today.timeline')" class="flex flex-col gap-2" @keydown="onKeydown">
     <template v-for="{ entry, key } in rows" :key="key">
       <li v-if="entry.kind === 'item'" class="grid grid-cols-[3.5rem_1fr] items-center gap-3">
-        <div class="font-mono text-xs text-slate-500">
+        <div class="font-mono text-xs text-slate-600">
           <div class="text-sm font-semibold text-slate-900">{{ formatTimeOfDay(entry.item.startMin) }}</div>
           <div>{{ formatTimeOfDay(entry.item.endMin) }}</div>
         </div>
@@ -69,7 +69,7 @@ function onKeydown(event: KeyboardEvent): void {
 
       <li v-else-if="entry.kind === 'gap'" class="grid grid-cols-[3.5rem_1fr] items-center gap-3">
         <span />
-        <p class="rounded-lg border border-dashed border-line px-3 py-2 text-sm text-slate-500">
+        <p class="rounded-lg border border-dashed border-line px-3 py-2 text-sm text-slate-600">
           {{ t('scheduling.today.freeFor', { span: span(entry.toMin - entry.fromMin) }) }}
         </p>
       </li>

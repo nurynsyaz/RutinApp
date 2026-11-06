@@ -65,14 +65,14 @@
       "hidePassword": "Sembunyikan kata laluan",
       "keepSignedIn": "Kekalkan saya log masuk pada peranti ini",
       "cta": "Log masuk",
-      "newToRutin": "Baharu dengan Rutin?",
+      "newToRutin": "Baru menggunakan Rutin?",
       "createAccount": "Cipta akaun",
       "attemptsLeft": "{count} percubaan lagi sebelum log masuk dikunci selama 60 saat."
     },
     "demoAccounts": {
       "title": "Akaun demo",
       "member": "Ahli",
-      "admin": "Admin",
+      "admin": "Pentadbir",
       "passwordBoth": "Kata laluan untuk kedua-duanya: {password}",
       "passwordShort": "Kata laluan: {password}"
     },
@@ -108,14 +108,14 @@
       "expiredTitle": "Sesi anda telah tamat",
       "expiredBody": "Anda dilog keluar selepas tempoh tidak aktif. Rutin dan fail anda telah dipadam daripada peranti ini.",
       "signInAgain": "Log masuk semula",
-      "differentAccount": "Guna akaun lain",
+      "differentAccount": "Gunakan akaun lain",
       "bodyPhone": "Kami telah memadam rutin dan fail anda daripada telefon ini. Log masuk semula bila-bila masa anda sedia.",
       "expiredBodyPhone": "Anda dilog keluar selepas tempoh tidak aktif. Rutin dan fail anda telah dipadam daripada telefon ini."
     },
     "accessDenied": {
       "heading": "Akses dinafikan",
       "title": "Anda tiada akses kepada halaman ini",
-      "body": "Pengguna hanya tersedia untuk admin. Jika anda rasa ini satu kesilapan, minta admin menukar peranan anda.",
+      "body": "Pengguna hanya tersedia untuk pentadbir. Jika anda rasa ini satu kesilapan, minta pentadbir menukar peranan anda.",
       "needs": "403 · memerlukan {permission}",
       "goToday": "Pergi ke Hari ini"
     },
@@ -125,7 +125,7 @@
     },
     "users": {
       "title": "Pengguna",
-      "readOnly": "Semua yang mempunyai akaun. Halaman ini hanya untuk dibaca.",
+      "readOnly": "Semua pengguna yang mempunyai akaun. Halaman ini hanya untuk dibaca.",
       "summary": "Tiada pengguna | {count} pengguna | {count} pengguna",
       "loading": "Memuatkan pengguna...",
       "loadFailed": "Pengguna tidak dapat dimuatkan.",
@@ -155,7 +155,7 @@
     "dropOver": "Lepaskan untuk menambah",
     "browse": "semak imbas",
     "add": "Tambah fail",
-    "limits": "PDF, PNG, JPG, WEBP, DOCX, XLSX, TXT · sehingga 10 MB setiap satu · {batch} satu kelompok",
+    "limits": "PDF, PNG, JPG, WEBP, DOCX, XLSX, TXT · sehingga 10 MB setiap satu · {batch} fail sekali gus",
     "empty": "Belum ada fail dilampirkan.",
     "stagedHint": "Fail ini ditambah apabila anda menyimpan rutin.",
     "removeStaged": "Buang {name}",
@@ -170,7 +170,8 @@
       "done": "Dimuat naik",
       "failed": "Gagal",
       "cancelled": "Dibatalkan"
-    }
+    },
+    "offline": "Anda luar talian. Muat naik dan muat turun dijeda sehingga anda kembali dalam talian."
   },
   "scheduling": {
     "newRoutine": "Rutin baharu",
@@ -188,8 +189,8 @@
       "previousDay": "Hari sebelumnya",
       "nextDay": "Hari seterusnya",
       "goToday": "Hari ini",
-      "now": "Kini",
-      "freeFor": "Kosong selama {span}",
+      "now": "Sekarang",
+      "freeFor": "Lapang selama {span}",
       "spanHours": "{h} j",
       "spanMinutes": "{m} min",
       "spanBoth": "{h} j {m} min",
@@ -274,7 +275,7 @@
       "title": "Padam rutin ini?",
       "confirm": "Padam rutin"
     },
-    "duplicate": "Gandakan",
+    "duplicate": "Duplikasi",
     "duplicateDialog": {
       "title": "Duplikasi ke tarikh lain",
       "hint": "Satu salinan sekali sahaja ditambah pada tarikh yang anda pilih.",
@@ -345,8 +346,8 @@
     "reject": {
       "FILE_TYPE_NOT_ALLOWED": "{name} bukan jenis yang disokong. Gunakan PDF, PNG, JPG, WEBP, DOCX, XLSX atau TXT.",
       "FILE_TOO_LARGE": "{name} melebihi had 10 MB.",
-      "BATCH_LIMIT": "{name} ditinggalkan. Anda boleh menambah sehingga 5 fail sekali gus.",
-      "ROUTINE_LIMIT": "{name} ditinggalkan. Satu rutin boleh menyimpan sehingga 20 fail."
+      "BATCH_LIMIT": "{name} tidak dimasukkan. Anda boleh menambah sehingga 5 fail sekali gus.",
+      "ROUTINE_LIMIT": "{name} tidak dimasukkan. Satu rutin boleh menyimpan sehingga 20 fail."
     },
     "storageWarning": "Storan pada peranti ini hampir penuh. Padam fail yang tidak diperlukan lagi.",
     "deleteDialog": {
@@ -359,6 +360,10 @@
       "failed": "Muat naik gagal",
       "downloadFailed": "Fail tidak dapat dimuat turun",
       "deleteFailed": "Fail tidak dapat dipadam"
+    },
+    "offline": {
+      "note": "Anda luar talian. Muat naik dan muat turun dijeda sehingga anda kembali dalam talian.",
+      "download": "Anda luar talian. Muat turun dijeda sehingga anda kembali dalam talian."
     }
   },
   "profile": {
@@ -403,20 +408,27 @@
       "hint": "PNG atau JPG, sehingga {max} MB",
       "alt": "Foto {name}",
       "cropTitle": "Pangkas foto anda",
-      "cropHint": "Seret foto untuk menggerakkannya, atau guna kekunci anak panah. Guna peluncur untuk zum.",
-      "cropArea": "Pratonton foto. Guna kekunci anak panah untuk menggerakkan foto.",
+      "cropHint": "Seret foto untuk menggerakkannya, atau gunakan kekunci anak panah. Gunakan peluncur untuk zum.",
+      "cropArea": "Pratonton foto. Gunakan kekunci anak panah untuk menggerakkan foto.",
       "zoom": "Zum",
-      "use": "Guna foto ini",
+      "use": "Gunakan foto ini",
       "saved": "Foto dikemas kini",
       "removed": "Foto dibuang",
       "saveFailed": "Foto anda tidak dapat disimpan."
     }
   },
   "shell": {
+    "inspector": {
+      "label": "Pemeriksa acara",
+      "title": "Acara",
+      "clear": "Kosongkan",
+      "empty": "Belum ada acara. Gunakan aplikasi dan acara akan dipaparkan di sini.",
+      "button": "Acara ({count})"
+    },
     "brand": {
       "tagline": "Rancang hari sekali. Ulang yang berkesan.",
       "subtitle": "Rutin, fail dan kemajuan di satu tempat, pada mana-mana peranti, dalam talian atau luar talian.",
-      "demoNote": "Binaan demo dengan data olok-olok. Tiada apa yang keluar daripada peranti ini.",
+      "demoNote": "Binaan demo dengan data contoh. Tiada apa yang keluar daripada peranti ini.",
       "sample": {
         "morningRun": "Larian pagi",
         "deepWork": "Kerja fokus",
@@ -431,7 +443,33 @@
         "title": "Kekal log masuk?",
         "body": "Sesi anda hampir tamat.",
         "action": "Kekal log masuk"
+      },
+      "backOnline": "Anda kembali dalam talian.",
+      "synced": "{count} perubahan disegerakkan. | {count} perubahan disegerakkan.",
+      "syncFailed": "{count} perubahan tidak dapat disegerakkan. | {count} perubahan tidak dapat disegerakkan.",
+      "syncFailedBody": "Perubahan kekal dalam baris gilir dan kami akan cuba lagi."
+    },
+    "offline": {
+      "title": "Anda luar talian.",
+      "body": "Jadual anda masih ada. Muat naik dan muat turun dijeda.",
+      "pending": "{count} perubahan akan dihantar apabila anda kembali dalam talian. | {count} perubahan akan dihantar apabila anda kembali dalam talian."
+    },
+    "install": {
+      "title": "Pasang Rutin pada komputer ini",
+      "titlePhone": "Pasang Rutin pada telefon ini",
+      "body": "Dibuka dalam tetingkapnya sendiri dan jadual hari ini kekal boleh dibaca tanpa talian.",
+      "cta": "Pasang",
+      "later": "Bukan sekarang",
+      "ios": {
+        "title": "Tambah Rutin ke Skrin Utama",
+        "step1": "Ketik butang Kongsi dalam Safari.",
+        "step2": "Pilih \"Tambah ke Skrin Utama\"."
       }
+    },
+    "update": {
+      "title": "Versi baharu tersedia",
+      "body": "Muat semula untuk mendapat versi terkini.",
+      "action": "Muat semula"
     }
   }
 }

@@ -11,6 +11,8 @@ function goBack() {
   if (window.history.length > 1) router.back()
   else void navigateTo('/today')
 }
+
+useHead({ title: () => t('identity.accessDenied.title') })
 </script>
 
 <template>
