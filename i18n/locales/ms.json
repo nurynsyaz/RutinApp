@@ -418,6 +418,13 @@
     }
   },
   "shell": {
+    "inspector": {
+      "label": "Pemeriksa acara",
+      "title": "Acara",
+      "clear": "Kosongkan",
+      "empty": "Belum ada acara. Gunakan aplikasi dan acara akan dipaparkan di sini.",
+      "button": "Acara ({count})"
+    },
     "brand": {
       "tagline": "Rancang hari sekali. Ulang yang berkesan.",
       "subtitle": "Rutin, fail dan kemajuan di satu tempat, pada mana-mana peranti, dalam talian atau luar talian.",

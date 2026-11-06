@@ -11,4 +11,5 @@ await useShellLocale().init()
     <NuxtPage />
   </NuxtLayout>
   <ToastHost />
+  <EventInspector />
 </template>
