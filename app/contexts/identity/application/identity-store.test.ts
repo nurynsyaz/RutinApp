@@ -249,6 +249,21 @@ describe('can', () => {
   })
 })
 
+describe('setName', () => {
+  it('changes the name of the signed in user and keeps the rest', async () => {
+    const store = useIdentityStore()
+    await store.signIn(MEMBER.email, MEMBER.password)
+    store.setName('Aina')
+    expect(store.user).toMatchObject({ name: 'Aina', email: MEMBER.email, role: 'member' })
+  })
+
+  it('does nothing when nobody is signed in', () => {
+    const store = useIdentityStore()
+    store.setName('Aina')
+    expect(store.user).toBeNull()
+  })
+})
+
 describe('denyAccess', () => {
   it('publishes identity.AccessDenied', () => {
     const store = useIdentityStore()

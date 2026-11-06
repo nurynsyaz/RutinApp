@@ -194,6 +194,11 @@ export const useIdentityStore = defineStore(
       return true
     }
 
+    // PR-02: the header shows the new name as soon as the profile is saved
+    function setName(name: string): void {
+      if (session.value) session.value = { ...session.value, user: { ...session.value.user, name } }
+    }
+
     function denyAccess(path: string, required: Permission | null): void {
       const { bus, clock } = useIdentityDeps()
       bus.publish('identity.AccessDenied', {
@@ -230,6 +235,7 @@ export const useIdentityStore = defineStore(
       touch,
       validateSession,
       denyAccess,
+      setName,
       reset,
     }
   },
