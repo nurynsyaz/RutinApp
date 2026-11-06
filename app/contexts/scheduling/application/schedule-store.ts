@@ -208,6 +208,37 @@ export const useScheduleStore = defineStore('schedule', () => {
     return ok(undefined)
   }
 
+  // BRD events table: attachments.FileUploaded / FileDeleted update the routine's file list.
+  // Files that are not linked to a routine do not matter here.
+  // One change at a time, so two files that finish close together do not overwrite each other
+  let filesQueue: Promise<void> = Promise.resolve()
+  function changeFiles(routineId: string | null, change: (ids: string[]) => string[]): Promise<void> {
+    filesQueue = filesQueue.then(() => applyFileChange(routineId, change))
+    return filesQueue
+  }
+
+  async function applyFileChange(routineId: string | null, change: (ids: string[]) => string[]): Promise<void> {
+    const { repo } = useSchedulingDeps()
+    const owner = ownerId.value
+    const current = routineId ? routineById(routineId) : undefined
+    if (!owner || !current) return
+
+    const next = change(current.attachmentIds)
+    if (next.length === current.attachmentIds.length && next.every((id, i) => id === current.attachmentIds[i])) return
+    // Saved first, so the count on screen is never ahead of what a reload would show
+    const saved = await repo.setAttachmentIds(owner, current.id, next)
+    if (!saved.ok || ownerId.value !== owner) return
+    routines.value = routines.value.map((r) => (r.id === current.id ? { ...r, attachmentIds: saved.value.attachmentIds } : r))
+  }
+
+  function onFileAttached(routineId: string | null, fileId: string): Promise<void> {
+    return changeFiles(routineId, (ids) => (ids.includes(fileId) ? ids : [...ids, fileId]))
+  }
+
+  function onFileDeleted(routineId: string | null, fileId: string): Promise<void> {
+    return changeFiles(routineId, (ids) => ids.filter((id) => id !== fileId))
+  }
+
   // BRD s.4: on sign out every store resets
   function reset(): void {
     ownerId.value = null
@@ -235,6 +266,8 @@ export const useScheduleStore = defineStore('schedule', () => {
     remove,
     removeOccurrence,
     duplicate,
+    onFileAttached,
+    onFileDeleted,
     reset,
   }
 })

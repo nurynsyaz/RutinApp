@@ -45,6 +45,11 @@ test.describe('4. Language', () => {
     await page.goto('/signed-out')
     await expect(page.getByRole('heading', { name: 'Anda telah log keluar' })).toBeVisible()
     await signIn(page, MEMBER, '/sign-in')
+    // The saved profile language wins after sign-in, so save Malay on the profile
+    await page.goto('/profile')
+    await page.getByLabel('Bahasa Melayu').check()
+    await page.getByRole('button', { name: 'Save changes' }).click()
+    await expect(page.getByRole('region', { name: 'Pemberitahuan' })).toContainText('Profil disimpan')
     await page.goto('/403')
     await expect(page.getByRole('heading', { name: 'Anda tiada akses kepada halaman ini' })).toBeVisible()
     await page.goto('/profile')

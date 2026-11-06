@@ -41,7 +41,18 @@
     "REMINDER_INVALID": "Masukkan peringatan dari 0 hingga 1440 minit.",
     "NOTES_TOO_LONG": "Nota boleh sehingga 500 aksara.",
     "ROUTINE_NOT_FOUND": "Rutin ini tidak dijumpai.",
-    "DATE_INVALID": "Tarikh ini tidak sah."
+    "DATE_INVALID": "Tarikh ini tidak sah.",
+    "FILE_NOT_FOUND": "Fail ini tidak ditemui.",
+    "FILE_TYPE_NOT_ALLOWED": "Jenis fail ini tidak disokong.",
+    "BATCH_LIMIT": "Anda boleh menambah sehingga 5 fail sekali gus.",
+    "ROUTINE_LIMIT": "Satu rutin boleh menyimpan sehingga 20 fail.",
+    "TIMEZONE_INVALID": "Pilih zon waktu daripada senarai.",
+    "DAY_START_INVALID": "Masukkan masa yang sah.",
+    "WEEK_START_INVALID": "Pilih Isnin atau Ahad.",
+    "LANGUAGE_INVALID": "Pilih English atau Bahasa Melayu.",
+    "AVATAR_TYPE_INVALID": "Gunakan foto PNG atau JPG.",
+    "AVATAR_TOO_LARGE": "Foto melebihi 2 MB.",
+    "AVATAR_UNREADABLE": "Foto ini tidak dapat dibuka."
   },
   "identity": {
     "signIn": {
@@ -111,6 +122,54 @@
     "session": {
       "title": "Log masuk pada peranti ini",
       "endsIn": "Sesi tamat dalam {minutes} min melainkan anda kekal aktif."
+    },
+    "users": {
+      "title": "Pengguna",
+      "readOnly": "Semua yang mempunyai akaun. Halaman ini hanya untuk dibaca.",
+      "summary": "Tiada pengguna | {count} pengguna | {count} pengguna",
+      "loading": "Memuatkan pengguna...",
+      "loadFailed": "Pengguna tidak dapat dimuatkan.",
+      "today": "Hari ini",
+      "never": "Tidak pernah",
+      "columns": {
+        "name": "Nama",
+        "email": "E-mel",
+        "role": "Peranan",
+        "status": "Status",
+        "lastActive": "Aktif terakhir"
+      },
+      "roles": {
+        "member": "Ahli",
+        "admin": "Pentadbir"
+      },
+      "statuses": {
+        "active": "Aktif",
+        "inactive": "Tidak aktif"
+      }
+    }
+  },
+  "routineFiles": {
+    "title": "Lampiran",
+    "count": "{n} daripada {max}",
+    "dropHere": "Lepaskan fail di sini atau",
+    "dropOver": "Lepaskan untuk menambah",
+    "browse": "semak imbas",
+    "add": "Tambah fail",
+    "limits": "PDF, PNG, JPG, WEBP, DOCX, XLSX, TXT · sehingga 10 MB setiap satu · {batch} satu kelompok",
+    "empty": "Belum ada fail dilampirkan.",
+    "stagedHint": "Fail ini ditambah apabila anda menyimpan rutin.",
+    "removeStaged": "Buang {name}",
+    "download": "Muat turun {name}",
+    "downloadFailed": "Tidak dapat memuat turun {name}.",
+    "rejectedTitle": "Tidak ditambah",
+    "dismiss": "Tutup",
+    "progress": "{loaded} daripada {size} · {percent}%",
+    "status": {
+      "queued": "Menunggu",
+      "uploading": "Sedang dimuat naik",
+      "done": "Dimuat naik",
+      "failed": "Gagal",
+      "cancelled": "Dibatalkan"
     }
   },
   "scheduling": {
@@ -203,6 +262,7 @@
     },
     "card": {
       "startsIn": "Bermula dalam {minutes} minit",
+      "files": "{n} fail | {n} fail",
       "overlaps": "Bertindih dengan {titles}"
     },
     "scope": {
@@ -229,11 +289,128 @@
     }
   },
   "attachments": {
+    "title": "Fail",
     "upload": "Muat naik fail",
-    "download": "Muat turun"
+    "download": "Muat turun",
+    "summary": "Tiada fail | {count} fail · {size} pada peranti ini | {count} fail · {size} pada peranti ini",
+    "dropHint": "Seret fail ke mana-mana bahagian halaman ini untuk memuat naik.",
+    "dropOverlay": "Lepaskan fail untuk memuat naik",
+    "limits": "Maksimum {max} MB setiap satu · PDF, PNG, JPG, WEBP, DOCX, XLSX, TXT",
+    "loading": "Memuatkan fail...",
+    "loadFailed": "Fail anda tidak dapat dimuatkan.",
+    "search": "Cari fail",
+    "searchPlaceholder": "Cari mengikut nama",
+    "filter": "Tapis mengikut jenis",
+    "kinds": {
+      "all": "Semua",
+      "pdf": "PDF",
+      "image": "Imej",
+      "doc": "Dokumen",
+      "sheet": "Hamparan",
+      "text": "Teks",
+      "other": "Lain-lain"
+    },
+    "sort": {
+      "label": "Isih",
+      "newest": "Terbaharu dahulu",
+      "oldest": "Terlama dahulu",
+      "largest": "Terbesar dahulu",
+      "smallest": "Terkecil dahulu"
+    },
+    "columns": {
+      "name": "Nama",
+      "routine": "Rutin",
+      "size": "Saiz",
+      "added": "Ditambah",
+      "actions": "Tindakan"
+    },
+    "notLinked": "Tidak dipautkan",
+    "today": "Hari ini",
+    "noMatch": "Tiada fail sepadan dengan carian anda.",
+    "empty": {
+      "title": "Belum ada fail",
+      "hint": "Muat naik fail di sini, atau lampirkan pada rutin."
+    },
+    "uploading": "Memuat naik {current} daripada {total}",
+    "progress": "{loaded} daripada {size} · {percent}%",
+    "status": {
+      "queued": "Menunggu",
+      "uploading": "Memuat naik",
+      "done": "Dimuat naik",
+      "failed": "Gagal",
+      "cancelled": "Dibatalkan"
+    },
+    "dismiss": "Tutup",
+    "rejectedTitle": "Tidak dimuat naik",
+    "reject": {
+      "FILE_TYPE_NOT_ALLOWED": "{name} bukan jenis yang disokong. Gunakan PDF, PNG, JPG, WEBP, DOCX, XLSX atau TXT.",
+      "FILE_TOO_LARGE": "{name} melebihi had 10 MB.",
+      "BATCH_LIMIT": "{name} ditinggalkan. Anda boleh menambah sehingga 5 fail sekali gus.",
+      "ROUTINE_LIMIT": "{name} ditinggalkan. Satu rutin boleh menyimpan sehingga 20 fail."
+    },
+    "storageWarning": "Storan pada peranti ini hampir penuh. Padam fail yang tidak diperlukan lagi.",
+    "deleteDialog": {
+      "title": "Padam fail ini?",
+      "hint": "{name} akan dibuang daripada peranti ini.",
+      "confirm": "Padam fail"
+    },
+    "toast": {
+      "uploaded": "Fail dimuat naik",
+      "failed": "Muat naik gagal",
+      "downloadFailed": "Fail tidak dapat dimuat turun",
+      "deleteFailed": "Fail tidak dapat dipadam"
+    }
   },
   "profile": {
-    "save": "Simpan perubahan"
+    "save": "Simpan perubahan",
+    "subtitle": "Butiran anda, bahasa dan cara Rutin merancang hari anda.",
+    "loading": "Memuatkan profil anda...",
+    "loadFailed": "Profil anda tidak dapat dimuatkan.",
+    "joined": "Menyertai {date}",
+    "stats": {
+      "streak": "hari berturut-turut",
+      "week": "selesai minggu ini",
+      "routines": "rutin"
+    },
+    "details": "Butiran",
+    "fullName": "Nama penuh",
+    "email": "E-mel",
+    "emailHint": "Minta pentadbir untuk menukar e-mel anda.",
+    "language": "Bahasa",
+    "languages": {
+      "en": "English",
+      "ms": "Bahasa Melayu"
+    },
+    "timezone": "Zon waktu",
+    "dayStart": "Hari bermula pada",
+    "weekStart": "Minggu bermula pada",
+    "weekStarts": {
+      "monday": "Isnin",
+      "sunday": "Ahad"
+    },
+    "appliesNote": "Perubahan terpakai pada Hari ini dan Minggu serta-merta.",
+    "discard": "Buang",
+    "saving": "Menyimpan...",
+    "saved": "Profil disimpan",
+    "saveFailed": "Perubahan anda tidak dapat disimpan.",
+    "roles": {
+      "member": "Ahli",
+      "admin": "Pentadbir"
+    },
+    "avatar": {
+      "change": "Tukar foto",
+      "remove": "Buang foto",
+      "hint": "PNG atau JPG, sehingga {max} MB",
+      "alt": "Foto {name}",
+      "cropTitle": "Pangkas foto anda",
+      "cropHint": "Seret foto untuk menggerakkannya, atau guna kekunci anak panah. Guna peluncur untuk zum.",
+      "cropArea": "Pratonton foto. Guna kekunci anak panah untuk menggerakkan foto.",
+      "zoom": "Zum",
+      "use": "Guna foto ini",
+      "saved": "Foto dikemas kini",
+      "removed": "Foto dibuang",
+      "saveFailed": "Foto anda tidak dapat disimpan."
+    }
   },
   "shell": {
     "brand": {

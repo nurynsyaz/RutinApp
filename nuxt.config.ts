@@ -2,7 +2,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-11-03',
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   ssr: false,
   typescript: { strict: true },
   modules: [
@@ -15,17 +15,21 @@ export default defineNuxtConfig({
   ],
   components: [
     { path: '~/contexts/identity/ui', pathPrefix: false },
+    { path: '~/contexts/profile/ui', pathPrefix: false },
     { path: '~/contexts/shell/ui', pathPrefix: false },
     { path: '~/contexts/scheduling/ui', pathPrefix: false },
+    { path: '~/contexts/attachments/ui', pathPrefix: false },
     '~/components',
   ],
-
   // Icons are bundled into the app, so a static build shows them offline
   icon: { clientBundle: { scan: true }, serverBundle: false },
-
   css: ['~/assets/css/main.css'],
   vite: { plugins: [tailwindcss()] },
-    pwa: {
+  runtimeConfig: {
+    public: { dataSource: 'mock' },
+  },
+  piniaPluginPersistedstate: { storage: 'localStorage' },
+  pwa: {
     registerType: 'prompt',
     manifest: {
       name: 'Rutin',
@@ -40,8 +44,7 @@ export default defineNuxtConfig({
         { src: '/icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
       ],
     },
-
-        workbox: {
+    workbox: {
       // App shell and fonts are precached. Any other page opens the app, which then routes itself.
       navigateFallback: '/',
       globPatterns: ['**/*.{js,css,html,woff2,svg,png,ico,webmanifest}'],
@@ -63,8 +66,4 @@ export default defineNuxtConfig({
       { code: 'ms', language: 'ms-MY', name: 'Bahasa Melayu', file: 'ms.json' },
     ],
   },
-  runtimeConfig: {
-    public: { dataSource: 'mock' }, // 'mock' now, 'http' when the real API exists
-  },
-  piniaPluginPersistedstate: { storage: 'localStorage' },
 })

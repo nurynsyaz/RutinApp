@@ -187,7 +187,7 @@ test.describe('2. Create account', () => {
     await expect(page).toHaveURL(/\/today/)
     await expect(page.getByRole('link', { name: 'Users' })).toHaveCount(0)
     await page.goto('/profile')
-    await expect(page.getByText(/\(member\)/)).toBeVisible()
+    await expect(page.getByTestId('profile-role')).toHaveText('Member')
   })
 
   test('TC-202 email already used', async ({ page }) => {
