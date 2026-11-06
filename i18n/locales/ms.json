@@ -111,6 +111,30 @@
     "session": {
       "title": "Log masuk pada peranti ini",
       "endsIn": "Sesi tamat dalam {minutes} min melainkan anda kekal aktif."
+    },
+    "users": {
+      "title": "Pengguna",
+      "readOnly": "Semua yang mempunyai akaun. Halaman ini hanya untuk dibaca.",
+      "summary": "Tiada pengguna | {count} pengguna | {count} pengguna",
+      "loading": "Memuatkan pengguna...",
+      "loadFailed": "Pengguna tidak dapat dimuatkan.",
+      "today": "Hari ini",
+      "never": "Tidak pernah",
+      "columns": {
+        "name": "Nama",
+        "email": "E-mel",
+        "role": "Peranan",
+        "status": "Status",
+        "lastActive": "Aktif terakhir"
+      },
+      "roles": {
+        "member": "Ahli",
+        "admin": "Pentadbir"
+      },
+      "statuses": {
+        "active": "Aktif",
+        "inactive": "Tidak aktif"
+      }
     }
   },
   "scheduling": {

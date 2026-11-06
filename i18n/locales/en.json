@@ -111,6 +111,30 @@
     "session": {
       "title": "Signed in on this device",
       "endsIn": "Session ends in {minutes} min unless you stay active."
+    },
+    "users": {
+      "title": "Users",
+      "readOnly": "Everyone with an account. This page is read-only.",
+      "summary": "No users | {count} user | {count} users",
+      "loading": "Loading users...",
+      "loadFailed": "The users could not be loaded.",
+      "today": "Today",
+      "never": "Never",
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "lastActive": "Last active"
+      },
+      "roles": {
+        "member": "Member",
+        "admin": "Admin"
+      },
+      "statuses": {
+        "active": "Active",
+        "inactive": "Inactive"
+      }
     }
   },
   "scheduling": {
