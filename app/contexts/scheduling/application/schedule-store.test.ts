@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import type { Clock } from '~/kernel/clock'
 import { domainError, type DomainError } from '~/kernel/domain-error'
@@ -528,5 +528,106 @@ describe('reset', () => {
     expect(store.routines).toEqual([])
     expect(store.completions).toEqual([])
     expect(store.status).toBe('idle')
+  })
+})
+
+describe('offline queue (SH-01)', () => {
+  beforeEach(() => {
+    const data = new Map<string, string>()
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string) => data.get(key) ?? null,
+      setItem: (key: string, value: string) => void data.set(key, value),
+      removeItem: (key: string) => void data.delete(key),
+    })
+  })
+  afterEach(() => vi.unstubAllGlobals())
+
+  it('changes the day and queues the change without calling the repository', async () => {
+    const store = await loaded()
+    store.setOnline(false)
+    const result = await store.setDone('a', TUESDAY, true)
+    expect(result.ok).toBe(true)
+    expect(store.isDone('a', TUESDAY)).toBe(true)
+    expect(store.pending).toBe(1)
+    expect(calls.setDone).toBe(0)
+  })
+
+  it('keeps one change for a day that was changed twice', async () => {
+    const store = await loaded()
+    store.setOnline(false)
+    await store.setDone('a', TUESDAY, true)
+    await store.setDone('a', TUESDAY, false)
+    expect(store.pending).toBe(1)
+    expect(store.isDone('a', TUESDAY)).toBe(false)
+  })
+
+  it('sends the queued changes when asked and empties the queue', async () => {
+    const store = await loaded()
+    store.setOnline(false)
+    await store.setDone('a', TUESDAY, true)
+    await store.setDone('b', TUESDAY, true)
+    store.setOnline(true)
+    expect(await store.flush()).toEqual({ synced: 2, failed: 0 })
+    expect(calls.setDone).toBe(2)
+    expect(store.pending).toBe(0)
+    expect(store.isDone('a', TUESDAY)).toBe(true)
+  })
+
+  it('keeps a change that could not be sent and counts it', async () => {
+    const store = await loaded()
+    store.setOnline(false)
+    await store.setDone('a', TUESDAY, true)
+    await store.setDone('b', TUESDAY, true)
+    failSetDone.add(`b|${TUESDAY}`)
+    store.setOnline(true)
+    expect(await store.flush()).toEqual({ synced: 1, failed: 1 })
+    expect(store.pending).toBe(1)
+    // the day stays done on screen
+    expect(store.isDone('b', TUESDAY)).toBe(true)
+  })
+
+  it('does nothing when the queue is empty', async () => {
+    const store = await loaded()
+    expect(await store.flush()).toEqual({ synced: 0, failed: 0 })
+  })
+
+  it('stops sending when the connection drops again', async () => {
+    const store = await loaded()
+    store.setOnline(false)
+    await store.setDone('a', TUESDAY, true)
+    expect(await store.flush()).toEqual({ synced: 0, failed: 0 })
+    expect(store.pending).toBe(1)
+  })
+
+  it('brings the queue back after a reload', async () => {
+    const first = await loaded()
+    first.setOnline(false)
+    await first.setDone('a', TUESDAY, true)
+    setActivePinia(createPinia())
+    const second = useScheduleStore()
+    await second.load('usr_member')
+    expect(second.pending).toBe(1)
+    expect(second.isDone('a', TUESDAY)).toBe(true)
+  })
+
+  it('drops the queue when the person signs out', async () => {
+    const store = await loaded()
+    store.setOnline(false)
+    await store.setDone('a', TUESDAY, true)
+    store.reset()
+    expect(store.pending).toBe(0)
+    setActivePinia(createPinia())
+    const next = useScheduleStore()
+    await next.load('usr_member')
+    expect(next.pending).toBe(0)
+  })
+
+  it('a change sent while online replaces an older queued one for the same day', async () => {
+    const store = await loaded()
+    store.setOnline(false)
+    await store.setDone('a', TUESDAY, true)
+    store.setOnline(true)
+    await store.setDone('a', TUESDAY, false)
+    expect(store.pending).toBe(0)
   })
 })

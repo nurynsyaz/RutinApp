@@ -42,7 +42,7 @@ v-if="toast.actionLabel" type="button" class="mt-2 min-h-11 text-sm font-semibol
             </button>
         </div>
         <button
-type="button" class="flex min-h-11 min-w-11 items-center justify-center text-slate-500"
+type="button" class="flex min-h-11 min-w-11 items-center justify-center text-slate-600"
             :aria-label="t('shell.toasts.dismiss')" @click="emit('dismiss', toast.id)">
             <Icon name="lucide:x" class="size-4" />
         </button>

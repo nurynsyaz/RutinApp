@@ -44,6 +44,8 @@ const sample = computed(() => [
     </aside>
 
     <div class="flex min-h-screen flex-1 flex-col">
+      <OfflineBanner />
+
       <header
         class="flex items-center justify-between border-b border-line bg-white px-4 py-3 lg:border-0 lg:bg-transparent lg:px-10 lg:pt-6"
       >
