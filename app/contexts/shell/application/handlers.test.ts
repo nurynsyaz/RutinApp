@@ -11,14 +11,20 @@ function setup() {
   const resetShell = vi.fn()
   const clearUserData = vi.fn(async () => {})
   const notifyExpiring = vi.fn()
+  const notifyUploaded = vi.fn()
+  const notifyUploadFailed = vi.fn()
+  const applyLocale = vi.fn()
   const stop = registerShellHandlers(bus, {
     navigate,
     signedInTarget: () => '/files',
     resetShell,
     clearUserData,
     notifyExpiring,
+    notifyUploaded,
+    notifyUploadFailed,
+    applyLocale,
   })
-  return { bus, navigate, stop, resetShell, clearUserData, notifyExpiring }
+  return { bus, navigate, stop, resetShell, clearUserData, notifyExpiring, notifyUploaded, notifyUploadFailed, applyLocale }
 }
 
 describe('shell handlers', () => {
@@ -52,6 +58,30 @@ describe('shell handlers', () => {
     const { bus, notifyExpiring } = setup()
     bus.publish('identity.SessionExpiring', { ...base, expiresAt: '2026-11-04T10:00:00.000Z' })
     expect(notifyExpiring).toHaveBeenCalledWith('2026-11-04T10:00:00.000Z')
+  })
+
+  it('shows a toast after attachments.FileUploaded', () => {
+    const { bus, notifyUploaded } = setup()
+    bus.publish('attachments.FileUploaded', { ...base, fileId: 'f1', routineId: null, name: 'plan.pdf', size: 10, mime: 'application/pdf' })
+    expect(notifyUploaded).toHaveBeenCalledWith('plan.pdf')
+  })
+
+  it('shows an error toast with the reason after attachments.FileUploadFailed', () => {
+    const { bus, notifyUploadFailed } = setup()
+    bus.publish('attachments.FileUploadFailed', { ...base, name: 'plan.pdf', reason: 'NETWORK' })
+    expect(notifyUploadFailed).toHaveBeenCalledWith('plan.pdf', 'NETWORK')
+  })
+
+  it('switches the language after the profile saves a new one', () => {
+    const { bus, applyLocale } = setup()
+    bus.publish('profile.ProfileUpdated', { ...base, userId: 'u1', changes: { locale: 'ms' } })
+    expect(applyLocale).toHaveBeenCalledWith('ms')
+  })
+
+  it('leaves the language alone when the profile change is something else', () => {
+    const { bus, applyLocale } = setup()
+    bus.publish('profile.ProfileUpdated', { ...base, userId: 'u1', changes: { name: 'Aina' } })
+    expect(applyLocale).not.toHaveBeenCalled()
   })
 
   it('goes to /403 and says which permission was missing', () => {

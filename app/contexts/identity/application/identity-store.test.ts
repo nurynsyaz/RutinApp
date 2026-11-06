@@ -60,6 +60,9 @@ const repo: AuthRepository = {
   async signOut() {
     return ok(undefined)
   },
+  async listUsers() {
+    return ok([])
+  },
   async refresh(session) {
     if (revoked) return err(domainError('UNAUTHENTICATED', 'UNAUTHENTICATED'))
     const account = Object.values(ACCOUNTS).find((a) => a?.id === session.user.id)
@@ -246,6 +249,21 @@ describe('can', () => {
     await store.signOut()
     await store.signIn('admin@rutin.test', PASSWORD)
     expect(store.can('admin:users:read')).toBe(true)
+  })
+})
+
+describe('setName', () => {
+  it('changes the name of the signed in user and keeps the rest', async () => {
+    const store = useIdentityStore()
+    await store.signIn(MEMBER.email, MEMBER.password)
+    store.setName('Aina')
+    expect(store.user).toMatchObject({ name: 'Aina', email: MEMBER.email, role: 'member' })
+  })
+
+  it('does nothing when nobody is signed in', () => {
+    const store = useIdentityStore()
+    store.setName('Aina')
+    expect(store.user).toBeNull()
   })
 })
 
