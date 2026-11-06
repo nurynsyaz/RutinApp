@@ -141,6 +141,36 @@
       }
     }
   },
+  "routineFiles": {
+    "title": "Lampiran",
+    "count": "{n} daripada {max}",
+    "dropHere": "Lepaskan fail di sini atau",
+    "dropOver": "Lepaskan untuk menambah",
+    "browse": "semak imbas",
+    "add": "Tambah fail",
+    "limits": "PDF, PNG, JPG, WEBP, DOCX, XLSX, TXT · sehingga 10 MB setiap satu · {batch} satu kelompok",
+    "empty": "Belum ada fail dilampirkan.",
+    "stagedHint": "Fail ini ditambah apabila anda menyimpan rutin.",
+    "removeStaged": "Buang {name}",
+    "download": "Muat turun {name}",
+    "downloadFailed": "Tidak dapat memuat turun {name}.",
+    "rejectedTitle": "Tidak ditambah",
+    "dismiss": "Tutup",
+    "progress": "{loaded} daripada {size} · {percent}%",
+    "status": {
+      "queued": "Menunggu",
+      "uploading": "Sedang dimuat naik",
+      "done": "Dimuat naik",
+      "failed": "Gagal",
+      "cancelled": "Dibatalkan"
+    },
+    "reject": {
+      "FILE_TYPE_NOT_ALLOWED": "{name} tidak ditambah: jenis fail tidak dibenarkan. Gunakan PDF, PNG, JPG, WEBP, DOCX, XLSX atau TXT.",
+      "FILE_TOO_LARGE": "{name} tidak ditambah: melebihi had 10 MB.",
+      "BATCH_LIMIT": "{name} tidak ditambah: anda boleh menambah sehingga 5 fail sekali gus.",
+      "ROUTINE_LIMIT": "{name} tidak ditambah: satu rutin boleh menyimpan sehingga 20 fail."
+    }
+  },
   "scheduling": {
     "newRoutine": "Rutin baharu",
     "markDone": "Tandakan selesai",
@@ -231,6 +261,7 @@
     },
     "card": {
       "startsIn": "Bermula dalam {minutes} minit",
+      "files": "{n} fail | {n} fail",
       "overlaps": "Bertindih dengan {titles}"
     },
     "scope": {
