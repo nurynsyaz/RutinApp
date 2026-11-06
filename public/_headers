@@ -1,0 +1,9 @@
+# Cache rules for hosts that read a _headers file (Cloudflare Pages, Netlify).
+# Files in /_nuxt have a hash in their name, so they never change and can be kept for a year.
+# Without this, the browser checks every file again on each visit, which makes the first screen slow on a phone.
+/_nuxt/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# The service worker must always be checked, or people would never get a new version.
+/sw.js
+  Cache-Control: no-cache
