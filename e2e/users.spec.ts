@@ -41,7 +41,11 @@ test.describe('Users page (AD-01)', () => {
 
   test('AD-01 shows the page in Malay', async ({ page }) => {
     await signIn(page, ADMIN)
-    await page.evaluate(() => localStorage.setItem('rutin.locale', 'ms'))
+    // The saved profile language wins after sign in, so save Malay on the profile first
+    await page.goto('/profile')
+    await page.getByLabel('Bahasa Melayu').check()
+    await page.getByRole('button', { name: 'Save changes' }).click()
+    await expect(page.getByRole('region', { name: 'Pemberitahuan' })).toContainText('Profil disimpan')
     await page.goto('/admin/users')
     await expect(page.getByRole('heading', { name: 'Pengguna', level: 1 })).toBeVisible()
     await expect(row(page, 'usr_expired')).toContainText('Tidak aktif')
