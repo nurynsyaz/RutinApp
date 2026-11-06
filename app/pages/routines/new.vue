@@ -10,7 +10,7 @@ const { t, te } = useI18n()
 const schedule = useScheduleStore()
 const shell = useShellStore()
 const router = useRouter()
-const viewed = useViewedDate()
+const viewed = useViewedDate(useDaySettings())
 const saving = ref(false)
 
 useHead({ title: computed(() => t('scheduling.editor.newTitle')) })
