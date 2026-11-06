@@ -170,7 +170,8 @@
       "done": "Dimuat naik",
       "failed": "Gagal",
       "cancelled": "Dibatalkan"
-    }
+    },
+    "offline": "Anda luar talian. Muat naik dan muat turun dijeda sehingga anda kembali dalam talian."
   },
   "scheduling": {
     "newRoutine": "Rutin baharu",
@@ -359,6 +360,10 @@
       "failed": "Muat naik gagal",
       "downloadFailed": "Fail tidak dapat dimuat turun",
       "deleteFailed": "Fail tidak dapat dipadam"
+    },
+    "offline": {
+      "note": "Anda luar talian. Muat naik dan muat turun dijeda sehingga anda kembali dalam talian.",
+      "download": "Anda luar talian. Muat turun dijeda sehingga anda kembali dalam talian."
     }
   },
   "profile": {
@@ -431,7 +436,16 @@
         "title": "Kekal log masuk?",
         "body": "Sesi anda hampir tamat.",
         "action": "Kekal log masuk"
-      }
+      },
+      "backOnline": "Anda kembali dalam talian.",
+      "synced": "{count} perubahan disegerakkan. | {count} perubahan disegerakkan.",
+      "syncFailed": "{count} perubahan tidak dapat disegerakkan. | {count} perubahan tidak dapat disegerakkan.",
+      "syncFailedBody": "Perubahan kekal dalam baris gilir dan kami akan cuba lagi."
+    },
+    "offline": {
+      "title": "Anda luar talian.",
+      "body": "Jadual anda masih ada. Muat naik dan muat turun dijeda.",
+      "pending": "{count} perubahan akan dihantar apabila anda kembali dalam talian. | {count} perubahan akan dihantar apabila anda kembali dalam talian."
     }
   }
 }

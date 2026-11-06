@@ -10,6 +10,7 @@ export type DomainEvents = {
   'identity.SignedOut': EventBase & { userId: string; reason: 'user' | 'expired' }
   'identity.SessionExpiring': EventBase & { expiresAt: string }
   'identity.AccessDenied': EventBase & { path: string; required: Permission | null }
+  'shell.ConnectivityChanged': EventBase & { online: boolean }
   'scheduling.RoutineCreated': EventBase & { routineId: string; scope: 'one' | 'future' }
   'scheduling.RoutineUpdated': EventBase & { routineId: string; scope: 'one' | 'future' }
   'scheduling.RoutineDeleted': EventBase & { routineId: string }
