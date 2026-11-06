@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "check:size": "node scripts/check-bundle-size.mjs"
   },
   "dependencies": {
     "@date-fns/tz": "^1.5.0",
