@@ -35,7 +35,12 @@ async function add(list: File[]): Promise<void> {
   if (list.length === 0) return
   downloadFailed.value = null
   if (props.routineId) {
-    const result = await store.upload(list, props.routineId)
+    if (!store.ownerId) return
+    // The store checks the files as soon as it is called, so the turned-away files show at once
+    // and not after the whole queue has finished sending
+    const sending = store.upload(list, props.routineId)
+    rejected.value = [...store.rejected]
+    const result = await sending
     rejected.value = result.ok ? result.value : []
     return
   }
