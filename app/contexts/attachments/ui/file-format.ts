@@ -22,8 +22,8 @@ export const ACCEPT = ALLOWED_EXTENSIONS.map((extension) => `.${extension}`).joi
 // The small badge in front of a file name
 export const KIND_BADGE: Record<FileKind, { label: string; classes: string }> = {
   pdf: { label: 'PDF', classes: 'bg-rose-50 text-rose-700' },
-  image: { label: 'IMG', classes: 'bg-sky-50 text-sky-700' },
-  doc: { label: 'DOC', classes: 'bg-indigo-50 text-indigo-700' },
+  image: { label: 'IMG', classes: 'bg-indigo-50 text-indigo-700' },
+  doc: { label: 'DOC', classes: 'bg-sky-50 text-sky-700' },
   sheet: { label: 'XLS', classes: 'bg-emerald-50 text-emerald-700' },
   text: { label: 'TXT', classes: 'bg-slate-100 text-slate-700' },
   other: { label: 'FILE', classes: 'bg-slate-100 text-slate-700' },
