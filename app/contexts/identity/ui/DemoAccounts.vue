@@ -7,7 +7,7 @@ const DEMO_PASSWORD = 'Rutin#2026'
 
 <template>
   <div class="rounded-lg border border-dashed border-slate-300 bg-white p-3 font-mono text-xs text-slate-700">
-    <p class="mb-1 font-sans font-semibold uppercase tracking-wide text-slate-500">
+    <p class="mb-1 font-sans font-semibold uppercase tracking-wide text-slate-600">
       {{ t('identity.demoAccounts.title') }}
     </p>
     <div class="hidden lg:block">

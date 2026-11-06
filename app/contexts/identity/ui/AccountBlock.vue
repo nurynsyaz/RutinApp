@@ -19,7 +19,7 @@ const { show } = useSignOutDialog()
     </span>
     <div class="min-w-0 flex-1">
       <p class="truncate text-sm font-semibold text-slate-900">{{ identity.user.name }}</p>
-      <p class="truncate text-xs text-slate-500">{{ identity.user.email }}</p>
+      <p class="truncate text-xs text-slate-600">{{ identity.user.email }}</p>
     </div>
     <button
       type="button"

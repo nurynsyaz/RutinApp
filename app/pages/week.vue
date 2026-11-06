@@ -130,7 +130,7 @@ function open(item: DayItem): void {
             :aria-label="t('scheduling.week.dayList', { date: formatDayTitle(selectedDay.date, locale) })"
           >
             <li v-for="item in selectedDay.items" :key="item.routine.id" class="grid grid-cols-[3.5rem_1fr] items-center gap-3">
-              <div class="font-mono text-xs text-slate-500">
+              <div class="font-mono text-xs text-slate-600">
                 <div class="text-sm font-semibold text-slate-900">{{ formatTimeOfDay(item.startMin) }}</div>
                 <div>{{ formatTimeOfDay(item.endMin) }}</div>
               </div>

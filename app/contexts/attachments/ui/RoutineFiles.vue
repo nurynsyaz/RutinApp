@@ -88,7 +88,7 @@ const percent = (progress: number): number => Math.round(progress * 100)
   <section aria-labelledby="routine-files-title" data-testid="routine-files">
     <div class="mb-1 flex items-baseline justify-between">
       <h2 id="routine-files-title" class="text-sm font-medium text-slate-900">{{ t('routineFiles.title') }}</h2>
-      <span class="font-mono text-xs text-slate-500" data-testid="routine-files-count">
+      <span class="font-mono text-xs text-slate-600" data-testid="routine-files-count">
         {{ t('routineFiles.count', { n: used, max: MAX_FILES_PER_ROUTINE }) }}
       </span>
     </div>
@@ -213,7 +213,7 @@ const percent = (progress: number): number => Math.round(progress * 100)
 
     <ul v-if="stored.length > 0" class="mt-3 divide-y divide-line rounded-lg border border-line bg-white px-3" data-testid="routine-files-list">
       <li v-for="file in stored" :key="file.id" class="flex items-center gap-3 py-2">
-        <Icon name="lucide:paperclip" class="size-4 shrink-0 text-slate-500" />
+        <Icon name="lucide:paperclip" class="size-4 shrink-0 text-slate-600" />
         <div class="min-w-0 flex-1">
           <p class="truncate text-sm font-medium text-slate-900">{{ file.name }}</p>
           <p class="text-xs text-slate-600">{{ formatSize(file.size, locale) }}</p>
@@ -235,7 +235,7 @@ const percent = (progress: number): number => Math.round(progress * 100)
     <template v-if="!routineId">
       <ul v-if="staged.length > 0" class="mt-3 divide-y divide-line rounded-lg border border-line bg-white px-3" data-testid="routine-files-staged">
         <li v-for="file in staged" :key="file.name + file.size" class="flex items-center gap-3 py-2">
-          <Icon name="lucide:paperclip" class="size-4 shrink-0 text-slate-500" />
+          <Icon name="lucide:paperclip" class="size-4 shrink-0 text-slate-600" />
           <div class="min-w-0 flex-1">
             <p class="truncate text-sm font-medium text-slate-900">{{ file.name }}</p>
             <p class="text-xs text-slate-600">{{ formatSize(file.size, locale) }}</p>
