@@ -147,130 +147,139 @@ const uploading = computed(() => store.jobs.some(isActive))
 </script>
 
 <template>
-  <div class="mx-auto max-w-5xl">
-    <header class="flex flex-wrap items-start justify-between gap-4">
-      <div>
-        <h1 class="text-2xl font-bold text-slate-900">{{ t('attachments.title') }}</h1>
-        <p v-if="store.status === 'ready'" class="mt-1 text-sm text-slate-600">{{ summary }}</p>
-        <p class="mt-1 hidden text-sm text-slate-600 md:block">{{ t('attachments.dropHint') }}</p>
+  <div>
+    <div class="-mx-4 -mt-4 border-b border-line bg-white px-4 py-3">
+      <div class="mx-auto flex max-w-5xl items-center justify-between gap-3">
+        <div v-if="store.files.length > 0" class="relative min-w-0 flex-1 sm:max-w-sm">
+          <label for="file-search" class="sr-only">{{ t('attachments.search') }}</label>
+          <Icon
+name="lucide:search"
+            class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-500" />
+          <input
+id="file-search" v-model="query" type="search" :placeholder="t('attachments.searchPlaceholder')"
+            class="h-11 w-full rounded-lg border border-line bg-white pr-3 pl-9 text-base text-slate-900 md:h-10 md:text-sm">
+        </div>
+        <div v-if="can('attachment:upload')" class="ml-auto shrink-0">
+          <button
+type="button"
+            class="flex min-h-11 items-center gap-2 rounded-lg bg-brand px-4 text-sm font-semibold text-white disabled:opacity-60 md:min-h-10"
+            :disabled="!online" :aria-describedby="online ? undefined : 'files-offline-note'" @click="picker?.click()">
+            <Icon name="lucide:upload" class="size-4" />
+            {{ t('attachments.upload') }}
+          </button>
+          <input
+ref="picker" type="file" multiple :accept="accept" class="sr-only" tabindex="-1" aria-hidden="true"
+            data-testid="file-input" @change="onPick">
+        </div>
       </div>
-      <div v-if="can('attachment:upload')" class="flex flex-col items-start gap-1 sm:items-end">
+    </div>
+
+    <div class="mx-auto max-w-5xl">
+      <header class="mt-6 flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
+        <div>
+          <h1 class="text-2xl font-bold text-slate-900">{{ t('attachments.title') }}</h1>
+          <p v-if="store.status === 'ready'" class="mt-1 text-sm text-slate-600">
+            {{ summary }}<span class="hidden md:inline"> · {{ t('attachments.dropHint') }}</span>
+          </p>
+        </div>
+        <p v-if="can('attachment:upload')" class="text-xs text-slate-600">
+          {{ t('attachments.limits', { max: maxMb }) }}
+        </p>
+      </header>
+
+      <p
+v-if="!online" id="files-offline-note" role="status"
+        class="mt-3 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+        <Icon name="lucide:wifi-off" class="mt-0.5 size-4 shrink-0" />
+        {{ t('attachments.offline.note') }}
+      </p>
+
+      <div class="mt-4">
+        <UploadPanel
+:jobs="store.jobs" :rejected="store.rejected" :storage-nearly-full="store.storageNearlyFull"
+          @cancel="store.cancel" @retry="store.retry" @dismiss="store.dismiss"
+          @dismiss-rejected="store.dismissRejected" />
+      </div>
+
+      <p v-if="loading" role="status" class="mt-6 text-sm text-slate-600">{{ t('attachments.loading') }}</p>
+
+      <div
+v-else-if="store.status === 'error'" role="alert"
+        class="mt-6 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">
+        <p>{{ t('attachments.loadFailed') }}</p>
         <button
-          type="button"
-          class="flex min-h-11 items-center gap-2 rounded-lg bg-brand px-4 text-sm font-semibold text-white disabled:opacity-60"
-          :disabled="!online"
-          :aria-describedby="online ? undefined : 'files-offline-note'"
-          @click="picker?.click()"
-        >
-          <Icon name="lucide:upload" class="size-4" />
-          {{ t('attachments.upload') }}
+type="button" class="mt-2 min-h-11 rounded-lg border border-rose-300 px-4 font-medium"
+          @click="retryLoad">
+          {{ t('common.retry') }}
         </button>
-        <p class="text-xs text-slate-600">{{ t('attachments.limits', { max: maxMb }) }}</p>
-        <input ref="picker" type="file" multiple :accept="accept" class="sr-only" tabindex="-1" aria-hidden="true" data-testid="file-input" @change="onPick">
       </div>
-    </header>
 
-    <p v-if="!online" id="files-offline-note" role="status" class="mt-3 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
-      <Icon name="lucide:wifi-off" class="mt-0.5 size-4 shrink-0" />
-      {{ t('attachments.offline.note') }}
-    </p>
-
-    <div class="mt-4">
-      <UploadPanel
-        :jobs="store.jobs"
-        :rejected="store.rejected"
-        :storage-nearly-full="store.storageNearlyFull"
-        @cancel="store.cancel"
-        @retry="store.retry"
-        @dismiss="store.dismiss"
-        @dismiss-rejected="store.dismissRejected"
-      />
-    </div>
-
-    <p v-if="loading" role="status" class="mt-6 text-sm text-slate-600">{{ t('attachments.loading') }}</p>
-
-    <div v-else-if="store.status === 'error'" role="alert" class="mt-6 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">
-      <p>{{ t('attachments.loadFailed') }}</p>
-      <button type="button" class="mt-2 min-h-11 rounded-lg border border-rose-300 px-4 font-medium" @click="retryLoad">{{ t('common.retry') }}</button>
-    </div>
-
-    <template v-else>
-      <div v-if="store.files.length > 0" class="mt-6 space-y-3">
-        <div class="flex flex-wrap items-end gap-3">
-          <div class="min-w-48 flex-1">
-            <label for="file-search" class="mb-1 block text-sm font-medium text-slate-900">{{ t('attachments.search') }}</label>
-            <input
-              id="file-search"
-              v-model="query"
-              type="search"
-              :placeholder="t('attachments.searchPlaceholder')"
-              class="h-11 w-full rounded-lg border border-line bg-white px-3 text-base text-slate-900"
-            >
+      <template v-else>
+        <div v-if="store.files.length > 0" class="mt-5 flex flex-wrap items-center justify-between gap-3">
+          <div role="group" :aria-label="t('attachments.filter')" class="flex flex-wrap gap-2">
+            <button
+v-for="chip in chips" :key="chip" type="button" :aria-pressed="kind === chip"
+              class="min-h-11 rounded-full border px-4 text-sm font-medium md:min-h-8 md:px-3 md:text-xs"
+              :class="kind === chip ? 'border-slate-900 bg-slate-900 text-white' : 'border-line bg-white text-slate-800'"
+              @click="kind = chip">
+              {{ t(`attachments.kinds.${chip}`) }} {{ counts[chip] }}
+            </button>
           </div>
-          <div>
-            <label for="file-sort" class="mb-1 block text-sm font-medium text-slate-900">{{ t('attachments.sort.label') }}</label>
-            <select id="file-sort" v-model="sort" class="h-11 rounded-lg border border-line bg-white px-3 text-base text-slate-900">
-              <option v-for="option in FILE_SORTS" :key="option" :value="option">{{ t(`attachments.sort.${option}`) }}</option>
+          <div class="flex items-center gap-2">
+            <label for="file-sort" class="text-sm text-slate-600 md:text-xs">{{ t('attachments.sort.label') }}</label>
+            <select
+id="file-sort" v-model="sort"
+              class="h-11 rounded-lg border border-line bg-white px-3 text-base text-slate-900 md:h-9 md:text-xs">
+              <option v-for="option in FILE_SORTS" :key="option" :value="option">
+                {{ t(`attachments.sort.${option}`) }}
+              </option>
             </select>
           </div>
         </div>
 
-        <div role="group" :aria-label="t('attachments.filter')" class="flex flex-wrap gap-2">
-          <button
-            v-for="chip in chips"
-            :key="chip"
-            type="button"
-            :aria-pressed="kind === chip"
-            class="min-h-11 rounded-full border px-4 text-sm font-medium"
-            :class="kind === chip ? 'border-brand bg-brand text-white' : 'border-line bg-white text-slate-800'"
-            @click="kind = chip"
-          >
-            {{ t(`attachments.kinds.${chip}`) }} {{ counts[chip] }}
-          </button>
+        <div v-if="store.files.length === 0 && !uploading" class="mt-10 text-center">
+          <Icon name="lucide:folder-open" class="mx-auto size-10 text-slate-400" />
+          <h2 class="mt-3 text-lg font-semibold text-slate-900">{{ t('attachments.empty.title') }}</h2>
+          <p class="mt-1 text-sm text-slate-600">{{ t('attachments.empty.hint') }}</p>
         </div>
-      </div>
 
-      <div v-if="store.files.length === 0 && !uploading" class="mt-10 text-center">
-        <Icon name="lucide:folder-open" class="mx-auto size-10 text-slate-400" />
-        <h2 class="mt-3 text-lg font-semibold text-slate-900">{{ t('attachments.empty.title') }}</h2>
-        <p class="mt-1 text-sm text-slate-600">{{ t('attachments.empty.hint') }}</p>
-      </div>
+        <p v-else-if="store.files.length > 0 && visible.length === 0" role="status" class="mt-6 text-sm text-slate-600">
+          {{ t('attachments.noMatch') }}
+        </p>
 
-      <p v-else-if="store.files.length > 0 && visible.length === 0" role="status" class="mt-6 text-sm text-slate-600">
-        {{ t('attachments.noMatch') }}
-      </p>
-
-      <div v-else-if="visible.length > 0" class="mt-4 overflow-hidden rounded-xl border border-line bg-white">
-        <div class="hidden grid-cols-[minmax(0,2fr)_minmax(0,1.5fr)_5rem_9rem_auto] gap-x-3 border-b border-line bg-slate-50 px-4 py-2 text-xs font-semibold tracking-wide text-slate-600 uppercase md:grid" aria-hidden="true">
-          <span>{{ t('attachments.columns.name') }}</span>
-          <span>{{ t('attachments.columns.routine') }}</span>
-          <span>{{ t('attachments.columns.size') }}</span>
-          <span>{{ t('attachments.columns.added') }}</span>
-          <span class="w-26 text-right">{{ t('attachments.columns.actions') }}</span>
+        <div v-else-if="visible.length > 0" class="mt-5 overflow-hidden rounded-xl border border-line bg-white">
+          <div
+            class="hidden grid-cols-[minmax(0,2fr)_minmax(0,1.5fr)_5rem_9rem_auto] gap-x-3 border-b border-line bg-slate-50 px-4 py-2 text-xs font-semibold tracking-wide text-slate-600 uppercase md:grid"
+            aria-hidden="true">
+            <span>{{ t('attachments.columns.name') }}</span>
+            <span>{{ t('attachments.columns.routine') }}</span>
+            <span>{{ t('attachments.columns.size') }}</span>
+            <span>{{ t('attachments.columns.added') }}</span>
+            <span class="w-26 text-right">{{ t('attachments.columns.actions') }}</span>
+          </div>
+          <ul class="divide-y divide-line" data-testid="file-list">
+            <FileRow
+v-for="file in visible" :key="file.id" :file="file" :routine-label="routineLabel(file.routineId)"
+              :size-label="formatSize(file.size, locale)" :added-label="addedLabel(file.createdAt)"
+              :can-download="can('attachment:download')" :can-delete="can('attachment:delete')"
+              :busy="downloading === file.id" :offline="!online" @download="download"
+              @delete="(id: string) => (toDelete = id)" />
+          </ul>
         </div>
-        <ul class="divide-y divide-line" data-testid="file-list">
-          <FileRow
-            v-for="file in visible"
-            :key="file.id"
-            :file="file"
-            :routine-label="routineLabel(file.routineId)"
-            :size-label="formatSize(file.size, locale)"
-            :added-label="addedLabel(file.createdAt)"
-            :can-download="can('attachment:download')"
-            :can-delete="can('attachment:delete')"
-            :busy="downloading === file.id"
-            :offline="!online"
-            @download="download"
-            @delete="(id: string) => (toDelete = id)"
-          />
-        </ul>
+      </template>
+
+      <DeleteFileDialog
+v-if="toDelete" :name="toDeleteName" :busy="deleting" @confirm="confirmDelete"
+        @cancel="toDelete = null" />
+
+      <div
+v-if="dragging"
+        class="pointer-events-none fixed inset-0 z-40 flex items-center justify-center bg-brand/10 p-6"
+        aria-hidden="true">
+        <p class="rounded-xl border-2 border-dashed border-brand bg-white px-8 py-6 text-lg font-semibold text-brand">
+          {{ t('attachments.dropOverlay') }}
+        </p>
       </div>
-    </template>
-
-    <DeleteFileDialog v-if="toDelete" :name="toDeleteName" :busy="deleting" @confirm="confirmDelete" @cancel="toDelete = null" />
-
-    <div v-if="dragging" class="pointer-events-none fixed inset-0 z-40 flex items-center justify-center bg-brand/10 p-6" aria-hidden="true">
-      <p class="rounded-xl border-2 border-dashed border-brand bg-white px-8 py-6 text-lg font-semibold text-brand">{{ t('attachments.dropOverlay') }}</p>
     </div>
   </div>
 </template>

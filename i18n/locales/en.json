@@ -300,7 +300,7 @@
     "loading": "Loading files...",
     "loadFailed": "Your files could not be loaded.",
     "search": "Search files",
-    "searchPlaceholder": "Search by name",
+    "searchPlaceholder": "Search files by name",
     "filter": "Filter by type",
     "kinds": {
       "all": "All",
