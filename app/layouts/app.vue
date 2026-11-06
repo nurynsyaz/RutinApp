@@ -53,6 +53,7 @@ const items = computed(() => {
       <slot />
     </main>
 
+    <InstallPrompt />
     <SignOutDialog />
   </div>
 </template>
