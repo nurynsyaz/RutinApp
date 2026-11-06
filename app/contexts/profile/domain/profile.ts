@@ -15,6 +15,8 @@ export interface Profile {
   timezone: string // IANA name, for example Asia/Kuala_Lumpur
   dayStart: string // HH:MM, 24-hour
   weekStart: WeekStartDay
+  // PR-03: the photo as a small PNG or JPEG data URL. Missing means the initials are shown.
+  avatar?: string
 }
 
 // PR-02: the fields a person can change. The email is not one of them.

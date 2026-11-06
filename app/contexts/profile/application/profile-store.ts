@@ -12,6 +12,7 @@ export const useProfileStore = defineStore('profile', () => {
   const profile = ref<Profile | null>(null)
   const status = ref<LoadStatus>('idle')
   const saving = ref(false)
+  const savingAvatar = ref(false)
 
   const noUser = () => err(domainError('UNAUTHENTICATED', 'UNAUTHENTICATED'))
 
@@ -60,12 +61,36 @@ export const useProfileStore = defineStore('profile', () => {
     return result
   }
 
+  // PR-03: save the cropped photo, or take it off with null
+  async function setAvatar(avatar: string | null): Promise<Result<Profile, DomainError>> {
+    const { repo, bus, clock } = useProfileDeps()
+    const current = profile.value
+    if (!current) return noUser()
+
+    savingAvatar.value = true
+    const result = await repo.setAvatar(current.userId, avatar)
+    savingAvatar.value = false
+    if (!result.ok) return result
+    // Signed out while it was saving: reset() already cleared the profile
+    if (profile.value?.userId !== current.userId) return result
+
+    profile.value = result.value
+    bus.publish('profile.ProfileUpdated', {
+      v: 1,
+      occurredAt: clock.nowIso(),
+      userId: current.userId,
+      changes: { avatar: avatar === null ? 'removed' : 'set' },
+    })
+    return result
+  }
+
   // BRD s.4: on sign out every store resets
   function reset(): void {
     profile.value = null
     status.value = 'idle'
     saving.value = false
+    savingAvatar.value = false
   }
 
-  return { profile, status, saving, load, save, reset }
+  return { profile, status, saving, savingAvatar, load, save, setAvatar, reset }
 })

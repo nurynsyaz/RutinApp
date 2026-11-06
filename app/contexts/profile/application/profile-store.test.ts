@@ -29,6 +29,12 @@ const repo: ProfileRepository = {
     stored = { ...stored, ...changes }
     return ok({ ...stored })
   },
+  setAvatar: async (_userId, avatar) => {
+    if (down) return err(domainError('NETWORK', 'NETWORK'))
+    const { avatar: _old, ...rest } = stored
+    stored = avatar === null ? rest : { ...rest, avatar }
+    return ok({ ...stored })
+  },
 }
 
 vi.mock('./deps', () => ({ useProfileDeps: () => ({ repo, bus, clock }) }))
@@ -109,6 +115,40 @@ describe('profile store', () => {
 
   it('cannot save before a profile is loaded', async () => {
     const result = await useProfileStore().save(toChanges(saved))
+    expect(!result.ok && result.error.code).toBe('UNAUTHENTICATED')
+  })
+
+  it('saves the photo and publishes ProfileUpdated', async () => {
+    const store = await loaded()
+    const result = await store.setAvatar('data:image/png;base64,AAAA')
+    expect(result.ok).toBe(true)
+    expect(store.profile?.avatar).toBe('data:image/png;base64,AAAA')
+    expect(store.savingAvatar).toBe(false)
+    expect(events).toHaveLength(1)
+    expect(events[0]).toMatchObject({ userId: 'usr_member', changes: { avatar: 'set' } })
+  })
+
+  it('removes the photo and says so', async () => {
+    const store = await loaded()
+    await store.setAvatar('data:image/png;base64,AAAA')
+    events.length = 0
+    await store.setAvatar(null)
+    expect(store.profile).not.toHaveProperty('avatar')
+    expect(events[0]).toMatchObject({ changes: { avatar: 'removed' } })
+  })
+
+  it('keeps the old photo and publishes nothing when the photo cannot be saved', async () => {
+    const store = await loaded()
+    down = true
+    const result = await store.setAvatar('data:image/png;base64,AAAA')
+    expect(!result.ok && result.error.code).toBe('NETWORK')
+    expect(store.profile).not.toHaveProperty('avatar')
+    expect(store.savingAvatar).toBe(false)
+    expect(events).toHaveLength(0)
+  })
+
+  it('cannot save a photo before a profile is loaded', async () => {
+    const result = await useProfileStore().setAvatar('data:image/png;base64,AAAA')
     expect(!result.ok && result.error.code).toBe('UNAUTHENTICATED')
   })
 

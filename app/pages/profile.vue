@@ -44,6 +44,19 @@ async function save(changes: ProfileChanges): Promise<void> {
   else shell.notify({ kind: 'error', title: t('profile.saveFailed'), body: reasonText(result.error.reason) })
 }
 
+// PR-03: the photo is cropped in the editor dialog, then saved here
+async function saveAvatar(dataUrl: string): Promise<void> {
+  const result = await profile.setAvatar(dataUrl)
+  if (result.ok) shell.notify({ kind: 'success', title: t('profile.avatar.saved') })
+  else shell.notify({ kind: 'error', title: t('profile.avatar.saveFailed'), body: reasonText(result.error.reason) })
+}
+
+async function removeAvatar(): Promise<void> {
+  const result = await profile.setAvatar(null)
+  if (result.ok) shell.notify({ kind: 'success', title: t('profile.avatar.removed') })
+  else shell.notify({ kind: 'error', title: t('profile.avatar.saveFailed'), body: reasonText(result.error.reason) })
+}
+
 function retry(): void {
   if (identity.user) void profile.load(identity.user.id)
 }
@@ -68,6 +81,8 @@ function retry(): void {
     <div v-else class="mt-6 grid gap-6 lg:grid-cols-[20rem_minmax(0,1fr)]">
       <div class="space-y-4">
         <ProfileHeader
+          :avatar="profile.profile.avatar"
+          :avatar-busy="profile.savingAvatar"
           :initials="initialsOf(profile.profile.name)"
           :name="profile.profile.name"
           :email="profile.profile.email"
@@ -76,6 +91,8 @@ function retry(): void {
           :streak="stats.streak"
           :week-percent="stats.weekPercent"
           :routines="stats.routines"
+          @save-avatar="saveAvatar"
+          @remove-avatar="removeAvatar"
         />
         <SessionCard />
       </div>

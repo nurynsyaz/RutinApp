@@ -20,6 +20,6 @@ export type DomainEvents = {
   'attachments.FileDeleted': EventBase & { fileId: string; routineId: string | null }
   'profile.ProfileUpdated': EventBase & {
     userId: string
-    changes: { name?: string; locale?: 'en' | 'ms'; timezone?: string; dayStart?: string; weekStart?: 'monday' | 'sunday' }
+    changes: { name?: string; locale?: 'en' | 'ms'; timezone?: string; dayStart?: string; weekStart?: 'monday' | 'sunday'; avatar?: 'set' | 'removed' }
   }
 }

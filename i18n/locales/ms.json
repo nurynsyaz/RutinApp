@@ -49,7 +49,10 @@
     "TIMEZONE_INVALID": "Pilih zon waktu daripada senarai.",
     "DAY_START_INVALID": "Masukkan masa yang sah.",
     "WEEK_START_INVALID": "Pilih Isnin atau Ahad.",
-    "LANGUAGE_INVALID": "Pilih English atau Bahasa Melayu."
+    "LANGUAGE_INVALID": "Pilih English atau Bahasa Melayu.",
+    "AVATAR_TYPE_INVALID": "Gunakan foto PNG atau JPG.",
+    "AVATAR_TOO_LARGE": "Foto melebihi 2 MB.",
+    "AVATAR_UNREADABLE": "Foto ini tidak dapat dibuka."
   },
   "identity": {
     "signIn": {
@@ -399,6 +402,20 @@
     "roles": {
       "member": "Ahli",
       "admin": "Pentadbir"
+    },
+    "avatar": {
+      "change": "Tukar foto",
+      "remove": "Buang foto",
+      "hint": "PNG atau JPG, sehingga {max} MB",
+      "alt": "Foto {name}",
+      "cropTitle": "Pangkas foto anda",
+      "cropHint": "Seret foto untuk menggerakkannya, atau guna kekunci anak panah. Guna peluncur untuk zum.",
+      "cropArea": "Pratonton foto. Guna kekunci anak panah untuk menggerakkan foto.",
+      "zoom": "Zum",
+      "use": "Guna foto ini",
+      "saved": "Foto dikemas kini",
+      "removed": "Foto dibuang",
+      "saveFailed": "Foto anda tidak dapat disimpan."
     }
   },
   "shell": {

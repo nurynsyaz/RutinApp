@@ -49,7 +49,10 @@
     "TIMEZONE_INVALID": "Choose a time zone from the list.",
     "DAY_START_INVALID": "Enter a valid time.",
     "WEEK_START_INVALID": "Choose Monday or Sunday.",
-    "LANGUAGE_INVALID": "Choose English or Bahasa Melayu."
+    "LANGUAGE_INVALID": "Choose English or Bahasa Melayu.",
+    "AVATAR_TYPE_INVALID": "Use a PNG or JPG photo.",
+    "AVATAR_TOO_LARGE": "The photo is over 2 MB.",
+    "AVATAR_UNREADABLE": "This photo could not be opened."
   },
   "identity": {
     "signIn": {
@@ -399,6 +402,20 @@
     "roles": {
       "member": "Member",
       "admin": "Admin"
+    },
+    "avatar": {
+      "change": "Change photo",
+      "remove": "Remove photo",
+      "hint": "PNG or JPG, up to {max} MB",
+      "alt": "Photo of {name}",
+      "cropTitle": "Crop your photo",
+      "cropHint": "Drag the photo to move it, or use the arrow keys. Use the slider to zoom.",
+      "cropArea": "Photo preview. Use the arrow keys to move the photo.",
+      "zoom": "Zoom",
+      "use": "Use this photo",
+      "saved": "Photo updated",
+      "removed": "Photo removed",
+      "saveFailed": "Your photo could not be saved."
     }
   },
   "shell": {
