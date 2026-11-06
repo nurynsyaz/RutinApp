@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useCan } from '~/contexts/identity/ui/use-can'
+import { useScheduleStore } from '~/contexts/scheduling/application/schedule-store'
 
 const { t } = useI18n()
 const can = useCan()
+const schedule = useScheduleStore()
 
 const items = computed(() => {
   const list = [
@@ -49,10 +51,12 @@ const items = computed(() => {
       <AccountBlock class="hidden lg:flex" />
     </aside>
 
+    <OfflineBanner :pending="schedule.pending" />
+
     <main class="p-4 pb-24 sm:pb-4">
       <slot />
     </main>
 
-    <SignOutDialog />
+    <SignOutDialog :unsynced="schedule.pending" />
   </div>
 </template>
