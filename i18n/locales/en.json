@@ -413,6 +413,13 @@
     }
   },
   "shell": {
+    "inspector": {
+      "label": "Event inspector",
+      "title": "Events",
+      "clear": "Clear",
+      "empty": "No events yet. Use the app and they will show here.",
+      "button": "Events ({count})"
+    },
     "brand": {
       "tagline": "Plan the day once. Repeat what works.",
       "subtitle": "Routines, files and progress in one place, on any device, online or off.",
