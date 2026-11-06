@@ -190,6 +190,11 @@ export const useAttachmentStore = defineStore('attachments', () => {
     jobs.value = jobs.value.filter((j) => j.id !== jobId)
   }
 
+  // Closes the "Not uploaded" list
+  function dismissRejected(): void {
+    rejected.value = []
+  }
+
   // AT-04: delete a file from the library
   async function remove(fileId: string): Promise<Result<void, DomainError>> {
     const { repo, bus, clock } = useAttachmentDeps()
@@ -245,6 +250,6 @@ export const useAttachmentStore = defineStore('attachments', () => {
 
   return {
     ownerId, files, status, jobs, rejected, storageNearlyFull,
-    filesOf, countFor, load, upload, cancel, retry, dismiss, remove, blobOf, detachRoutine, reset,
+    filesOf, countFor, load, upload, cancel, retry, dismiss, dismissRejected, remove, blobOf, detachRoutine, reset,
   }
 })

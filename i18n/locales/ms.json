@@ -41,7 +41,11 @@
     "REMINDER_INVALID": "Masukkan peringatan dari 0 hingga 1440 minit.",
     "NOTES_TOO_LONG": "Nota boleh sehingga 500 aksara.",
     "ROUTINE_NOT_FOUND": "Rutin ini tidak dijumpai.",
-    "DATE_INVALID": "Tarikh ini tidak sah."
+    "DATE_INVALID": "Tarikh ini tidak sah.",
+    "FILE_NOT_FOUND": "Fail ini tidak ditemui.",
+    "FILE_TYPE_NOT_ALLOWED": "Jenis fail ini tidak disokong.",
+    "BATCH_LIMIT": "Anda boleh menambah sehingga 5 fail sekali gus.",
+    "ROUTINE_LIMIT": "Satu rutin boleh menyimpan sehingga 20 fail."
   },
   "identity": {
     "signIn": {
@@ -229,8 +233,77 @@
     }
   },
   "attachments": {
+    "title": "Fail",
     "upload": "Muat naik fail",
-    "download": "Muat turun"
+    "download": "Muat turun",
+    "summary": "Tiada fail | {count} fail · {size} pada peranti ini | {count} fail · {size} pada peranti ini",
+    "dropHint": "Seret fail ke mana-mana bahagian halaman ini untuk memuat naik.",
+    "dropOverlay": "Lepaskan fail untuk memuat naik",
+    "limits": "Maksimum {max} MB setiap satu · PDF, PNG, JPG, WEBP, DOCX, XLSX, TXT",
+    "loading": "Memuatkan fail...",
+    "loadFailed": "Fail anda tidak dapat dimuatkan.",
+    "search": "Cari fail",
+    "searchPlaceholder": "Cari mengikut nama",
+    "filter": "Tapis mengikut jenis",
+    "kinds": {
+      "all": "Semua",
+      "pdf": "PDF",
+      "image": "Imej",
+      "doc": "Dokumen",
+      "sheet": "Hamparan",
+      "text": "Teks",
+      "other": "Lain-lain"
+    },
+    "sort": {
+      "label": "Isih",
+      "newest": "Terbaharu dahulu",
+      "oldest": "Terlama dahulu",
+      "largest": "Terbesar dahulu",
+      "smallest": "Terkecil dahulu"
+    },
+    "columns": {
+      "name": "Nama",
+      "routine": "Rutin",
+      "size": "Saiz",
+      "added": "Ditambah",
+      "actions": "Tindakan"
+    },
+    "notLinked": "Tidak dipautkan",
+    "today": "Hari ini",
+    "noMatch": "Tiada fail sepadan dengan carian anda.",
+    "empty": {
+      "title": "Belum ada fail",
+      "hint": "Muat naik fail di sini, atau lampirkan pada rutin."
+    },
+    "uploading": "Memuat naik {current} daripada {total}",
+    "progress": "{loaded} daripada {size} · {percent}%",
+    "status": {
+      "queued": "Menunggu",
+      "uploading": "Memuat naik",
+      "done": "Dimuat naik",
+      "failed": "Gagal",
+      "cancelled": "Dibatalkan"
+    },
+    "dismiss": "Tutup",
+    "rejectedTitle": "Tidak dimuat naik",
+    "reject": {
+      "FILE_TYPE_NOT_ALLOWED": "{name} bukan jenis yang disokong. Gunakan PDF, PNG, JPG, WEBP, DOCX, XLSX atau TXT.",
+      "FILE_TOO_LARGE": "{name} melebihi had 10 MB.",
+      "BATCH_LIMIT": "{name} ditinggalkan. Anda boleh menambah sehingga 5 fail sekali gus.",
+      "ROUTINE_LIMIT": "{name} ditinggalkan. Satu rutin boleh menyimpan sehingga 20 fail."
+    },
+    "storageWarning": "Storan pada peranti ini hampir penuh. Padam fail yang tidak diperlukan lagi.",
+    "deleteDialog": {
+      "title": "Padam fail ini?",
+      "hint": "{name} akan dibuang daripada peranti ini.",
+      "confirm": "Padam fail"
+    },
+    "toast": {
+      "uploaded": "Fail dimuat naik",
+      "failed": "Muat naik gagal",
+      "downloadFailed": "Fail tidak dapat dimuat turun",
+      "deleteFailed": "Fail tidak dapat dipadam"
+    }
   },
   "profile": {
     "save": "Simpan perubahan"
