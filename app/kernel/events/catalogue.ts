@@ -18,4 +18,8 @@ export type DomainEvents = {
   'attachments.FileUploaded': EventBase & { fileId: string; routineId: string | null; name: string; size: number; mime: string }
   'attachments.FileUploadFailed': EventBase & { name: string; reason: string }
   'attachments.FileDeleted': EventBase & { fileId: string; routineId: string | null }
+  'profile.ProfileUpdated': EventBase & {
+    userId: string
+    changes: { name?: string; locale?: 'en' | 'ms'; timezone?: string; dayStart?: string; weekStart?: 'monday' | 'sunday' }
+  }
 }
