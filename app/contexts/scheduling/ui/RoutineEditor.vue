@@ -162,7 +162,7 @@ onMounted(() => titleField.value?.focus())
         <div>
           <div class="mb-1 flex items-baseline justify-between">
             <label for="routine-notes" class="text-sm font-medium text-slate-900">{{ t('scheduling.field.notes') }}</label>
-            <span class="font-mono text-xs text-slate-500">{{ t('scheduling.editor.notesCount', { n: form.notes.length }) }}</span>
+            <span class="font-mono text-xs text-slate-600">{{ t('scheduling.editor.notesCount', { n: form.notes.length }) }}</span>
           </div>
           <textarea
             id="routine-notes"

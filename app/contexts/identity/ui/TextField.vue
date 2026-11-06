@@ -43,13 +43,13 @@ const describedBy = computed(() => {
         :disabled="disabled"
         :aria-invalid="hasError"
         :aria-describedby="describedBy"
-        class="h-11 w-full rounded-lg border bg-white px-3 text-base text-slate-900 placeholder:text-slate-400 disabled:opacity-60"
+        class="h-11 w-full rounded-lg border bg-white px-3 text-base text-slate-900 placeholder:text-slate-500 disabled:opacity-60"
         :class="[hasError ? 'border-danger' : 'border-line', isPassword ? 'pr-12' : '']"
       >
       <button
         v-if="isPassword"
         type="button"
-        class="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-slate-500"
+        class="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-slate-600"
         :aria-label="reveal ? t('identity.signIn.hidePassword') : t('identity.signIn.showPassword')"
         :aria-pressed="reveal"
         @click="reveal = !reveal"
@@ -58,6 +58,6 @@ const describedBy = computed(() => {
       </button>
     </div>
     <p v-if="error" :id="`${id}-error`" class="mt-1 text-sm text-danger">{{ errorText(error) }}</p>
-    <p v-else-if="hint" :id="`${id}-hint`" class="mt-1 text-sm text-slate-500">{{ hint }}</p>
+    <p v-else-if="hint" :id="`${id}-hint`" class="mt-1 text-sm text-slate-600">{{ hint }}</p>
   </div>
 </template>
