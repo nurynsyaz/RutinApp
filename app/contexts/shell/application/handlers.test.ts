@@ -11,14 +11,16 @@ function setup() {
   const resetShell = vi.fn()
   const clearUserData = vi.fn(async () => {})
   const notifyExpiring = vi.fn()
+  const applyLocale = vi.fn()
   const stop = registerShellHandlers(bus, {
     navigate,
     signedInTarget: () => '/files',
     resetShell,
     clearUserData,
     notifyExpiring,
+    applyLocale,
   })
-  return { bus, navigate, stop, resetShell, clearUserData, notifyExpiring }
+  return { bus, navigate, stop, resetShell, clearUserData, notifyExpiring, applyLocale }
 }
 
 describe('shell handlers', () => {
@@ -52,6 +54,18 @@ describe('shell handlers', () => {
     const { bus, notifyExpiring } = setup()
     bus.publish('identity.SessionExpiring', { ...base, expiresAt: '2026-11-04T10:00:00.000Z' })
     expect(notifyExpiring).toHaveBeenCalledWith('2026-11-04T10:00:00.000Z')
+  })
+
+  it('switches the language after the profile saves a new one', () => {
+    const { bus, applyLocale } = setup()
+    bus.publish('profile.ProfileUpdated', { ...base, userId: 'u1', changes: { locale: 'ms' } })
+    expect(applyLocale).toHaveBeenCalledWith('ms')
+  })
+
+  it('leaves the language alone when the profile change is something else', () => {
+    const { bus, applyLocale } = setup()
+    bus.publish('profile.ProfileUpdated', { ...base, userId: 'u1', changes: { name: 'Aina' } })
+    expect(applyLocale).not.toHaveBeenCalled()
   })
 
   it('goes to /403 and says which permission was missing', () => {
