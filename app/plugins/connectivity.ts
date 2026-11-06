@@ -4,7 +4,10 @@ import { setOnlineState } from '~/kernel/connectivity'
 
 // SH-01: the browser going online or offline is published as shell.ConnectivityChanged.
 // Scheduling then queues or sends completions, and the Files and editor screens lock uploads and downloads.
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin({
+  name: 'connectivity',
+  dependsOn: ['event-bus', 'repositories', 'event-handlers'],
+  setup(nuxtApp) {
   const schedule = useScheduleStore()
   const shell = useShellStore()
   const t = nuxtApp.$i18n.t
@@ -37,4 +40,5 @@ export default defineNuxtPlugin((nuxtApp) => {
       if (status === 'ready' && schedule.online && schedule.pending > 0) void syncQueued(false)
     },
   )
+  },
 })
