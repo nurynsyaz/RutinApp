@@ -16,7 +16,7 @@ useHead({ title: () => t('identity.accessDenied.title') })
 </script>
 
 <template>
-  <div class="mx-auto max-w-md text-center">
+  <div class="mx-auto max-w-lg text-center">
     <div class="-mx-4 -mt-4 mb-6 flex items-center gap-2 border-b border-line bg-white px-2 py-2 sm:hidden">
       <button
         type="button"
@@ -29,7 +29,7 @@ useHead({ title: () => t('identity.accessDenied.title') })
       <span class="text-lg font-bold text-slate-900">{{ t('identity.accessDenied.heading') }}</span>
     </div>
 
-    <div class="pt-6 sm:pt-16">
+    <div class="pt-6 sm:mt-20 sm:rounded-2xl sm:border sm:border-line sm:bg-white sm:p-10">
       <span class="mx-auto flex size-14 items-center justify-center rounded-full bg-amber-100 text-amber-700">
         <Icon name="lucide:shield-alert" class="size-7" />
       </span>
@@ -44,19 +44,21 @@ useHead({ title: () => t('identity.accessDenied.title') })
         {{ t('identity.accessDenied.needs', { permission: needs }) }}
       </p>
 
-      <NuxtLink
-        to="/today"
-        class="mt-6 flex h-11 w-full items-center justify-center rounded-lg bg-brand text-sm font-semibold text-white"
-      >
-        {{ t('identity.accessDenied.goToday') }}
-      </NuxtLink>
-      <button
-        type="button"
-        class="mt-2 h-11 w-full rounded-lg border border-line bg-white text-sm font-semibold text-slate-900"
-        @click="goBack"
-      >
-        {{ t('common.back') }}
-      </button>
+      <div class="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-center sm:gap-3">
+        <button
+          type="button"
+          class="h-11 w-full rounded-lg border border-line bg-white text-sm font-semibold text-slate-900 sm:w-auto sm:px-5"
+          @click="goBack"
+        >
+          {{ t('common.back') }}
+        </button>
+        <NuxtLink
+          to="/today"
+          class="flex h-11 w-full items-center justify-center rounded-lg bg-brand text-sm font-semibold text-white sm:w-auto sm:px-5"
+        >
+          {{ t('identity.accessDenied.goToday') }}
+        </NuxtLink>
+      </div>
     </div>
   </div>
 </template>
