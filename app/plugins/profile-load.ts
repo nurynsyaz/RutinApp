@@ -3,8 +3,11 @@ import { useProfileStore } from '~/contexts/profile/application/profile-store'
 
 // The profile loads for whoever is signed in, including a session restored after a reload.
 // BRD s.11: the language saved in the profile comes first, so it is applied once it is loaded.
-// On sign out the store is reset by 03.event-handlers.
-export default defineNuxtPlugin(() => {
+// On sign out the store is reset by the event-handlers plugin.
+export default defineNuxtPlugin({
+  name: 'profile-load',
+  dependsOn: ['event-handlers', 'session-watch'],
+  setup() {
   const identity = useIdentityStore()
   const profile = useProfileStore()
   const applyLocale = useApplyLocale()
@@ -19,4 +22,5 @@ export default defineNuxtPlugin(() => {
     },
     { immediate: true },
   )
+  },
 })
