@@ -123,12 +123,12 @@ Every read and write goes through four ports (interfaces):
 | Files | `app/contexts/attachments/domain/file-repository.ts` |
 | Profile | `app/contexts/profile/domain/profile-repository.ts` |
 
-The data source is chosen in `app/plugins/02.repositories.ts` from `runtimeConfig.public.dataSource`. Today only `mock` exists, and any other value stops the app with a clear message.
+The data source is chosen in `app/plugins/repositories.ts` from `runtimeConfig.public.dataSource`. Today only `mock` exists, and any other value stops the app with a clear message.
 
 The HTTP version is not built yet. To build it:
 
 1. In each context, add `infrastructure/http-<name>-repository.ts` that implements the port with `fetch`. It attaches the access token. The UI and the stores never read the token.
-2. In `02.repositories.ts`, return the HTTP repositories when the data source is `http`.
+2. In `repositories.ts`, return the HTTP repositories when the data source is `http`.
 3. Set the data source and rebuild:
 
 ```bash
