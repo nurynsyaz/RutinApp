@@ -20,7 +20,9 @@ function readInspectorSetting(): boolean {
   return resolveInspector({ dev: import.meta.dev, stored, query })
 }
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin({
+  name: 'event-bus',
+  setup(nuxtApp) {
   const inspectorOn = readInspectorSetting()
   const logger = inspectorOn && import.meta.dev ? consoleLogger : silentLogger
   const base = createMittEventBus<DomainEvents>()
@@ -40,4 +42,5 @@ export default defineNuxtPlugin((nuxtApp) => {
       clock: systemClock, // one clock for the whole app, so demos can freeze time later
     },
   }
+  },
 })
