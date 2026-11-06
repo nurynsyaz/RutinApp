@@ -24,4 +24,21 @@ describe('message files', () => {
       }
     }
   })
+
+  // SH-04: a Malay message that drops or renames a {placeholder} would show the raw braces to the person
+  it('use the same {placeholders} in English and Malay', () => {
+    const placeholders = (text: string) => [...new Set(text.match(/\{\w+\}/g) ?? [])].sort()
+    const read = (file: unknown, key: string) => String(key.split('.').reduce<unknown>((node, part) => (node as Record<string, unknown>)[part], file))
+    for (const key of keysOf(en)) {
+      expect(placeholders(read(ms, key)), key).toEqual(placeholders(read(en, key)))
+    }
+  })
+
+  // SH-04: one word for one thing. The role is "pentadbir" in Malay, never the English "admin".
+  it('call the administrator "pentadbir" in Malay', () => {
+    for (const key of keysOf(ms)) {
+      const message = key.split('.').reduce<unknown>((node, part) => (node as Record<string, unknown>)[part], ms)
+      expect(String(message), key).not.toMatch(/\badmin\b/i)
+    }
+  })
 })

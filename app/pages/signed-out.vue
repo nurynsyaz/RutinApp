@@ -4,6 +4,8 @@ definePageMeta({ layout: 'auth', public: true })
 const { t } = useI18n()
 const route = useRoute()
 const expired = computed(() => route.query.reason === 'expired')
+
+useHead({ title: () => expired.value ? t('identity.signedOut.expiredTitle') : t('identity.signedOut.title') })
 </script>
 
 <template>

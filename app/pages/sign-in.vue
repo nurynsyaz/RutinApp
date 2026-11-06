@@ -66,6 +66,8 @@ async function submit() {
     failureReason.value = result.error.reason
   }
 }
+
+useHead({ title: () => t('identity.signIn.title') })
 </script>
 
 <template>
