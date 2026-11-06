@@ -41,7 +41,11 @@
     "REMINDER_INVALID": "Masukkan peringatan dari 0 hingga 1440 minit.",
     "NOTES_TOO_LONG": "Nota boleh sehingga 500 aksara.",
     "ROUTINE_NOT_FOUND": "Rutin ini tidak dijumpai.",
-    "DATE_INVALID": "Tarikh ini tidak sah."
+    "DATE_INVALID": "Tarikh ini tidak sah.",
+    "TIMEZONE_INVALID": "Pilih zon waktu daripada senarai.",
+    "DAY_START_INVALID": "Masukkan masa yang sah.",
+    "WEEK_START_INVALID": "Pilih Isnin atau Ahad.",
+    "LANGUAGE_INVALID": "Pilih English atau Bahasa Melayu."
   },
   "identity": {
     "signIn": {
@@ -233,7 +237,41 @@
     "download": "Muat turun"
   },
   "profile": {
-    "save": "Simpan perubahan"
+    "save": "Simpan perubahan",
+    "subtitle": "Butiran anda, bahasa dan cara Rutin merancang hari anda.",
+    "loading": "Memuatkan profil anda...",
+    "loadFailed": "Profil anda tidak dapat dimuatkan.",
+    "joined": "Menyertai {date}",
+    "stats": {
+      "streak": "hari berturut-turut",
+      "week": "selesai minggu ini",
+      "routines": "rutin"
+    },
+    "details": "Butiran",
+    "fullName": "Nama penuh",
+    "email": "E-mel",
+    "emailHint": "Minta pentadbir untuk menukar e-mel anda.",
+    "language": "Bahasa",
+    "languages": {
+      "en": "English",
+      "ms": "Bahasa Melayu"
+    },
+    "timezone": "Zon waktu",
+    "dayStart": "Hari bermula pada",
+    "weekStart": "Minggu bermula pada",
+    "weekStarts": {
+      "monday": "Isnin",
+      "sunday": "Ahad"
+    },
+    "appliesNote": "Perubahan terpakai pada Hari ini dan Minggu serta-merta.",
+    "discard": "Buang",
+    "saving": "Menyimpan...",
+    "saved": "Profil disimpan",
+    "saveFailed": "Perubahan anda tidak dapat disimpan.",
+    "roles": {
+      "member": "Ahli",
+      "admin": "Pentadbir"
+    }
   },
   "shell": {
     "brand": {
