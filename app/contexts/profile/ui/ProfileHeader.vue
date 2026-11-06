@@ -1,6 +1,8 @@
 <script setup lang="ts">
 // PR-01: avatar, name, email, role, member since and the three numbers
 defineProps<{
+  avatar?: string
+  avatarBusy?: boolean
   initials: string
   name: string
   email: string
@@ -11,15 +13,21 @@ defineProps<{
   routines: number
 }>()
 
+const emit = defineEmits<{ saveAvatar: [dataUrl: string]; removeAvatar: [] }>()
 const { t } = useI18n()
 </script>
 
 <template>
   <section class="rounded-2xl border border-line bg-white p-5">
     <div class="flex flex-col items-center text-center">
-      <span class="flex size-20 items-center justify-center rounded-full bg-check text-2xl font-bold text-brand" aria-hidden="true">
-        {{ initials }}
-      </span>
+      <AvatarPicker
+        :avatar="avatar"
+        :initials="initials"
+        :name="name"
+        :busy="avatarBusy"
+        @save="emit('saveAvatar', $event)"
+        @remove="emit('removeAvatar')"
+      />
       <h2 class="mt-3 text-lg font-bold text-slate-900" data-testid="profile-name">{{ name }}</h2>
       <p class="text-sm text-slate-600" data-testid="profile-email">{{ email }}</p>
       <p class="mt-2 flex items-center gap-2 text-sm text-slate-700">
