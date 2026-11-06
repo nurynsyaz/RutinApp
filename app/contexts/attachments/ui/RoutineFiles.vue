@@ -2,8 +2,8 @@
 import { useAttachmentStore } from '../application/attachment-store'
 import { checkFiles, MAX_FILES_PER_BATCH, MAX_FILES_PER_ROUTINE, type Rejection } from '../domain/file-rules'
 import { isActive } from '../domain/upload-job'
-import { downloadBlob } from './editor-download'
-import { ACCEPT, problemText, sizeText } from './editor-format'
+import { saveBlob } from './download'
+import { ACCEPT, formatSize, reasonText } from './file-format'
 
 // AT-01: the Attachments part of the routine editor (S-06). Drop files on a desktop, or pick them
 // with the button on a phone. A routine that already exists uploads at once. A new routine has no id
@@ -73,7 +73,7 @@ async function download(id: string, name: string): Promise<void> {
     downloadFailed.value = name
     return
   }
-  downloadBlob(result.value.blob, result.value.name)
+  saveBlob(result.value.blob, result.value.name)
 }
 
 const percent = (progress: number): number => Math.round(progress * 100)
@@ -144,7 +144,7 @@ const percent = (progress: number): number => Math.round(progress * 100)
         </button>
       </div>
       <ul class="mt-1 space-y-1">
-        <li v-for="item in rejected" :key="item.name + item.reason">{{ problemText(t, te, item.reason, item.name) }}</li>
+        <li v-for="item in rejected" :key="item.name + item.reason">{{ reasonText(t, te, item.reason, item.name) }}</li>
       </ul>
     </section>
 
@@ -167,9 +167,9 @@ const percent = (progress: number): number => Math.round(progress * 100)
           </div>
           <p class="mt-1 text-xs" :class="job.status === 'failed' ? 'text-rose-700' : 'text-slate-600'" :role="job.status === 'failed' ? 'alert' : undefined">
             <template v-if="job.status === 'uploading'">
-              {{ t('routineFiles.progress', { loaded: sizeText(job.size * job.progress, locale), size: sizeText(job.size, locale), percent: percent(job.progress) }) }}
+              {{ t('routineFiles.progress', { loaded: formatSize(job.size * job.progress, locale), size: formatSize(job.size, locale), percent: percent(job.progress) }) }}
             </template>
-            <template v-else-if="job.status === 'failed'">{{ problemText(t, te, job.reason ?? 'UNKNOWN', job.name) }}</template>
+            <template v-else-if="job.status === 'failed'">{{ reasonText(t, te, job.reason ?? 'UNKNOWN', job.name) }}</template>
             <template v-else>{{ t(`routineFiles.status.${job.status}`) }}</template>
           </p>
         </div>
@@ -210,7 +210,7 @@ const percent = (progress: number): number => Math.round(progress * 100)
         <Icon name="lucide:paperclip" class="size-4 shrink-0 text-slate-500" />
         <div class="min-w-0 flex-1">
           <p class="truncate text-sm font-medium text-slate-900">{{ file.name }}</p>
-          <p class="text-xs text-slate-600">{{ sizeText(file.size, locale) }}</p>
+          <p class="text-xs text-slate-600">{{ formatSize(file.size, locale) }}</p>
         </div>
         <button
           type="button"
@@ -230,7 +230,7 @@ const percent = (progress: number): number => Math.round(progress * 100)
           <Icon name="lucide:paperclip" class="size-4 shrink-0 text-slate-500" />
           <div class="min-w-0 flex-1">
             <p class="truncate text-sm font-medium text-slate-900">{{ file.name }}</p>
-            <p class="text-xs text-slate-600">{{ sizeText(file.size, locale) }}</p>
+            <p class="text-xs text-slate-600">{{ formatSize(file.size, locale) }}</p>
           </div>
           <button
             type="button"

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatAdded, formatSize, reasonText } from './file-format'
+import { ACCEPT, formatAdded, formatSize, reasonText } from './file-format'
 
 describe('formatSize', () => {
   it('uses bytes, KB and MB', () => {
@@ -7,6 +7,14 @@ describe('formatSize', () => {
     expect(formatSize(240 * 1024)).toBe('240 KB')
     expect(formatSize(1.2 * 1024 * 1024)).toBe('1.2 MB')
     expect(formatSize(10 * 1024 * 1024)).toBe('10 MB')
+  })
+
+  it('rounds a part of a byte, as when an upload is half way', () => {
+    expect(formatSize(123.456)).toBe('123 B')
+  })
+
+  it('writes the decimal the way the language does', () => {
+    expect(formatSize(1.5 * 1024 * 1024, 'ms')).toBe('1.5 MB')
   })
 })
 
@@ -46,5 +54,11 @@ describe('reasonText', () => {
   })
   it('falls back to the unknown line for a code it does not know', () => {
     expect(reasonText(t, te, 'WEIRD', 'a.pdf')).toBe('Something went wrong.')
+  })
+})
+
+describe('ACCEPT', () => {
+  it('lists the allowed extensions for the file picker', () => {
+    expect(ACCEPT.split(',')).toEqual(expect.arrayContaining(['.pdf', '.png', '.jpg', '.webp', '.docx', '.xlsx', '.txt']))
   })
 })

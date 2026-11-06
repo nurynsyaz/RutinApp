@@ -170,12 +170,6 @@
       "done": "Uploaded",
       "failed": "Failed",
       "cancelled": "Cancelled"
-    },
-    "reject": {
-      "FILE_TYPE_NOT_ALLOWED": "{name} was not added: file type not allowed. Use PDF, PNG, JPG, WEBP, DOCX, XLSX or TXT.",
-      "FILE_TOO_LARGE": "{name} was not added: it is over the 10 MB limit.",
-      "BATCH_LIMIT": "{name} was not added: you can add up to 5 files at once.",
-      "ROUTINE_LIMIT": "{name} was not added: a routine can hold up to 20 files."
     }
   },
   "scheduling": {

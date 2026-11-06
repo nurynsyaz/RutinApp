@@ -170,12 +170,6 @@
       "done": "Dimuat naik",
       "failed": "Gagal",
       "cancelled": "Dibatalkan"
-    },
-    "reject": {
-      "FILE_TYPE_NOT_ALLOWED": "{name} tidak ditambah: jenis fail tidak dibenarkan. Gunakan PDF, PNG, JPG, WEBP, DOCX, XLSX atau TXT.",
-      "FILE_TOO_LARGE": "{name} tidak ditambah: melebihi had 10 MB.",
-      "BATCH_LIMIT": "{name} tidak ditambah: anda boleh menambah sehingga 5 fail sekali gus.",
-      "ROUTINE_LIMIT": "{name} tidak ditambah: satu rutin boleh menyimpan sehingga 20 fail."
     }
   },
   "scheduling": {

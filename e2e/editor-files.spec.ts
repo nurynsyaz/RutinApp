@@ -79,8 +79,8 @@ test.describe('Editor limits (AT-02)', () => {
       file('ok.txt', TXT),
     ])
     const rejected = page.getByRole('status').filter({ hasText: 'Not added' })
-    await expect(rejected).toContainText('screen-recording.mov was not added: file type not allowed')
-    await expect(rejected).toContainText('huge.pdf was not added: it is over the 10 MB limit.')
+    await expect(rejected).toContainText('screen-recording.mov is not a supported type')
+    await expect(rejected).toContainText('huge.pdf is over the 10 MB limit.')
     await expect(page.getByTestId('routine-files-list')).toContainText('ok.txt')
     await rejected.getByRole('button', { name: 'Dismiss' }).click()
     await expect(rejected).toHaveCount(0)
@@ -89,7 +89,7 @@ test.describe('Editor limits (AT-02)', () => {
   test('AT-02 adds at most 5 files at once', async ({ page }) => {
     await openMorningRun(page)
     await input(page).setInputFiles(Array.from({ length: 6 }, (_, i) => file(`batch-${i + 1}.txt`, TXT)))
-    await expect(page.getByRole('status').filter({ hasText: 'Not added' })).toContainText('batch-6.txt was not added: you can add up to 5 files at once.')
+    await expect(page.getByRole('status').filter({ hasText: 'Not added' })).toContainText('batch-6.txt was left out. You can add up to 5 files at once.')
     await expect(count(page)).toHaveText('6 of 20')
   })
 
@@ -101,7 +101,7 @@ test.describe('Editor limits (AT-02)', () => {
     }
     await input(page).setInputFiles(Array.from({ length: 5 }, (_, i) => file(`last-${i}.txt`, TXT)))
     await expect(count(page)).toHaveText('20 of 20')
-    await expect(page.getByRole('status').filter({ hasText: 'Not added' })).toContainText('a routine can hold up to 20 files')
+    await expect(page.getByRole('status').filter({ hasText: 'Not added' })).toContainText('A routine can hold up to 20 files')
     await expect(page.getByRole('button', { name: 'browse' })).toBeDisabled()
   })
 })
@@ -128,7 +128,7 @@ test.describe('New routine attachments (AT-01)', () => {
   test('AT-02 a bad file for a new routine is named at once', async ({ page }) => {
     await page.goto(`/routines/new?date=${TUESDAY}`)
     await input(page).setInputFiles(file('movie.mov', 'video/quicktime'))
-    await expect(page.getByRole('status').filter({ hasText: 'Not added' })).toContainText('movie.mov was not added: file type not allowed')
+    await expect(page.getByRole('status').filter({ hasText: 'Not added' })).toContainText('movie.mov is not a supported type')
     await expect(count(page)).toHaveText('0 of 20')
   })
 })
