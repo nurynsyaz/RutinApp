@@ -10,7 +10,9 @@ export interface RepeatText {
 export interface CardText {
   category: DayItem['routine']['category']
   repeat: RepeatText
-  // The last part of the line under the title: "Done", "Starts in 20 min" or nothing
+  // The status part of the line under the title: "Done", "Starts in 20 min" or nothing
+  // How many files are attached
+  files: number
   status: { kind: 'done' } | { kind: 'startsIn'; minutes: number } | null
 }
 
@@ -21,6 +23,7 @@ export function cardText(item: DayItem, startsInMin: number | null = null): Card
   return {
     category: item.routine.category,
     repeat: { kind: repeat.kind, days: repeat.kind === 'custom' ? repeat.days : [] },
+    files: item.routine.attachmentIds.length,
     status: item.done
       ? { kind: 'done' }
       : startsInMin !== null && startsInMin > 0
