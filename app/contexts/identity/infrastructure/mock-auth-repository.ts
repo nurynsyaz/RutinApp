@@ -7,6 +7,7 @@ import type { AuthRepository } from '../domain/auth-repository'
 import { validateEmail, validateName, validatePassword } from '../domain/credentials'
 import { permissionsFor, type Role } from '../domain/permissions'
 import type { Session } from '../domain/session'
+import type { UserStatus, UserSummary } from '../domain/user-summary'
 
 // ID-04: 60 min mock expiry. A user row can override it (expired@rutin.test uses 60 s).
 const DEFAULT_SESSION_SECONDS = 60 * 60
@@ -23,6 +24,9 @@ interface UserRow {
   timezone: string
   dayStart: string
   weekStart: string
+  // Added with AD-01. Accounts saved before that have neither, so both are optional.
+  status?: UserStatus
+  lastActiveAt?: string | null
 }
 
 function toSession(user: UserRow, clock: Clock): Session {
@@ -48,6 +52,8 @@ export function createMockAuthRepository(clock: Clock = systemClock): AuthReposi
       const user = users.find((u) => u.email === checkedEmail.value && u.password === password)
       if (!user) return err(domainError('UNAUTHENTICATED', 'INVALID_CREDENTIALS'))
 
+      // AD-01: the Users page shows when each person was last active
+      await writeTable('users', users.map((u) => (u.id === user.id ? { ...u, lastActiveAt: clock.nowIso() } : u)))
       return ok(toSession(user, clock))
     },
 
@@ -78,6 +84,8 @@ export function createMockAuthRepository(clock: Clock = systemClock): AuthReposi
         timezone: 'Asia/Kuala_Lumpur',
         dayStart: '06:00',
         weekStart: 'monday',
+        status: 'active',
+        lastActiveAt: clock.nowIso(),
       }
       await writeTable('users', [...users, user])
       return ok(toSession(user, clock))
@@ -105,6 +113,24 @@ export function createMockAuthRepository(clock: Clock = systemClock): AuthReposi
         ...session,
         expiresAt: new Date(clock.now().getTime() + seconds * 1000).toISOString(),
       })
+    },
+
+    async listUsers(requester) {
+      await latency()
+      if (requester.role !== 'admin') return err(domainError('FORBIDDEN', 'FORBIDDEN'))
+      const users = await readTable<UserRow>('users')
+      const rows: UserSummary[] = users
+        .map((u) => ({
+          id: u.id,
+          name: u.name,
+          email: u.email,
+          role: u.role,
+          status: u.status ?? 'active',
+          lastActiveAt: u.lastActiveAt ?? null,
+          memberSince: u.memberSince,
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name))
+      return ok(rows)
     },
   }
 }

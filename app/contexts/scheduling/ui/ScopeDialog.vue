@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Scope } from '../domain/occurrence-edit'
-import { trapTab } from './focus-trap'
+import { trapTab } from '~/kernel/focus-trap'
 
 // SC-05: "This day only" or "This and following days" for a repeating routine. A one-time
 // routine has nothing to choose, so deleting it only asks to confirm.

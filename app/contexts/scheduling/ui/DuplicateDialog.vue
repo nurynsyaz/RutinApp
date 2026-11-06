@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { isValidDate } from '../domain/dates'
-import { trapTab } from './focus-trap'
+import { trapTab } from '~/kernel/focus-trap'
 
 // SC-07: pick the date for the copy
 const props = defineProps<{ date: string; busy?: boolean }>()

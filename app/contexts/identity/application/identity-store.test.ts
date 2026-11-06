@@ -60,6 +60,9 @@ const repo: AuthRepository = {
   async signOut() {
     return ok(undefined)
   },
+  async listUsers() {
+    return ok([])
+  },
   async refresh(session) {
     if (revoked) return err(domainError('UNAUTHENTICATED', 'UNAUTHENTICATED'))
     const account = Object.values(ACCOUNTS).find((a) => a?.id === session.user.id)

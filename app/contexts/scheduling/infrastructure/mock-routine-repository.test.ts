@@ -79,6 +79,21 @@ describe('create', () => {
   })
 })
 
+describe('setAttachmentIds', () => {
+  it('replaces the file ids and keeps the other fields', async () => {
+    const updated = unwrap(await repo.setAttachmentIds(MEMBER, 'rt_01', ['fl_03', 'fl_99', 'fl_99']))
+    expect(updated.attachmentIds).toEqual(['fl_03', 'fl_99'])
+    expect(updated.title).toBe('Morning run')
+    expect(unwrap(await repo.get(MEMBER, 'rt_01')).attachmentIds).toEqual(['fl_03', 'fl_99'])
+  })
+
+  it('does not change a routine owned by someone else', async () => {
+    const error = failure(await repo.setAttachmentIds('usr_other', 'rt_01', []))
+    expect(error.reason).toBe('ROUTINE_NOT_FOUND')
+    expect(unwrap(await repo.get(MEMBER, 'rt_01')).attachmentIds).toEqual(['fl_03'])
+  })
+})
+
 describe('update', () => {
   it('changes the fields and keeps the attached files', async () => {
     const updated = unwrap(await repo.update(MEMBER, 'rt_01', { ...input, title: 'Long run' }))

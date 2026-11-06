@@ -49,7 +49,7 @@ let failSetDone: Set<string>
 let gate: Promise<void> | null
 let listFails: boolean
 let failSetSpan: boolean
-const calls = { setDone: 0 }
+const calls = { setDone: 0, setAttachmentIds: 0 }
 
 const repo: RoutineRepository = {
   async list() {
@@ -68,6 +68,14 @@ const repo: RoutineRepository = {
   },
   async update(owner, id, value) {
     const updated: Routine = { ...value, id, ownerId: owner, attachmentIds: [] }
+    stored = stored.map((r) => (r.id === id ? updated : r))
+    return ok(updated)
+  },
+  async setAttachmentIds(_owner, id, fileIds) {
+    calls.setAttachmentIds++
+    const found = stored.find((r) => r.id === id)
+    if (!found) return err(domainError('VALIDATION', 'ROUTINE_NOT_FOUND'))
+    const updated: Routine = { ...found, attachmentIds: fileIds }
     stored = stored.map((r) => (r.id === id ? updated : r))
     return ok(updated)
   },
@@ -131,6 +139,7 @@ beforeEach(() => {
   listFails = false
   failSetSpan = false
   calls.setDone = 0
+  calls.setAttachmentIds = 0
 })
 
 describe('load', () => {
@@ -469,6 +478,45 @@ describe('duplicate (SC-07)', () => {
   it('reports a routine that is not in the list', async () => {
     const store = await loaded()
     expect(failureOf(await store.duplicate('nope', '2026-11-12')).reason).toBe('ROUTINE_NOT_FOUND')
+  })
+})
+
+describe('attached files (AT-01)', () => {
+  it('adds the file to the routine when it is uploaded, and saves it', async () => {
+    const store = await loaded()
+    await store.onFileAttached('a', 'fl_new')
+    expect(store.routineById('a')?.attachmentIds).toEqual(['fl_new'])
+    expect(stored.find((r) => r.id === 'a')?.attachmentIds).toEqual(['fl_new'])
+  })
+
+  it('does not add the same file twice', async () => {
+    const store = await loaded()
+    await store.onFileAttached('a', 'fl_new')
+    await store.onFileAttached('a', 'fl_new')
+    expect(store.routineById('a')?.attachmentIds).toEqual(['fl_new'])
+    expect(calls.setAttachmentIds).toBe(1)
+  })
+
+  it('removes the file when it is deleted', async () => {
+    stored = [routine('a', { attachmentIds: ['fl_1', 'fl_2'] })]
+    const store = await loaded()
+    await store.onFileDeleted('a', 'fl_1')
+    expect(store.routineById('a')?.attachmentIds).toEqual(['fl_2'])
+  })
+
+  it('keeps every file when several finish together', async () => {
+    const store = await loaded()
+    await Promise.all([store.onFileAttached('a', 'fl_1'), store.onFileAttached('a', 'fl_2'), store.onFileAttached('a', 'fl_3')])
+    expect(store.routineById('a')?.attachmentIds).toEqual(['fl_1', 'fl_2', 'fl_3'])
+    expect(stored.find((r) => r.id === 'a')?.attachmentIds).toEqual(['fl_1', 'fl_2', 'fl_3'])
+  })
+
+  it('ignores a file with no routine, and a routine it does not know', async () => {
+    const store = await loaded()
+    await store.onFileAttached(null, 'fl_new')
+    await store.onFileAttached('nope', 'fl_new')
+    await store.onFileDeleted('a', 'fl_none')
+    expect(calls.setAttachmentIds).toBe(0)
   })
 })
 

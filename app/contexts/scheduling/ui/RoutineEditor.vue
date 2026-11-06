@@ -3,20 +3,22 @@ import { useScheduleStore } from '../application/schedule-store'
 import { isValidDate } from '../domain/dates'
 import type { Routine, RoutineInput } from '../domain/routine'
 import { emptyRoutineInput, formErrors, inputOf } from '../domain/routine-form'
-import { trapTab } from './focus-trap'
+import { trapTab } from '~/kernel/focus-trap'
 import { DURATION_OPTIONS, REMINDER_OPTIONS } from './field-options'
 
 // S-06: the routine form. A side drawer from tablet up, a full-screen sheet on mobile.
 // It checks the form and shows the overlap warning (SC-04). The page saves it.
 // Give it a `routine` to edit one (SC-05), leave it out to make a new one (SC-03).
 const props = defineProps<{ date: string; routine?: Routine; saving?: boolean }>()
-const emit = defineEmits<{ submit: [input: RoutineInput]; delete: []; duplicate: []; close: [] }>()
+// `files` are the files picked for a new routine. The page uploads them once the routine is saved (AT-01).
+const emit = defineEmits<{ submit: [input: RoutineInput, files: File[]]; delete: []; duplicate: []; close: [] }>()
 
 const { t, te } = useI18n()
 const schedule = useScheduleStore()
 
 const form = ref<RoutineInput>(props.routine ? inputOf(props.routine) : emptyRoutineInput(props.date))
 const submitted = ref(false)
+const staged = ref<File[]>([])
 const panel = ref<HTMLElement | null>(null)
 const titleField = ref<HTMLInputElement | null>(null)
 
@@ -40,7 +42,7 @@ const minutesLabel = (minutes: number) => t('scheduling.fields.minutes', { n: mi
 function save(): void {
   submitted.value = true
   if (Object.keys(formErrors(form.value)).length > 0) return
-  emit('submit', { ...form.value, title: form.value.title.trim() })
+  emit('submit', { ...form.value, title: form.value.title.trim() }, staged.value)
 }
 
 // Esc closes. Tab stays inside the panel while it is open.
@@ -174,6 +176,7 @@ onMounted(() => titleField.value?.focus())
           <p v-if="errors.notes" id="routine-notes-error" class="mt-1 text-sm text-danger">{{ errorText(errors.notes) }}</p>
         </div>
 
+        <RoutineFiles v-model:staged="staged" :routine-id="routine?.id ?? null" />
       </form>
 
       <footer class="flex gap-3 border-t border-line px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">

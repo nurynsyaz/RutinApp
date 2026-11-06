@@ -12,6 +12,9 @@ export interface ShellHandlerDeps {
   clearUserData: () => Promise<void>
   // BRD: shows the "Stay signed in?" toast
   notifyExpiring: (expiresAt: string) => void
+  // BRD events table: attachments.FileUploaded and FileUploadFailed show a toast
+  notifyUploaded: (name: string) => void
+  notifyUploadFailed: (name: string, reason: string) => void
   // BRD s.4: saving the profile switches the language and updates <html lang>
   applyLocale: (locale: Locale) => void
 }
@@ -32,6 +35,12 @@ export function registerShellHandlers(bus: EventBus<DomainEvents>, deps: ShellHa
     }),
     bus.subscribe('identity.SessionExpiring', (event) => {
       deps.notifyExpiring(event.expiresAt)
+    }),
+    bus.subscribe('attachments.FileUploaded', (event) => {
+      deps.notifyUploaded(event.name)
+    }),
+    bus.subscribe('attachments.FileUploadFailed', (event) => {
+      deps.notifyUploadFailed(event.name, event.reason)
     }),
     bus.subscribe('profile.ProfileUpdated', (event) => {
       if (event.changes.locale) deps.applyLocale(event.changes.locale)

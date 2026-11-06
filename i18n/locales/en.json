@@ -42,6 +42,10 @@
     "NOTES_TOO_LONG": "Notes can be up to 500 characters.",
     "ROUTINE_NOT_FOUND": "This routine could not be found.",
     "DATE_INVALID": "This date is not valid.",
+    "FILE_NOT_FOUND": "This file could not be found.",
+    "FILE_TYPE_NOT_ALLOWED": "This file type is not supported.",
+    "BATCH_LIMIT": "You can add up to 5 files at once.",
+    "ROUTINE_LIMIT": "A routine can hold up to 20 files.",
     "TIMEZONE_INVALID": "Choose a time zone from the list.",
     "DAY_START_INVALID": "Enter a valid time.",
     "WEEK_START_INVALID": "Choose Monday or Sunday.",
@@ -115,6 +119,60 @@
     "session": {
       "title": "Signed in on this device",
       "endsIn": "Session ends in {minutes} min unless you stay active."
+    },
+    "users": {
+      "title": "Users",
+      "readOnly": "Everyone with an account. This page is read-only.",
+      "summary": "No users | {count} user | {count} users",
+      "loading": "Loading users...",
+      "loadFailed": "The users could not be loaded.",
+      "today": "Today",
+      "never": "Never",
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "lastActive": "Last active"
+      },
+      "roles": {
+        "member": "Member",
+        "admin": "Admin"
+      },
+      "statuses": {
+        "active": "Active",
+        "inactive": "Inactive"
+      }
+    }
+  },
+  "routineFiles": {
+    "title": "Attachments",
+    "count": "{n} of {max}",
+    "dropHere": "Drop files here or",
+    "dropOver": "Drop to add",
+    "browse": "browse",
+    "add": "Add files",
+    "limits": "PDF, PNG, JPG, WEBP, DOCX, XLSX, TXT · up to 10 MB each · {batch} per batch",
+    "empty": "No files attached yet.",
+    "stagedHint": "These files are added when you save the routine.",
+    "removeStaged": "Remove {name}",
+    "download": "Download {name}",
+    "downloadFailed": "Could not download {name}.",
+    "rejectedTitle": "Not added",
+    "dismiss": "Dismiss",
+    "progress": "{loaded} of {size} · {percent}%",
+    "status": {
+      "queued": "Waiting",
+      "uploading": "Uploading",
+      "done": "Uploaded",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    },
+    "reject": {
+      "FILE_TYPE_NOT_ALLOWED": "{name} was not added: file type not allowed. Use PDF, PNG, JPG, WEBP, DOCX, XLSX or TXT.",
+      "FILE_TOO_LARGE": "{name} was not added: it is over the 10 MB limit.",
+      "BATCH_LIMIT": "{name} was not added: you can add up to 5 files at once.",
+      "ROUTINE_LIMIT": "{name} was not added: a routine can hold up to 20 files."
     }
   },
   "scheduling": {
@@ -207,6 +265,7 @@
     },
     "card": {
       "startsIn": "Starts in {minutes} min",
+      "files": "{n} file | {n} files",
       "overlaps": "Overlaps with {titles}"
     },
     "scope": {
@@ -233,8 +292,77 @@
     }
   },
   "attachments": {
+    "title": "Files",
     "upload": "Upload files",
-    "download": "Download"
+    "download": "Download",
+    "summary": "No files | {count} file · {size} on this device | {count} files · {size} on this device",
+    "dropHint": "Drop files anywhere on this page to upload.",
+    "dropOverlay": "Drop files to upload",
+    "limits": "Max {max} MB each · PDF, PNG, JPG, WEBP, DOCX, XLSX, TXT",
+    "loading": "Loading files...",
+    "loadFailed": "Your files could not be loaded.",
+    "search": "Search files",
+    "searchPlaceholder": "Search by name",
+    "filter": "Filter by type",
+    "kinds": {
+      "all": "All",
+      "pdf": "PDF",
+      "image": "Images",
+      "doc": "Docs",
+      "sheet": "Sheets",
+      "text": "Text",
+      "other": "Other"
+    },
+    "sort": {
+      "label": "Sort",
+      "newest": "Newest first",
+      "oldest": "Oldest first",
+      "largest": "Largest first",
+      "smallest": "Smallest first"
+    },
+    "columns": {
+      "name": "Name",
+      "routine": "Routine",
+      "size": "Size",
+      "added": "Added",
+      "actions": "Actions"
+    },
+    "notLinked": "Not linked",
+    "today": "Today",
+    "noMatch": "No files match your search.",
+    "empty": {
+      "title": "No files yet",
+      "hint": "Upload a file here, or attach one to a routine."
+    },
+    "uploading": "Uploading {current} of {total}",
+    "progress": "{loaded} of {size} · {percent}%",
+    "status": {
+      "queued": "Waiting",
+      "uploading": "Uploading",
+      "done": "Uploaded",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    },
+    "dismiss": "Dismiss",
+    "rejectedTitle": "Not uploaded",
+    "reject": {
+      "FILE_TYPE_NOT_ALLOWED": "{name} is not a supported type. Use PDF, PNG, JPG, WEBP, DOCX, XLSX or TXT.",
+      "FILE_TOO_LARGE": "{name} is over the 10 MB limit.",
+      "BATCH_LIMIT": "{name} was left out. You can add up to 5 files at once.",
+      "ROUTINE_LIMIT": "{name} was left out. A routine can hold up to 20 files."
+    },
+    "storageWarning": "Storage on this device is almost full. Delete files you no longer need.",
+    "deleteDialog": {
+      "title": "Delete this file?",
+      "hint": "{name} will be removed from this device.",
+      "confirm": "Delete file"
+    },
+    "toast": {
+      "uploaded": "File uploaded",
+      "failed": "Upload failed",
+      "downloadFailed": "Could not download the file",
+      "deleteFailed": "Could not delete the file"
+    }
   },
   "profile": {
     "save": "Save changes",
