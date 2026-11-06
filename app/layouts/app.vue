@@ -57,6 +57,7 @@ const items = computed(() => {
       <slot />
     </main>
 
+    <InstallPrompt />
     <SignOutDialog :unsynced="schedule.pending" />
   </div>
 </template>

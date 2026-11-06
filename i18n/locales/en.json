@@ -453,6 +453,23 @@
       "title": "You're offline.",
       "body": "Your schedule is still here. Uploads and downloads are paused.",
       "pending": "{count} change will be sent when you're back online. | {count} changes will be sent when you're back online."
+    },
+    "install": {
+      "title": "Install Rutin on this computer",
+      "titlePhone": "Install Rutin on this phone",
+      "body": "Opens in its own window and keeps today's schedule readable offline.",
+      "cta": "Install",
+      "later": "Not now",
+      "ios": {
+        "title": "Add Rutin to your Home Screen",
+        "step1": "Tap the Share button in Safari.",
+        "step2": "Choose \"Add to Home Screen\"."
+      }
+    },
+    "update": {
+      "title": "New version available",
+      "body": "Reload to get the latest version.",
+      "action": "Reload"
     }
   }
 }

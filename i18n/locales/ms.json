@@ -453,6 +453,23 @@
       "title": "Anda luar talian.",
       "body": "Jadual anda masih ada. Muat naik dan muat turun dijeda.",
       "pending": "{count} perubahan akan dihantar apabila anda kembali dalam talian. | {count} perubahan akan dihantar apabila anda kembali dalam talian."
+    },
+    "install": {
+      "title": "Pasang Rutin pada komputer ini",
+      "titlePhone": "Pasang Rutin pada telefon ini",
+      "body": "Dibuka dalam tetingkapnya sendiri dan jadual hari ini kekal boleh dibaca tanpa talian.",
+      "cta": "Pasang",
+      "later": "Bukan sekarang",
+      "ios": {
+        "title": "Tambah Rutin ke Skrin Utama",
+        "step1": "Ketik butang Kongsi dalam Safari.",
+        "step2": "Pilih \"Tambah ke Skrin Utama\"."
+      }
+    },
+    "update": {
+      "title": "Versi baharu tersedia",
+      "body": "Muat semula untuk mendapat versi terkini.",
+      "action": "Muat semula"
     }
   }
 }
