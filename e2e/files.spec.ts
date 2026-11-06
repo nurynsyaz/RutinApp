@@ -135,8 +135,12 @@ test.describe('Upload (AT-01, AT-02, AT-03)', () => {
 
 test.describe('Files in Malay', () => {
   test('AT-04 shows the screen in Malay', async ({ page }) => {
-    await page.evaluate(() => localStorage.setItem('rutin.locale', 'ms'))
-    await page.reload()
+    // The saved profile language wins after sign in, so save Malay on the profile first
+    await page.goto('/profile')
+    await page.getByLabel('Bahasa Melayu').check()
+    await page.getByRole('button', { name: 'Save changes' }).click()
+    await expect(page.getByRole('region', { name: 'Pemberitahuan' })).toContainText('Profil disimpan')
+    await page.goto('/files')
     await expect(page.getByRole('heading', { name: 'Fail', level: 1 })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Muat naik fail' })).toBeVisible()
     await expect(page.getByText('7 fail ·')).toBeVisible()

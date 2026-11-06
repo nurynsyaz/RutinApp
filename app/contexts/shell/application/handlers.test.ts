@@ -13,6 +13,7 @@ function setup() {
   const notifyExpiring = vi.fn()
   const notifyUploaded = vi.fn()
   const notifyUploadFailed = vi.fn()
+  const applyLocale = vi.fn()
   const stop = registerShellHandlers(bus, {
     navigate,
     signedInTarget: () => '/files',
@@ -21,8 +22,9 @@ function setup() {
     notifyExpiring,
     notifyUploaded,
     notifyUploadFailed,
+    applyLocale,
   })
-  return { bus, navigate, stop, resetShell, clearUserData, notifyExpiring, notifyUploaded, notifyUploadFailed }
+  return { bus, navigate, stop, resetShell, clearUserData, notifyExpiring, notifyUploaded, notifyUploadFailed, applyLocale }
 }
 
 describe('shell handlers', () => {
@@ -68,6 +70,18 @@ describe('shell handlers', () => {
     const { bus, notifyUploadFailed } = setup()
     bus.publish('attachments.FileUploadFailed', { ...base, name: 'plan.pdf', reason: 'NETWORK' })
     expect(notifyUploadFailed).toHaveBeenCalledWith('plan.pdf', 'NETWORK')
+  })
+
+  it('switches the language after the profile saves a new one', () => {
+    const { bus, applyLocale } = setup()
+    bus.publish('profile.ProfileUpdated', { ...base, userId: 'u1', changes: { locale: 'ms' } })
+    expect(applyLocale).toHaveBeenCalledWith('ms')
+  })
+
+  it('leaves the language alone when the profile change is something else', () => {
+    const { bus, applyLocale } = setup()
+    bus.publish('profile.ProfileUpdated', { ...base, userId: 'u1', changes: { name: 'Aina' } })
+    expect(applyLocale).not.toHaveBeenCalled()
   })
 
   it('goes to /403 and says which permission was missing', () => {

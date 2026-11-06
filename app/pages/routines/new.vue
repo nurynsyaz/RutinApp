@@ -12,7 +12,7 @@ const schedule = useScheduleStore()
 const attachments = useAttachmentStore()
 const shell = useShellStore()
 const router = useRouter()
-const viewed = useViewedDate()
+const viewed = useViewedDate(useDaySettings())
 const saving = ref(false)
 
 useHead({ title: computed(() => t('scheduling.editor.newTitle')) })

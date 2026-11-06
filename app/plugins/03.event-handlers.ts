@@ -4,6 +4,7 @@ import { registerShellHandlers } from '~/contexts/shell/application/handlers'
 import { useShellStore } from '~/contexts/shell/application/shell-store'
 import { reasonText } from '~/contexts/attachments/ui/file-format'
 import { useAttachmentStore } from '~/contexts/attachments/application/attachment-store'
+import { useProfileStore } from '~/contexts/profile/application/profile-store'
 import { useScheduleStore } from '~/contexts/scheduling/application/schedule-store'
 import { clearUserData } from '~/mocks/db'
 
@@ -12,6 +13,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   const shell = useShellStore()
   const identity = useIdentityStore()
   const schedule = useScheduleStore()
+  const profile = useProfileStore()
+  const applyLocale = useApplyLocale()
   const attachments = useAttachmentStore()
   const t = nuxtApp.$i18n.t
 
@@ -29,6 +32,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       expiringToast = null
     },
     clearUserData,
+    applyLocale: (locale) => void applyLocale(locale),
     notifyExpiring: () => {
       dismissExpiringToast()
       expiringToast = shell.notify({
@@ -58,6 +62,12 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.$bus.subscribe('identity.SignedOut', () => {
     schedule.reset()
     attachments.reset()
+    profile.reset()
+  })
+
+  // PR-02: the header shows the new name as soon as the profile is saved
+  nuxtApp.$bus.subscribe('profile.ProfileUpdated', ({ changes }) => {
+    if (changes.name) identity.setName(changes.name)
   })
 
   // BRD events table: a deleted routine's files stay in the library, only the link is dropped

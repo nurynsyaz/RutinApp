@@ -45,7 +45,11 @@
     "FILE_NOT_FOUND": "Fail ini tidak ditemui.",
     "FILE_TYPE_NOT_ALLOWED": "Jenis fail ini tidak disokong.",
     "BATCH_LIMIT": "Anda boleh menambah sehingga 5 fail sekali gus.",
-    "ROUTINE_LIMIT": "Satu rutin boleh menyimpan sehingga 20 fail."
+    "ROUTINE_LIMIT": "Satu rutin boleh menyimpan sehingga 20 fail.",
+    "TIMEZONE_INVALID": "Pilih zon waktu daripada senarai.",
+    "DAY_START_INVALID": "Masukkan masa yang sah.",
+    "WEEK_START_INVALID": "Pilih Isnin atau Ahad.",
+    "LANGUAGE_INVALID": "Pilih English atau Bahasa Melayu."
   },
   "identity": {
     "signIn": {
@@ -361,7 +365,41 @@
     }
   },
   "profile": {
-    "save": "Simpan perubahan"
+    "save": "Simpan perubahan",
+    "subtitle": "Butiran anda, bahasa dan cara Rutin merancang hari anda.",
+    "loading": "Memuatkan profil anda...",
+    "loadFailed": "Profil anda tidak dapat dimuatkan.",
+    "joined": "Menyertai {date}",
+    "stats": {
+      "streak": "hari berturut-turut",
+      "week": "selesai minggu ini",
+      "routines": "rutin"
+    },
+    "details": "Butiran",
+    "fullName": "Nama penuh",
+    "email": "E-mel",
+    "emailHint": "Minta pentadbir untuk menukar e-mel anda.",
+    "language": "Bahasa",
+    "languages": {
+      "en": "English",
+      "ms": "Bahasa Melayu"
+    },
+    "timezone": "Zon waktu",
+    "dayStart": "Hari bermula pada",
+    "weekStart": "Minggu bermula pada",
+    "weekStarts": {
+      "monday": "Isnin",
+      "sunday": "Ahad"
+    },
+    "appliesNote": "Perubahan terpakai pada Hari ini dan Minggu serta-merta.",
+    "discard": "Buang",
+    "saving": "Menyimpan...",
+    "saved": "Profil disimpan",
+    "saveFailed": "Perubahan anda tidak dapat disimpan.",
+    "roles": {
+      "member": "Ahli",
+      "admin": "Pentadbir"
+    }
   },
   "shell": {
     "brand": {

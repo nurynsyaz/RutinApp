@@ -16,7 +16,7 @@ const router = useRouter()
 const schedule = useScheduleStore()
 const shell = useShellStore()
 // The day the routine was opened from. "This day only" means this one.
-const viewed = useViewedDate()
+const viewed = useViewedDate(useDaySettings())
 
 const id = computed(() => String(route.params.id))
 const loading = computed(() => schedule.status === 'idle' || schedule.status === 'loading')

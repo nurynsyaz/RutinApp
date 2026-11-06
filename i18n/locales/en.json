@@ -45,7 +45,11 @@
     "FILE_NOT_FOUND": "This file could not be found.",
     "FILE_TYPE_NOT_ALLOWED": "This file type is not supported.",
     "BATCH_LIMIT": "You can add up to 5 files at once.",
-    "ROUTINE_LIMIT": "A routine can hold up to 20 files."
+    "ROUTINE_LIMIT": "A routine can hold up to 20 files.",
+    "TIMEZONE_INVALID": "Choose a time zone from the list.",
+    "DAY_START_INVALID": "Enter a valid time.",
+    "WEEK_START_INVALID": "Choose Monday or Sunday.",
+    "LANGUAGE_INVALID": "Choose English or Bahasa Melayu."
   },
   "identity": {
     "signIn": {
@@ -361,7 +365,41 @@
     }
   },
   "profile": {
-    "save": "Save changes"
+    "save": "Save changes",
+    "subtitle": "Your details, language and how Rutin plans your day.",
+    "loading": "Loading your profile...",
+    "loadFailed": "Your profile could not be loaded.",
+    "joined": "Joined {date}",
+    "stats": {
+      "streak": "day streak",
+      "week": "done this week",
+      "routines": "routines"
+    },
+    "details": "Details",
+    "fullName": "Full name",
+    "email": "Email",
+    "emailHint": "Ask an admin to change your email.",
+    "language": "Language",
+    "languages": {
+      "en": "English",
+      "ms": "Bahasa Melayu"
+    },
+    "timezone": "Timezone",
+    "dayStart": "Day starts at",
+    "weekStart": "Week starts on",
+    "weekStarts": {
+      "monday": "Monday",
+      "sunday": "Sunday"
+    },
+    "appliesNote": "Changes apply to Today and Week right away.",
+    "discard": "Discard",
+    "saving": "Saving...",
+    "saved": "Profile saved",
+    "saveFailed": "Your changes could not be saved.",
+    "roles": {
+      "member": "Member",
+      "admin": "Admin"
+    }
   },
   "shell": {
     "brand": {
