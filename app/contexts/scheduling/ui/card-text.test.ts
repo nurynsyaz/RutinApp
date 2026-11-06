@@ -27,8 +27,13 @@ describe('cardText', () => {
     expect(cardText(item())).toEqual({
       category: 'health',
       repeat: { kind: 'weekdays', days: [] },
+      files: 0,
       status: null,
     })
+  })
+
+  it('counts the attached files', () => {
+    expect(cardText(item({ attachmentIds: ['fl_01', 'fl_02'] })).files).toBe(2)
   })
 
   it('lists the days of a custom repeat', () => {

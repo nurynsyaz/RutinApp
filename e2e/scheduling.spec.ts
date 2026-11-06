@@ -62,7 +62,11 @@ test.describe('Today (SC-01)', () => {
   })
 
   test('NFR Malay date and summary', async ({ page }) => {
-    await page.evaluate(() => localStorage.setItem('rutin.locale', 'ms'))
+    // The saved profile language wins after sign-in, so save Malay on the profile first
+    await page.goto('/profile')
+    await page.getByLabel('Bahasa Melayu').check()
+    await page.getByRole('button', { name: 'Save changes' }).click()
+    await expect(page.getByRole('region', { name: 'Pemberitahuan' })).toContainText('Profil disimpan')
     await page.goto(`/today?date=${TUESDAY}`)
     await expect(page.getByRole('heading', { name: 'Selasa, 3 November' })).toBeVisible()
     await expect(page.getByText('10 rutin · 0 selesai · 10 lagi')).toBeVisible()

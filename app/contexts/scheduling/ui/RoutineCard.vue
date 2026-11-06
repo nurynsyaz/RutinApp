@@ -30,8 +30,10 @@ const status = computed(() => {
   if (!value) return null
   return value.kind === 'done' ? t('scheduling.done') : t('scheduling.card.startsIn', { minutes: value.minutes })
 })
+// Blueprint S-04: "Work · Weekdays · Done · 2 files". A routine with no files says nothing.
+const files = computed(() => (text.value.files > 0 ? t('scheduling.card.files', { n: text.value.files }, text.value.files) : null))
 const subtitle = computed(() =>
-  [t(`scheduling.category.${text.value.category}`), repeat.value, status.value].filter(Boolean).join(' · '),
+  [t(`scheduling.category.${text.value.category}`), repeat.value, status.value, files.value].filter(Boolean).join(' · '),
 )
 const clash = computed(() => (props.clashTitles ?? []).join(', '))
 const timeRange = computed(

@@ -1,6 +1,16 @@
 import 'fake-indexeddb/auto'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { readTable, writeTable, resetDemoData, clearUserData, shouldFail, latency } from './db'
+import {
+  readTable,
+  writeTable,
+  readBlob,
+  writeBlob,
+  deleteBlob,
+  resetDemoData,
+  clearUserData,
+  shouldFail,
+  latency,
+} from './db'
 
 beforeEach(async () => {
   await resetDemoData()
@@ -38,6 +48,22 @@ describe('mock db', () => {
     await writeTable('completions', [{ routineId: 'rt_01', date: '2026-11-02' }])
     await clearUserData()
     expect(await readTable('completions')).toEqual([])
+  })
+
+  it('keeps the bytes of a file and gives them back', async () => {
+    expect(await readBlob('fl_x')).toBeUndefined()
+    await writeBlob('fl_x', new Blob(['hello'], { type: 'text/plain' }))
+    const blob = await readBlob('fl_x')
+    expect(blob?.type).toBe('text/plain')
+    expect(await blob?.text()).toBe('hello')
+    await deleteBlob('fl_x')
+    expect(await readBlob('fl_x')).toBeUndefined()
+  })
+
+  it('clearUserData drops the stored file bytes', async () => {
+    await writeBlob('fl_x', new Blob(['hello']))
+    await clearUserData()
+    expect(await readBlob('fl_x')).toBeUndefined()
   })
 
   it('goes back to the seed after reset', async () => {

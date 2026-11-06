@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { dateInZone, formatTimeOfDay, minutesInZone } from './local-date'
+import { dateInZone, dayAndMinuteIn, formatTimeOfDay, minutesInZone, parseTimeOfDay } from './local-date'
 
 // 2026-11-03 at 01:40 in UTC is 09:40 in Kuala Lumpur (UTC+8)
 const NOW = new Date('2026-11-03T01:40:00.000Z')
@@ -41,5 +41,46 @@ describe('formatTimeOfDay', () => {
 
   it('wraps past midnight, for a routine that ends the next day', () => {
     expect(formatTimeOfDay(1440 + 30)).toBe('00:30')
+  })
+})
+
+describe('dayAndMinuteIn', () => {
+  const KL = 'Asia/Kuala_Lumpur'
+
+  it('is the plain day when the day starts at midnight', () => {
+    expect(dayAndMinuteIn(NOW, KL, 0)).toEqual({ date: '2026-11-03', minutes: 580 })
+  })
+
+  it('is the same day once the day has started', () => {
+    expect(dayAndMinuteIn(NOW, KL, 6 * 60)).toEqual({ date: '2026-11-03', minutes: 580 })
+  })
+
+  it('still belongs to the day before until the day starts', () => {
+    // 02:00 in Kuala Lumpur on the 3rd is 18:00 UTC on the 2nd
+    const early = new Date('2026-11-02T18:00:00.000Z')
+    expect(dayAndMinuteIn(early, KL, 6 * 60)).toEqual({ date: '2026-11-02', minutes: 120 + 1440 })
+  })
+
+  it('switches to the new day exactly at the start time', () => {
+    const start = new Date('2026-11-02T22:00:00.000Z') // 06:00 on the 3rd in Kuala Lumpur
+    expect(dayAndMinuteIn(start, KL, 6 * 60)).toEqual({ date: '2026-11-03', minutes: 360 })
+  })
+
+  it('uses the time zone of the profile', () => {
+    expect(dayAndMinuteIn(NOW, 'UTC', 6 * 60)).toEqual({ date: '2026-11-02', minutes: 100 + 1440 })
+  })
+})
+
+describe('parseTimeOfDay', () => {
+  it('reads a 24-hour time', () => {
+    expect(parseTimeOfDay('06:30')).toBe(390)
+    expect(parseTimeOfDay('00:00')).toBe(0)
+    expect(parseTimeOfDay('23:59')).toBe(1439)
+  })
+
+  it('gives 0 for anything else', () => {
+    expect(parseTimeOfDay('')).toBe(0)
+    expect(parseTimeOfDay('6:30')).toBe(0)
+    expect(parseTimeOfDay('25:00')).toBe(0)
   })
 })

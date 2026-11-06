@@ -10,7 +10,9 @@
     "language": "en",
     "timezone": "Asia/Kuala_Lumpur",
     "dayStart": "06:00",
-    "weekStart": "monday"
+    "weekStart": "monday",
+    "status": "active",
+    "lastActiveAt": "2026-11-05T01:12:00.000Z"
   },
   {
     "id": "usr_admin",
@@ -23,7 +25,9 @@
     "language": "en",
     "timezone": "Asia/Kuala_Lumpur",
     "dayStart": "06:00",
-    "weekStart": "monday"
+    "weekStart": "monday",
+    "status": "active",
+    "lastActiveAt": "2026-11-05T08:30:00.000Z"
   },
   {
     "id": "usr_expired",
@@ -33,9 +37,11 @@
     "role": "member",
     "sessionTtlSec": 60,
     "memberSince": "2026-03-10",
-    "language": "ms",
+    "language": "en",
     "timezone": "Asia/Kuala_Lumpur",
     "dayStart": "07:00",
-    "weekStart": "monday"
+    "weekStart": "monday",
+    "status": "inactive",
+    "lastActiveAt": "2026-09-20T08:00:00.000Z"
   }
 ]

@@ -7,9 +7,17 @@ export type Table = 'users' | 'routines' | 'files' | 'completions'
 export type FailKey = 'signin' | 'upload' | 'complete'
 
 // Change these to speed up or slow down the fake server
-export const mockConfig = { minLatencyMs: 150, maxLatencyMs: 600 }
+// Uploads go at about 2 MB/s and report progress every 100 ms (BRD section 8)
+export const mockConfig = {
+  minLatencyMs: 150,
+  maxLatencyMs: 600,
+  uploadBytesPerSecond: 2 * 1024 * 1024,
+  progressIntervalMs: 100,
+}
 
 const store = createStore('rutin-db', 'tables')
+// The bytes of every stored file, kept apart from the table of file records
+const blobStore = createStore('rutin-blobs', 'blobs')
 // Nobody has finished anything on a fresh install, so completions start empty
 const seeds: Record<Table, unknown[]> = { users, routines, files, completions: [] }
 
@@ -38,14 +46,20 @@ export async function writeTable<T>(table: Table, rows: T[]): Promise<void> {
   await set(table, rows, store)
 }
 
+export const readBlob = (id: string): Promise<Blob | undefined> => get<Blob>(id, blobStore)
+export const writeBlob = (id: string, blob: Blob): Promise<void> => set(id, blob, blobStore)
+export const deleteBlob = (id: string): Promise<void> => del(id, blobStore)
+
 // Sign out (BRD s.7 step 4): drops the signed-in user's routines and files.
 // The users table stays because accounts are not cached user data, and the PWA shell cache is not touched.
 export async function clearUserData(): Promise<void> {
   await del('routines', store)
   await del('files', store)
   await del('completions', store)
+  await clear(blobStore)
 }
 
 export async function resetDemoData(): Promise<void> {
   await clear(store)
+  await clear(blobStore)
 }

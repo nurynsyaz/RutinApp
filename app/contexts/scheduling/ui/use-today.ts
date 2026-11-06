@@ -1,14 +1,27 @@
+import type { MaybeRefOrGetter } from 'vue'
 import { isValidDate } from '../domain/dates'
-import { dateInZone, minutesInZone } from '../domain/local-date'
+import { dayAndMinuteIn, parseTimeOfDay } from '../domain/local-date'
 import type { WeekStart } from '../domain/week'
 
 const TICK_MS = 30_000
 
-// "Today" and the current time come from the app clock (BRD s.9), in the device's time zone.
-// It ticks every 30 seconds so the current-time line moves.
-export function useToday() {
+// PR-02: the profile settings that Today and Week follow
+export interface DaySettings {
+  timezone: string
+  dayStart: string // HH:MM
+  weekStart: WeekStart
+}
+
+export const deviceSettings = (): DaySettings => ({
+  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  dayStart: '00:00',
+  weekStart: 'monday',
+})
+
+// "Today" and the current time come from the app clock (BRD s.9), in the time zone and with the
+// day start from the profile. It ticks every 30 seconds so the current-time line moves.
+export function useToday(settings?: MaybeRefOrGetter<DaySettings>) {
   const { $clock } = useNuxtApp()
-  const zone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const now = ref($clock.now())
 
   const timer = setInterval(() => {
@@ -16,16 +29,21 @@ export function useToday() {
   }, TICK_MS)
   onScopeDispose(() => clearInterval(timer))
 
+  const current = computed(() => {
+    const resolved = toValue(settings) ?? deviceSettings()
+    return dayAndMinuteIn(now.value, resolved.timezone, parseTimeOfDay(resolved.dayStart))
+  })
+
   return {
-    today: computed(() => dateInZone(now.value, zone)),
-    nowMin: computed(() => minutesInZone(now.value, zone)),
+    today: computed(() => current.value.date),
+    nowMin: computed(() => current.value.minutes),
   }
 }
 
 // The day on screen: `?date=` when it is a real date, today otherwise
-export function useViewedDate() {
+export function useViewedDate(settings?: MaybeRefOrGetter<DaySettings>) {
   const route = useRoute()
-  const { today } = useToday()
+  const { today } = useToday(settings)
 
   return computed(() => {
     const value = route.query.date
@@ -33,7 +51,7 @@ export function useViewedDate() {
   })
 }
 
-// Not in BRD, my choice: Monday until the profile setting (S-09) is built
-export function useWeekStart() {
-  return computed<WeekStart>(() => 'monday')
+// PR-02: the week starts on the day set in the profile
+export function useWeekStart(settings?: MaybeRefOrGetter<DaySettings>) {
+  return computed<WeekStart>(() => (toValue(settings) ?? deviceSettings()).weekStart)
 }

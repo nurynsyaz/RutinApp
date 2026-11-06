@@ -16,6 +16,8 @@ export interface RoutineRepository {
   create(ownerId: string, input: RoutineInput, span?: RoutineSpan): Promise<Result<Routine, DomainError>>
   // Replaces the fields from the editor. The attached files stay as they are.
   update(ownerId: string, id: string, input: RoutineInput): Promise<Result<Routine, DomainError>>
+  // AT-01: sets the ids of the files attached to the routine (the editor and the Files screen add and remove them)
+  setAttachmentIds(ownerId: string, id: string, fileIds: string[]): Promise<Result<Routine, DomainError>>
   // SC-05: sets the first day, the last day and the skipped days. Fields left out are cleared.
   setSpan(ownerId: string, id: string, span: RoutineSpan): Promise<Result<Routine, DomainError>>
   // Also forgets the routine's completed days
