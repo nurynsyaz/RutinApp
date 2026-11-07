@@ -57,8 +57,6 @@ PowerShell: `$env:PW_CHANNEL='bundled'; npm run test:e2e`
 
 ## How the code is organised
 
-New to Nuxt, Vue or TypeScript? Read [docs/PROJECT_NOTES.md](docs/PROJECT_NOTES.md) first. It explains every folder and file in simple terms, with links to the Nuxt docs.
-
 The code is split into five contexts. Each one has the same four layers.
 
 ```
