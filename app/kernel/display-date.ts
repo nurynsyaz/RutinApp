@@ -5,9 +5,9 @@ export type DatePattern =
     | 'DD/MM/YYYY'  // 12/11/2026
     | 'D MMM YYYY'  // 12 Nov 2026
     | 'MMM YYYY'    // Nov 2026
-    | 'dddd, D MMMM' // Monday, 12 November
-    | 'dddd, D MMM'  // Monday, 12 Nov
-    | 'ddd'          // Mon
+    | 'dddd, D MMMM' // Thursday, 12 November
+    | 'dddd, D MMM'  // Thursday, 12 Nov
+    | 'ddd'          // Thu
     | 'D'           // 12
 
 export function displayDate(date: string, locale: string, pattern: DatePattern): string {
