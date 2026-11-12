@@ -1,24 +1,16 @@
-// Dates through Intl in the active language (BRD s.11). A date is a plain YYYY-MM-DD string,
-// so it is formatted in UTC and never shifts with the time zone.
-const INTL_LOCALE: Record<string, string> = { en: 'en-MY', ms: 'ms-MY' }
+import {displayDate} from '~/kernel/display-date'
 
-function format(date: string, locale: string, options: Intl.DateTimeFormatOptions): string {
-  return new Intl.DateTimeFormat(INTL_LOCALE[locale] ?? locale, { ...options, timeZone: 'UTC' }).format(
-    new Date(`${date}T00:00:00Z`),
-  )
-}
-
-// "Tuesday, 3 November" / "Selasa, 3 November". With 'short' the month is "Nov".
+//"Thursday, 12 November" / "Khamis, 12 November" / "Thursday, 12 Nov" / "Khamis, 12 Nov"
 export function formatDayTitle(date: string, locale: string, month: 'long' | 'short' = 'long'): string {
-  return `${format(date, locale, { weekday: 'long' })}, ${format(date, locale, { day: 'numeric' })} ${format(date, locale, { month })}`
+  return displayDate(date, locale, month === 'long' ? 'dddd, D MMMM' : 'dddd, D MMM')
 }
 
-// "Mon" / "Isn"
+//"Thu" / "Kha"
 export function formatWeekdayShort(date: string, locale: string): string {
-  return format(date, locale, { weekday: 'short' })
+  return displayDate(date, locale, 'ddd')
 }
 
-// "3"
+//"12" / "12"
 export function formatDayNumber(date: string, locale: string): string {
-  return format(date, locale, { day: 'numeric' })
+  return displayDate(date, locale, 'D')
 }
