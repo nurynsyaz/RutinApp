@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { payloadText } from '../application/inspector'
 import { useInspectorStore } from '../application/inspector-store'
+import moment from 'moment'
 
 // BRD s.13: a dev-only panel that lists every published event with its payload.
 // Payloads are printed as plain text, never as HTML.
 const { t, locale } = useI18n()
 const inspector = useInspectorStore()
-
-const timeText = (iso: string) =>
+const timeText = (iso: string) => moment(iso).format('HH:mm:ss')
   new Intl.DateTimeFormat(locale.value === 'ms' ? 'ms-MY' : 'en-MY', { timeStyle: 'medium' }).format(new Date(iso))
 </script>
 
