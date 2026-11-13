@@ -29,6 +29,7 @@
     "idb-keyval": "^6.3.0",
     "mitt": "^3.0.1",
     "moment": "^2.31.0",
+    "moment-timezone": "^0.6.6",
     "nuxt": "^4.6.3",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
