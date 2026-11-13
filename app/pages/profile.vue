@@ -5,6 +5,7 @@ import { useProfileStore } from '~/contexts/profile/application/profile-store'
 import type { ProfileChanges } from '~/contexts/profile/domain/profile'
 import { formatDayTitle } from '~/contexts/scheduling/ui/format'
 import { useShellStore } from '~/contexts/shell/application/shell-store'
+import { displayDate } from '~/kernel/display-date'
 
 definePageMeta({ layout: 'app' })
 
@@ -21,8 +22,7 @@ const errors = ref<Record<string, string>>({})
 const joined = computed(() => {
   const since = profile.profile?.memberSince
   if (!since) return ''
-  const text = new Intl.DateTimeFormat(locale.value === 'ms' ? 'ms-MY' : 'en-MY', { month: 'short', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${since}T00:00:00Z`))
-  return t('profile.joined', { date: text })
+  return t('profile.joined', { date: displayDate(since, locale.value, 'MMM YYYY') })
 })
 
 // The language choice shows the same day in both languages
