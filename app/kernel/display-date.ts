@@ -4,6 +4,7 @@ import 'moment/dist/locale/ms'
 export type DatePattern =
     | 'DD/MM/YYYY'  // 12/11/2026
     | 'D MMM YYYY'  // 12 Nov 2026
+    | 'D MMM'       // 12 Nov
     | 'MMM YYYY'    // Nov 2026
     | 'dddd, D MMMM' // Thursday, 12 November
     | 'dddd, D MMM'  // Thursday, 12 Nov
